@@ -5,7 +5,7 @@ import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase
 import { auth } from '@/lib/firebase'
 import { getUserProfile } from '@/lib/auth'
 import type { UserProfile } from '@/types'
-
+//.
 interface AuthContextValue {
   user: FirebaseUser | null
   profile: UserProfile | null
