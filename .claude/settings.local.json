@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(node:*)",
+      "Bash(grep -r dahlia C:/Users/olive/OneDrive/Documentos/pessoal/cowly/node_modules/stripe/ --include=*.ts -l)",
+      "Bash(npm install:*)",
+      "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-path */lib/* -o -path */types/* \\\\\\) -print)",
+      "Bash(ls:*)",
+      "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-name *auth* -o -name *user* -o -name *role* -o -name *firestore* \\\\\\) -print)"
+    ]
+  }
+}
