@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Zap,
   Sparkles,
@@ -12,6 +13,10 @@ import {
   Radio,
   Target,
   ShieldCheck,
+  Star,
+  Users,
+  Heart,
+  Globe,
 } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -68,21 +73,13 @@ function BrowserMockup({
 }
 
 const MARQUEE_ITEMS = [
-  { icon: Zap, label: 'Entrega em 7 dias' },
+  { icon: Zap, label: 'Express em 7 dias' },
   { icon: Sparkles, label: 'Preço fixo garantido' },
-  { icon: Palette, label: 'Design premium' },
+  { icon: Palette, label: 'Design profissional' },
   { icon: Smartphone, label: '100% responsivo' },
-  { icon: Lock, label: 'Checkout seguro' },
-  { icon: Rocket, label: 'Pronto para lançar' },
-  { icon: CheckCircle, label: 'Sem revisões infinitas' },
-  { icon: Gem, label: 'Sites de alta conversão' },
-  { icon: Zap, label: 'Entrega em 7 dias' },
-  { icon: Sparkles, label: 'Preço fixo garantido' },
-  { icon: Palette, label: 'Design premium' },
-  { icon: Smartphone, label: '100% responsivo' },
-  { icon: Lock, label: 'Checkout seguro' },
-  { icon: Rocket, label: 'Pronto para lançar' },
-  { icon: CheckCircle, label: 'Sem revisões infinitas' },
+  { icon: Lock, label: 'Pagamento 100% adiantado' },
+  { icon: Rocket, label: 'Entrega em 14 dias' },
+  { icon: CheckCircle, label: 'Escopo fixo e claro' },
   { icon: Gem, label: 'Sites de alta conversão' },
 ]
 
@@ -90,7 +87,7 @@ const BENTO = [
   {
     size: 'col-span-2 row-span-1',
     title: 'Entregue em dias, não meses',
-    desc: 'Processo ágil e sem burocracia. Do pagamento ao site no ar em até 7 dias úteis.',
+    desc: 'Do pagamento ao site no ar em até 14 dias. Com pacote express, em 7 dias.',
     icon: Zap,
     accent: true,
   },
@@ -126,9 +123,9 @@ const BENTO = [
 
 const STEPS = [
   { n: '01', title: 'Escolha o template', desc: 'Navegue pelo catálogo e encontre o estilo certo para o seu negócio.' },
-  { n: '02', title: 'Finalize o pagamento', desc: 'Checkout seguro via Stripe. Preço fixo, confirmação imediata.' },
+  { n: '02', title: 'Finalize o pagamento', desc: 'Pagamento 100% adiantado via checkout seguro. Quer prioridade? Adicione o pacote express e receba em 7 dias.' },
   { n: '03', title: 'Acompanhe o projeto', desc: 'Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.' },
-  { n: '04', title: 'Receba seu site', desc: 'Site entregue, revisado e pronto para lançar. Sem enrolação.' },
+  { n: '04', title: 'Receba seu site', desc: 'Site entregue em até 14 dias. Com pacote express, em 7 dias. Pronto para publicar.' },
 ]
 
 const TEMPLATES_PREVIEW = [
@@ -205,34 +202,27 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 w-full pt-24 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+        <div className="relative max-w-7xl mx-auto px-6 w-full pt-4 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
 
           {/* LEFT: Copy */}
           <div className="z-10">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 mb-8 animate-fade-up">
               <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
-              <span className="text-sm font-medium text-brand">Sites premium · Entrega garantida</span>
+              <span className="text-sm font-medium text-brand">Desenvolvimento web · Entrega em 14 dias</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-6xl md:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
               <span className="block text-white overflow-hidden">
-                <WordReveal words={['Seu', 'site,']} baseDelay={200} />
+                <WordReveal words={['Seu', 'site', 'no', 'ar', 'em']} baseDelay={200} />
               </span>
               <span className="block overflow-hidden mt-2">
                 <span
                   className="animate-word-reveal inline-block gradient-text"
-                  style={{ animationDelay: '420ms' }}
+                  style={{ animationDelay: '650ms' }}
                 >
-                  do jeito
-                </span>
-                {' '}
-                <span
-                  className="animate-word-reveal inline-block gradient-text"
-                  style={{ animationDelay: '510ms' }}
-                >
-                  certo.
+                  14 dias.
                 </span>
               </span>
             </h1>
@@ -242,8 +232,7 @@ export default function HomePage() {
               className="text-lg md:text-xl text-neutral-400 max-w-lg leading-relaxed mb-10 animate-fade-up"
               style={{ animationDelay: '650ms' }}
             >
-              A Cowly entrega sites premium com design, desenvolvimento e
-              entrega garantidos — em dias, a um preço fixo.
+              A Crably desenvolve sites profissionais com entrega garantida em 14 dias, preço fixo e sem enrolação. Precisa de urgência? Entre na fila prioritária e receba em 7 dias.
             </p>
 
             {/* CTAs */}
@@ -277,7 +266,7 @@ export default function HomePage() {
             >
               {[
                 { v: '100+', l: 'Projetos' },
-                { v: '7 dias', l: 'Entrega média' },
+                { v: '14 dias', l: 'Prazo padrão' },
                 { v: '100%', l: 'Preço fixo' },
               ].map((s, i) => (
                 <div key={i} className={i > 0 ? 'border-l border-white/8 pl-8' : ''}>
@@ -297,7 +286,7 @@ export default function HomePage() {
               style={{ animationDelay: '0s', animationDuration: '7s' }}
             >
               <BrowserMockup
-                url="agencia.cowly.io"
+                url="agencia.crably.io"
                 accentColor="linear-gradient(135deg, #1a0a00, #2d1200)"
                 className=""
               >
@@ -326,7 +315,7 @@ export default function HomePage() {
               style={{ animationDelay: '1.5s', animationDuration: '9s' }}
             >
               <BrowserMockup
-                url="saas.cowly.io"
+                url="saas.crably.io"
                 accentColor="linear-gradient(135deg, #000d1a, #001433)"
                 className="opacity-90"
               >
@@ -352,7 +341,7 @@ export default function HomePage() {
               style={{ animationDelay: '3s', animationDuration: '10s' }}
             >
               <BrowserMockup
-                url="loja.cowly.io"
+                url="loja.crably.io"
                 accentColor="linear-gradient(135deg, #0a0f00, #141f00)"
                 className="opacity-80"
               >
@@ -379,14 +368,7 @@ export default function HomePage() {
             />
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-30">
-          <span className="text-xs text-neutral-500 tracking-widest uppercase">scroll</span>
-          <svg className="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
+        
       </section>
 
       {/* ══════════════════════════════════════════════════════════
@@ -394,24 +376,34 @@ export default function HomePage() {
       ════════════════════════════════════════════════════════== */}
       <div className="border-y border-white/5 bg-[#0d0d0d] py-4 overflow-hidden">
         <div className="flex">
-          <div className="animate-marquee flex gap-8 whitespace-nowrap">
-            {MARQUEE_ITEMS.map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-2 text-sm font-semibold px-4 text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.7)]">
-                <item.icon size={14} />
-                {item.label}
-              </span>
-            ))}
-          </div>
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              aria-hidden={copy === 1}
+              className="animate-marquee flex shrink-0 items-center"
+            >
+              {MARQUEE_ITEMS.map((item, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-2 text-sm font-semibold px-6 text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.7)]"
+                >
+                  <item.icon size={14} />
+                  {item.label}
+                  <span className="mx-2 text-orange-400/30">·</span>
+                </span>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
           BENTO GRID
       ════════════════════════════════════════════════════════== */}
-      <section className="py-32 px-6">
+      <section id="vantagens" className="py-32 px-6">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
-            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Cowly</p>
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Crably</p>
             <h2 className="text-4xl md:text-5xl font-bold text-white max-w-2xl mx-auto">
               Tudo que você precisa,{' '}
               <span className="gradient-text-subtle">sem complicação</span>
@@ -429,9 +421,9 @@ export default function HomePage() {
                 />
                 <div className="relative z-10">
                   <Zap size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-white mb-2">Entregue em dias, não meses</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">Entregue em 14 dias, garantido</h3>
                   <p className="text-neutral-400 leading-relaxed">
-                    Processo ágil e sem burocracia. Do pagamento ao site no ar em até 7 dias úteis, com acompanhamento em tempo real.
+                    Do pagamento ao site no ar em até 14 dias. Precisa antes? Ative o pacote express e receba em 7 dias, com fila prioritária.
                   </p>
                 </div>
                 <div className="absolute bottom-6 right-6 flex gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
@@ -457,7 +449,7 @@ export default function HomePage() {
                 <DollarSign size={36} className="mb-4 text-brand" />
                 <h3 className="text-xl font-bold text-white mb-2">Preço fixo</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
-                  Sem surpresas. Você sabe o valor total antes de confirmar a compra.
+                  Pagamento único, 100% adiantado. Sem surpresas, sem parcelamento, sem cobranças extras no final.
                 </p>
                 <p className="mt-4 text-3xl font-bold text-brand">R$ 997+</p>
               </div>
@@ -502,7 +494,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           TEMPLATES PREVIEW
       ════════════════════════════════════════════════════════== */}
-      <section className="py-32 px-6 border-t border-white/5">
+      <section id="templates" className="py-32 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
@@ -614,6 +606,179 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
+          AVALIAÇÕES
+      ════════════════════════════════════════════════════════== */}
+      <section id="avaliacoes" className="py-32 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal className="text-center mb-16">
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Avaliações</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">
+              O que nossos clientes dizem
+            </h2>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'Rafael Mendes',
+                role: 'Fundador, AgênciaPulse',
+                text: 'Entrega impecável. Em 6 dias tinha meu site no ar, com um design que minha equipe toda elogiou. Valeu cada centavo — sem estresse, sem revisão infinita.',
+                stars: 5,
+              },
+              {
+                name: 'Camila Ferreira',
+                role: 'CEO, Loja Vista',
+                text: 'Já tentei com dois freelas antes da Crably. A diferença é absurda. Processo claro, prazo cumprido e o resultado ficou muito acima do que eu esperava.',
+                stars: 5,
+              },
+              {
+                name: 'Bruno Alves',
+                role: 'Co-founder, SaaSly',
+                text: 'O dashboard de acompanhamento é incrível. Sabia o que estava acontecendo a cada etapa. Paguei, acompanhei e recebi o site no prazo combinado.',
+                stars: 5,
+              },
+              {
+                name: 'Juliana Costa',
+                role: 'Diretora, Clínica Espaço Bem',
+                text: 'Nunca imaginei que ter um site profissional fosse tão simples. Paguei, acompanhei pelo dashboard e recebi tudo pronto no prazo. Recomendo demais.',
+                stars: 5,
+              },
+              {
+                name: 'Thiago Rocha',
+                role: 'Marketing, TechFlow',
+                text: 'A relação custo-benefício é excelente. Preço fixo, pagamento único e o site entregue dentro do prazo. Processo direto, sem enrolação.',
+                stars: 5,
+              },
+              {
+                name: 'Mariana Lima',
+                role: 'Empreendedora',
+                text: 'Fiquei com medo no começo por ser online, mas a experiência superou tudo. Comunicação ativa, entrega no prazo e o site ficou lindo.',
+                stars: 5,
+              },
+            ].map((review, i) => (
+              <ScrollReveal key={i} delay={((i % 3) + 1) as 1 | 2 | 3}>
+                <div className="bento-card p-7 h-full flex flex-col gap-4">
+                  <div className="flex gap-1">
+                    {Array.from({ length: review.stars }).map((_, s) => (
+                      <Star key={s} size={14} className="text-brand fill-brand" />
+                    ))}
+                  </div>
+                  <p className="text-neutral-300 text-sm leading-relaxed flex-1">"{review.text}"</p>
+                  <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+                    <Image
+                      src={`https://api.dicebear.com/9.x/avataaars/png?seed=${encodeURIComponent(review.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=50`}
+                      alt={review.name}
+                      width={36}
+                      height={36}
+                      className="rounded-full shrink-0"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-white">{review.name}</p>
+                      <p className="text-xs text-neutral-500">{review.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          SOBRE NÓS
+      ════════════════════════════════════════════════════════== */}
+      <section id="sobre" className="py-32 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <ScrollReveal>
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sobre nós</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Nascemos para{' '}
+              <span className="gradient-text">simplificar</span>{' '}
+              a web.
+            </h2>
+            <p className="text-neutral-400 leading-relaxed mb-4">
+              A Crably surgiu da frustração com um mercado cheio de promessas e poucas entregas. Freelancers que somem, agências que cobram caro demais e projetos que nunca terminam.
+            </p>
+            <p className="text-neutral-400 leading-relaxed mb-8">
+              Nossa missão é simples: desenvolver sites profissionais com pagamento único, entrega em 14 dias e processo 100% transparente. Do pagamento ao site no ar — sem surpresas.
+            </p>
+            <div className="flex flex-wrap gap-6">
+              {[
+                { label: 'Projetos entregues', value: '120+' },
+                { label: 'Clientes satisfeitos', value: '98%' },
+                { label: 'Prazo padrão', value: '14 dias' },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col">
+                  <span className="text-3xl font-bold text-white">{stat.value}</span>
+                  <span className="text-sm text-neutral-500 mt-0.5">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={2}>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: Rocket, title: 'Velocidade', desc: 'Sites entregues em até 14 dias. Com pacote express, em 7 dias — sem abrir mão da qualidade.' },
+                { icon: Heart, title: 'Cuidado', desc: 'Cada projeto é tratado como se fosse o nosso próprio negócio.' },
+                { icon: Globe, title: 'Alcance', desc: 'Atendemos empreendedores em todo o Brasil, 100% remoto.' },
+                { icon: ShieldCheck, title: 'Garantia', desc: 'Entrega garantida ou devolvemos seu dinheiro. Sem letras miúdas.' },
+              ].map((item, i) => (
+                <div key={i} className="bento-card p-6 flex flex-col gap-3">
+                  <item.icon size={24} className="text-brand" />
+                  <h4 className="font-semibold text-white text-sm">{item.title}</h4>
+                  <p className="text-xs text-neutral-500 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          NOSSA EQUIPE
+      ════════════════════════════════════════════════════════== */}
+      <section id="equipe" className="py-32 px-6 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <ScrollReveal className="text-center mb-16">
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">
+              Pessoas reais por trás de cada projeto
+            </h2>
+            <p className="text-neutral-400 mt-4 max-w-xl mx-auto">
+              Um time enxuto, especializado e apaixonado por entregar resultados de verdade.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: 'Oliver Cowley', role: 'Fundador & CEO', bio: 'Apaixonado por produtos digitais e experiências que convertem.' },
+              { name: 'Caio Guimarães', role: 'Design Lead', bio: 'Especialista em UI/UX com foco em interfaces de alta conversão.' },
+              { name: 'Gustavo Pavaneli', role: 'Fundador & CO-CEO', bio: 'Fullstack sênior com experiência em entregas ágeis e escaláveis.' },
+              { name: 'Fernanda Ramos', role: 'Customer Success', bio: 'Garante que cada cliente tenha a melhor experiência do início ao fim.' },
+            ].map((member, i) => (
+              <ScrollReveal key={i} delay={((i % 4) + 1) as 1 | 2 | 3 | 4}>
+                <div className="bento-card p-6 flex flex-col items-center text-center gap-4">
+                  <Image
+                    src={`https://api.dicebear.com/9.x/avataaars/png?seed=${encodeURIComponent(member.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=12`}
+                    alt={member.name}
+                    width={64}
+                    height={64}
+                    className="rounded-2xl"
+                  />
+                  <div>
+                    <p className="font-semibold text-white">{member.name}</p>
+                    <p className="text-xs text-brand mt-0.5">{member.role}</p>
+                  </div>
+                  <p className="text-xs text-neutral-500 leading-relaxed">{member.bio}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
           CTA FINAL
       ════════════════════════════════════════════════════════== */}
       <section className="py-32 px-6">
@@ -641,7 +806,7 @@ export default function HomePage() {
 
               <div className="relative z-10">
                 <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-6">
-                  Pronto para lançar?
+                  Pronto para começar?
                 </p>
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
                   Seu site está a{' '}
@@ -650,10 +815,9 @@ export default function HomePage() {
                   de distância.
                 </h2>
                 <p className="text-lg text-neutral-400 mb-10 max-w-lg mx-auto">
-                  Sem freelancers. Sem revisões infinitas. Um site premium entregue rápido,
-                  com preço fixo e garantia de entrega.
+                  Sem freelancers. Sem surpresas no preço. Pagamento único, site entregue em 14 dias — ou em 7 com prioridade express.
                 </p>
-                <Link href="/products">
+                <Link href="/login?mode=register">
                   <Button
                     size="lg"
                     className="glow-brand-sm hover:scale-105 transition-transform text-base px-10"

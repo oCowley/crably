@@ -7,7 +7,8 @@
       "Bash(npm install:*)",
       "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-path */lib/* -o -path */types/* \\\\\\) -print)",
       "Bash(ls:*)",
-      "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-name *auth* -o -name *user* -o -name *role* -o -name *firestore* \\\\\\) -print)"
+      "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-name *auth* -o -name *user* -o -name *role* -o -name *firestore* \\\\\\) -print)",
+      "Bash(npm run *)"
     ]
   }
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import AuthGuard from '@/components/auth/AuthGuard'
@@ -20,10 +21,8 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
         <header className="border-b border-white/5 bg-dark-card/50 backdrop-blur-xl">
           <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-brand flex items-center justify-center">
-                <span className="text-white font-bold text-xs">C</span>
-              </div>
-              <span className="font-bold text-white tracking-tight">cowly</span>
+              <Image src="/images/icone-crably.png" alt="Crably" width={28} height={28} className="rounded-lg" />
+              <span className="font-bold text-white tracking-tight">crably</span>
             </Link>
             <nav className="flex items-center gap-6">
               {profile?.name && (

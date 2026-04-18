@@ -267,7 +267,7 @@ function CreateDevModal({ onSuccess, onClose }: { onSuccess: () => void; onClose
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: João Silva" required className={inputCls} />
           </Field>
           <Field label="Email" required>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="dev@cowly.dev" required className={inputCls} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="dev@crably.dev" required className={inputCls} />
           </Field>
           <Field label="Senha" required>
             <PasswordInput value={password} onChange={setPassword} show={showPassword} onToggle={() => setShowPassword((p) => !p)} placeholder="Mínimo 6 caracteres" />

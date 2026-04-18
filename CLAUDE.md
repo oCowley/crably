@@ -1,9 +1,9 @@
 @AGENTS.md
-# Cowly
+# Crably
 
 ## Overview
 
-Cowly is a platform for selling ready-made website products with a fast ecommerce flow and internal project management.
+Crably is a platform for selling ready-made website products with a fast ecommerce flow and internal project management.
 
 The system has three main layers:
 

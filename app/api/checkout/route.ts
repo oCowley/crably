@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
             unit_amount: price,
             product_data: {
               name: productName,
-              description: 'Cowly — Premium website template',
+              description: 'Crably — Premium website template',
             },
           },
         },

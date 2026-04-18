@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard,
@@ -74,10 +75,8 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
           <Menu size={20} />
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-brand flex items-center justify-center">
-            <span className="text-white font-bold text-[10px]">C</span>
-          </div>
-          <span className="font-bold text-white text-sm tracking-tight">cowly</span>
+          <Image src="/images/icone-crably.png" alt="Crably" width={24} height={24} className="rounded-md" />
+          <span className="font-bold text-white text-sm tracking-tight">crably</span>
         </div>
       </header>
 
@@ -107,13 +106,11 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
           'h-16 flex items-center border-b border-white/5 px-4 shrink-0 gap-3',
           collapsed ? 'lg:justify-center lg:px-0' : '',
         ].join(' ')}>
-          <div className="w-8 h-8 rounded-xl bg-brand flex items-center justify-center shrink-0">
-            <span className="text-white font-bold text-sm">C</span>
-          </div>
+          <Image src="/images/icone-crably.png" alt="Crably" width={32} height={32} className="rounded-xl shrink-0" />
 
           {/* Label + role badge – hidden when collapsed */}
           <div className={`flex-1 min-w-0 transition-all duration-200 ${collapsed ? 'lg:hidden' : ''}`}>
-            <span className="font-bold text-white tracking-tight">cowly</span>
+            <span className="font-bold text-white tracking-tight">crably</span>
           </div>
 
           {/* Desktop collapse arrow */}

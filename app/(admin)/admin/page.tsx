@@ -133,7 +133,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Dashboard</h1>
-        <p className="text-neutral-500 text-sm">Visão geral da operação Cowly.</p>
+        <p className="text-neutral-500 text-sm">Visão geral da operação Crably.</p>
       </div>
 
       {/* Stat cards */}

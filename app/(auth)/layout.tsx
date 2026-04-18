@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,10 +7,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Minimal header */}
       <header className="px-6 h-16 flex items-center">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
-            <span className="text-white font-bold text-sm">C</span>
-          </div>
-          <span className="font-bold text-white text-lg tracking-tight">cowly</span>
+          <Image src="/images/icone-crably.png" alt="Crably" width={32} height={32} className="rounded-lg" />
+          <span className="font-bold text-white text-lg tracking-tight">crably</span>
         </Link>
       </header>
 
