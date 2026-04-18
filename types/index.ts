@@ -66,3 +66,46 @@ export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
   delivered: 'Entregue',
   completed: 'Concluído',
 }
+
+export type DashboardProjectStatus =
+  | 'pending_payment'
+  | 'aguardando'
+  | 'em_desenvolvimento'
+  | 'em_revisao'
+  | 'entregue'
+
+export const DASHBOARD_STATUS_LABELS: Record<DashboardProjectStatus, string> = {
+  pending_payment: 'Processando pagamento…',
+  aguardando: 'Aguardando início',
+  em_desenvolvimento: 'Em desenvolvimento',
+  em_revisao: 'Em revisão',
+  entregue: 'Entregue',
+}
+
+export interface CartItem {
+  id: string
+  productName: string
+  productType: string
+  projectName: string
+  briefing: string
+  reference: string
+  prazo: '14dias' | '7dias'
+  basePrice: number
+  finalPrice: number
+}
+
+export interface DashboardOrder {
+  id: string
+  userId: string
+  productName: string
+  productType: string
+  projectName: string
+  briefing: string
+  reference: string
+  prazo: '14dias' | '7dias'
+  price: number
+  status: DashboardProjectStatus
+  stripeSessionId: string
+  deliveryUrl: string | null
+  createdAt: Date
+}
