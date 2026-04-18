@@ -22,6 +22,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Button from '@/components/ui/Button'
 import ScrollReveal from '@/components/ui/ScrollReveal'
+import SitesGrid from '@/components/sections/SitesGrid'
 
 /* ──────────────────────────────────────────────────────────────
    Sub-components (server)
@@ -108,7 +109,7 @@ const BENTO = [
   {
     size: 'col-span-1 row-span-1',
     title: 'Design de alta conversão',
-    desc: 'Templates criados para converter visitantes em clientes.',
+    desc: 'Sites criados para converter visitantes em clientes.',
     icon: Target,
     accent: false,
   },
@@ -122,34 +123,10 @@ const BENTO = [
 ]
 
 const STEPS = [
-  { n: '01', title: 'Escolha o template', desc: 'Navegue pelo catálogo e encontre o estilo certo para o seu negócio.' },
+  { n: '01', title: 'Escolha o site', desc: 'Navegue pelo catálogo e encontre o estilo certo para o seu negócio.' },
   { n: '02', title: 'Finalize o pagamento', desc: 'Pagamento 100% adiantado via checkout seguro. Quer prioridade? Adicione o pacote express e receba em 7 dias.' },
   { n: '03', title: 'Acompanhe o projeto', desc: 'Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.' },
   { n: '04', title: 'Receba seu site', desc: 'Site entregue em até 14 dias. Com pacote express, em 7 dias. Pronto para publicar.' },
-]
-
-const TEMPLATES_PREVIEW = [
-  {
-    name: 'Agency Pro',
-    price: 'R$ 2.997',
-    tag: 'Mais popular',
-    desc: 'Landing page para agências criativas',
-    bg: 'linear-gradient(135deg, #1a0a00 0%, #2d1200 50%, #1a0800 100%)',
-  },
-  {
-    name: 'SaaS Launch',
-    price: 'R$ 1.997',
-    tag: null,
-    desc: 'Landing page moderna para SaaS',
-    bg: 'linear-gradient(135deg, #000d1a 0%, #001433 50%, #000a1a 100%)',
-  },
-  {
-    name: 'Negócio Local',
-    price: 'R$ 997',
-    tag: 'Melhor custo-benefício',
-    desc: 'Site profissional para negócios locais',
-    bg: 'linear-gradient(135deg, #0a0f00 0%, #141f00 50%, #0a0f00 100%)',
-  },
 ]
 
 /* ──────────────────────────────────────────────────────────────
@@ -245,7 +222,7 @@ export default function HomePage() {
                   size="lg"
                   className="w-full sm:w-auto glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
                 >
-                  Ver templates →
+                  Ver sites →
                 </Button>
               </Link>
               <Link href="#como-funciona">
@@ -472,7 +449,7 @@ export default function HomePage() {
                 <Target size={36} className="mb-4 text-brand" />
                 <h3 className="text-xl font-bold text-white mb-2">Design que converte</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
-                  Templates criados para transformar visitantes em clientes.
+                  Sites criados para transformar visitantes em clientes.
                 </p>
               </div>
             </ScrollReveal>
@@ -494,79 +471,16 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           TEMPLATES PREVIEW
       ════════════════════════════════════════════════════════== */}
-      <section id="templates" className="py-32 px-6 border-t border-white/5">
+      <section id="sites" className="py-32 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
-          <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-            <div>
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Templates</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
-                Feitos para converter
-              </h2>
-            </div>
-            <Link href="/products">
-              <Button variant="secondary" size="md" className="hover:scale-105 transition-transform">
-                Ver todos →
-              </Button>
-            </Link>
+          <ScrollReveal className="mb-16">
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sites</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">
+              Feitos para converter
+            </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {TEMPLATES_PREVIEW.map((t, i) => (
-              <ScrollReveal key={i} delay={(i + 1) as 1 | 2 | 3}>
-                <div className="group relative rounded-2xl border border-white/5 hover:border-brand/20 transition-all duration-400 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 overflow-hidden bg-dark-card cursor-pointer">
-                  {t.tag && (
-                    <span className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-brand/15 text-brand text-xs font-semibold border border-brand/20">
-                      {t.tag}
-                    </span>
-                  )}
-
-                  {/* Preview area */}
-                  <div className="h-52 relative overflow-hidden" style={{ background: t.bg }}>
-                    {/* Fake website content */}
-                    <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-60 group-hover:opacity-80 transition-opacity">
-                      <div className="space-y-2">
-                        <div className="h-4 w-2/3 rounded-lg bg-white/10" />
-                        <div className="h-2.5 w-full rounded bg-white/6" />
-                        <div className="h-2.5 w-5/6 rounded bg-white/6" />
-                        <div className="h-2.5 w-4/6 rounded bg-white/6" />
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="h-7 w-20 rounded-lg bg-brand/40 group-hover:bg-brand/60 transition-colors" />
-                        <div className="h-7 w-14 rounded-lg bg-white/6" />
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        {[0, 1, 2].map((n) => (
-                          <div key={n} className="h-12 rounded-lg bg-white/5" />
-                        ))}
-                      </div>
-                    </div>
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Link href="/products">
-                        <span className="px-5 py-2.5 rounded-xl bg-brand text-white text-sm font-semibold shadow-lg shadow-brand/30 hover:bg-brand-hover transition-colors">
-                          Ver detalhes
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="font-semibold text-white text-lg mb-1 group-hover:text-brand transition-colors">
-                      {t.name}
-                    </h3>
-                    <p className="text-sm text-neutral-500 mb-4">{t.desc}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-white">{t.price}</span>
-                      <Link href="/products">
-                        <Button size="sm">Comprar</Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+          <SitesGrid />
         </div>
       </section>
 

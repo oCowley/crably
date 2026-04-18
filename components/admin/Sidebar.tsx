@@ -28,7 +28,7 @@ interface SidebarProps {
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/pedidos', label: 'Pedidos', icon: Package },
-  { href: '/admin/templates', label: 'Templates', icon: Globe },
+  { href: '/admin/templates', label: 'Sites', icon: Globe },
   { href: '/admin/clientes', label: 'Clientes', icon: Users },
   { href: '/admin/tickets', label: 'Tickets', icon: MessageSquare },
   { href: '/admin/devs', label: 'Devs', icon: Code2 },

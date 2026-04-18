@@ -103,12 +103,12 @@ export default function DashboardPage() {
             </svg>
           </div>
           <h2 className="text-lg font-semibold text-white mb-2">Nenhum pedido ainda</h2>
-          <p className="text-sm text-neutral-400 mb-6">Explore nossos templates e comece o seu site.</p>
+          <p className="text-sm text-neutral-400 mb-6">Explore nossos sites e comece o seu projeto.</p>
           <Link
             href="/products"
             className="inline-flex items-center justify-center h-10 px-6 text-sm font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors"
           >
-            Ver templates
+            Ver sites
           </Link>
         </div>
       ) : (

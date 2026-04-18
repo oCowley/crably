@@ -13,7 +13,7 @@ The system has three main layers:
 
 ## Core Idea
 
-Users can browse website templates, purchase them online, and track project progress.
+Users can browse ready-made sites (portfolio models), purchase them online, and track project progress.
 
 The internal team manages projects and assigns work to developers.
 
@@ -42,7 +42,7 @@ The internal team manages projects and assigns work to developers.
 
 * Products have fixed scope
 * No custom development in MVP
-* Each order is tied to a template
+* Each order is tied to a site (portfolio model)
 * Limited customization
 * No unlimited revisions
 

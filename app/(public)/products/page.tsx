@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Templates',
-  description: 'Navegue pelos nossos templates de sites premium prontos para produção.',
+  title: 'Sites',
+  description: 'Navegue pelos nossos sites premium prontos para produção.',
 }
 
 const PRODUCTS = [
@@ -82,7 +82,7 @@ export default function ProductsPage() {
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">
-            Todos os templates
+            Todos os sites
           </p>
           <h1 className="text-5xl font-bold text-white mb-4">
             Feitos para converter

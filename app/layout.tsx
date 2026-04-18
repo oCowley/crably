@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     template: '%s | Crably',
   },
   description:
-    'A Crably entrega sites premium prontos para produção com design, desenvolvimento e entrega garantidos. Escolha um template, pague e acompanhe seu projeto.',
+    'A Crably entrega sites premium prontos para produção com design, desenvolvimento e entrega garantidos. Escolha um site, pague e acompanhe seu projeto.',
   openGraph: {
     title: 'Crably — Sites premium prontos para lançar',
     description:
-      'Templates de sites premium com design, desenvolvimento e entrega garantidos.',
+      'Sites premium com design, desenvolvimento e entrega garantidos.',
     type: 'website',
   },
 }

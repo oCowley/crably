@@ -80,7 +80,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-neutral-500 mb-12">
           <Link href="/products" className="hover:text-white transition-colors">
-            Templates
+            Sites
           </Link>
           <span>/</span>
           <span className="text-white">{product.name}</span>

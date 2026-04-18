@@ -50,7 +50,7 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               <p className="text-[10px] font-semibold text-neutral-600 uppercase tracking-widest mb-1">Navegação</p>
               {[
-                { href: '/#templates', label: 'Templates' },
+                { href: '/#sites', label: 'Sites' },
                 { href: '/#como-funciona', label: 'Como funciona' },
                 { href: '/#vantagens', label: 'Por que a Crably' },
                 { href: '/#avaliacoes', label: 'Avaliações' },

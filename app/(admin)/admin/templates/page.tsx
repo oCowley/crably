@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react'
 
-export const metadata: Metadata = { title: 'Admin — Templates' }
+export const metadata: Metadata = { title: 'Admin — Sites' }
 
 const TEMPLATES: {
   id: string
@@ -31,12 +31,12 @@ export default function TemplatesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Templates</h1>
-          <p className="text-neutral-500 text-sm">Gerencie os modelos disponíveis na loja.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Sites</h1>
+          <p className="text-neutral-500 text-sm">Gerencie os sites disponíveis na loja.</p>
         </div>
         <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-hover text-white text-sm font-semibold rounded-xl transition-colors shrink-0">
           <Plus size={16} />
-          Novo template
+          Novo site
         </button>
       </div>
 
