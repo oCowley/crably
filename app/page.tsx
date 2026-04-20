@@ -190,7 +190,7 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-6xl md:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
               <span className="block text-white overflow-hidden">
                 <WordReveal words={['Seu', 'site', 'no', 'ar', 'em']} baseDelay={200} />
               </span>
@@ -238,7 +238,7 @@ export default function HomePage() {
 
             {/* Stats */}
             <div
-              className="flex items-center gap-8 animate-fade-up"
+              className="flex flex-wrap items-center gap-6 animate-fade-up"
               style={{ animationDelay: '900ms' }}
             >
               {[
