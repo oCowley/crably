@@ -377,7 +377,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           BENTO GRID
       ════════════════════════════════════════════════════════== */}
-      <section id="vantagens" className="py-32 px-6">
+      <section id="vantagens" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Crably</p>
@@ -471,7 +471,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           TEMPLATES PREVIEW
       ════════════════════════════════════════════════════════== */}
-      <section id="sites" className="py-32 px-6 border-t border-white/5">
+      <section id="sites" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sites</p>
@@ -487,7 +487,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           HOW IT WORKS
       ════════════════════════════════════════════════════════== */}
-      <section id="como-funciona" className="py-32 px-6 border-t border-white/5">
+      <section id="como-funciona" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-20">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">O processo</p>
@@ -522,7 +522,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           AVALIAÇÕES
       ════════════════════════════════════════════════════════== */}
-      <section id="avaliacoes" className="py-32 px-6 border-t border-white/5">
+      <section id="avaliacoes" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Avaliações</p>
@@ -601,7 +601,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           SOBRE NÓS
       ════════════════════════════════════════════════════════== */}
-      <section id="sobre" className="py-32 px-6 border-t border-white/5">
+      <section id="sobre" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <ScrollReveal>
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sobre nós</p>
@@ -652,7 +652,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           NOSSA EQUIPE
       ════════════════════════════════════════════════════════== */}
-      <section id="equipe" className="py-32 px-6 border-t border-white/5">
+      <section id="equipe" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
@@ -695,7 +695,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════
           CTA FINAL
       ════════════════════════════════════════════════════════== */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <ScrollReveal>
             <div className="relative p-14 md:p-24 rounded-3xl bg-dark-card border border-white/5 text-center overflow-hidden">
