@@ -243,7 +243,7 @@ export default function SitesGrid() {
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl p-8 shadow-2xl shadow-black/60 overflow-hidden">
+          <div className="relative w-full max-w-md mx-4 sm:mx-auto bg-[#111111] border border-white/8 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/60 overflow-hidden">
             {/* Ambient glow */}
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
