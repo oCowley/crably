@@ -31,11 +31,11 @@ export default function Header() {
           <Image
             src="/images/icone-crably.png"
             alt="Crably"
-            width={48}
-            height={48}
+            width={64}
+            height={64}
             className="rounded-xl"
           />
-          <span className={`${spaceGrotesk.className} text-white text-3xl tracking-tight`}>crably</span>
+          <span className={`${spaceGrotesk.className} text-white text-4xl tracking-tight`}>crably</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
