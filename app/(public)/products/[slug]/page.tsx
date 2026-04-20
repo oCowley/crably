@@ -75,7 +75,7 @@ export default async function ProductDetailPage({ params }: Props) {
   }).format(product.price / 100)
 
   return (
-    <div className="pt-24 pb-32 px-6">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-neutral-500 mb-12">
@@ -86,9 +86,9 @@ export default async function ProductDetailPage({ params }: Props) {
           <span className="text-white">{product.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           {/* Left — Visual */}
-          <div className="sticky top-28">
+          <div className="lg:sticky lg:top-28">
             <div className="aspect-video rounded-2xl bg-dark-card border border-white/5 overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -106,7 +106,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {/* Right — Details */}
           <div>
-            <h1 className="text-4xl font-bold text-white mb-4">{product.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{product.name}</h1>
             <p className="text-neutral-400 leading-relaxed mb-8">{product.description}</p>
 
             {/* Features */}
