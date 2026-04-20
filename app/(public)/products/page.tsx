@@ -77,14 +77,14 @@ function formatPrice(cents: number) {
 
 export default function ProductsPage() {
   return (
-    <div className="pt-24 pb-32 px-6">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">
             Todos os sites
           </p>
-          <h1 className="text-5xl font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Feitos para converter
           </h1>
           <p className="text-lg text-neutral-400 max-w-xl mx-auto">
@@ -94,7 +94,7 @@ export default function ProductsPage() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {PRODUCTS.map((product) => (
             <div
               key={product.id}
