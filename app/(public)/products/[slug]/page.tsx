@@ -133,7 +133,7 @@ export default async function ProductDetailPage({ params }: Props) {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-sm text-neutral-500 mb-1">Preço fixo</p>
-                  <p className="text-4xl font-bold text-white">{price}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-white">{price}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-neutral-500 mb-1">Pagamento único</p>

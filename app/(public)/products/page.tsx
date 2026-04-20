@@ -80,7 +80,7 @@ export default function ProductsPage() {
     <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">
             Todos os sites
           </p>
