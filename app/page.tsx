@@ -246,7 +246,7 @@ export default function HomePage() {
                 { v: '14 dias', l: 'Prazo padrão' },
                 { v: '100%', l: 'Preço fixo' },
               ].map((s, i) => (
-                <div key={i} className={i > 0 ? 'border-l border-white/8 pl-8' : ''}>
+                <div key={i} className={i > 0 ? 'sm:border-l sm:border-white/8 sm:pl-6' : ''}>
                   <p className="text-2xl font-bold text-white">{s.v}</p>
                   <p className="text-xs text-neutral-500 mt-0.5">{s.l}</p>
                 </div>
