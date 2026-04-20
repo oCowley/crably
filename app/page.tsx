@@ -381,7 +381,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Crably</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white max-w-2xl mx-auto">
               Tudo que você precisa,{' '}
               <span className="gradient-text-subtle">sem complicação</span>
             </h2>
@@ -391,7 +391,7 @@ export default function HomePage() {
 
             {/* Card 1 — wide */}
             <ScrollReveal delay={1} className="md:col-span-2">
-              <div className="bento-card p-8 h-full min-h-[200px] relative overflow-hidden group">
+              <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] relative overflow-hidden group">
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(249,115,22,0.06) 0%, transparent 60%)' }}
@@ -418,7 +418,7 @@ export default function HomePage() {
 
             {/* Card 2 */}
             <ScrollReveal delay={2}>
-              <div className="bento-card p-8 h-full min-h-[200px] group relative overflow-hidden">
+              <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] group relative overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.05) 0%, transparent 70%)' }}
@@ -434,7 +434,7 @@ export default function HomePage() {
 
             {/* Card 3 */}
             <ScrollReveal delay={1}>
-              <div className="bento-card p-8 h-full min-h-[180px] group relative overflow-hidden">
+              <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                 <Radio size={36} className="mb-4 text-brand" />
                 <h3 className="text-xl font-bold text-white mb-2">Acompanhe em tempo real</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -445,7 +445,7 @@ export default function HomePage() {
 
             {/* Card 4 */}
             <ScrollReveal delay={2}>
-              <div className="bento-card p-8 h-full min-h-[180px] group relative overflow-hidden">
+              <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                 <Target size={36} className="mb-4 text-brand" />
                 <h3 className="text-xl font-bold text-white mb-2">Design que converte</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -456,7 +456,7 @@ export default function HomePage() {
 
             {/* Card 5 — wide */}
             <ScrollReveal delay={3} className="md:col-span-1">
-              <div className="bento-card p-8 h-full min-h-[180px] group relative overflow-hidden">
+              <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                 <ShieldCheck size={36} className="mb-4 text-brand" />
                 <h3 className="text-xl font-bold text-white mb-2">Sem dor de cabeça</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
@@ -491,7 +491,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-20">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">O processo</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white">Do zero ao ar em 4 passos</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">Do zero ao ar em 4 passos</h2>
           </ScrollReveal>
 
           <div className="relative">
@@ -501,8 +501,8 @@ export default function HomePage() {
             <div className="space-y-6">
               {STEPS.map((step, i) => (
                 <ScrollReveal key={i} delay={(i % 4 + 1) as 1 | 2 | 3 | 4}>
-                  <div className="flex gap-8 group">
-                    <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-dark-card border border-white/5 group-hover:border-brand/20 flex items-center justify-center transition-all duration-300 relative z-10">
+                  <div className="flex gap-4 sm:gap-8 group">
+                    <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-dark-card border border-white/5 group-hover:border-brand/20 flex items-center justify-center transition-all duration-300 relative z-10">
                       <span className="text-lg font-bold gradient-text-subtle">{step.n}</span>
                     </div>
                     <div className="flex-1 py-3">
@@ -526,7 +526,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Avaliações</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
               O que nossos clientes dizem
             </h2>
           </ScrollReveal>
@@ -571,7 +571,7 @@ export default function HomePage() {
               },
             ].map((review, i) => (
               <ScrollReveal key={i} delay={((i % 3) + 1) as 1 | 2 | 3}>
-                <div className="bento-card p-7 h-full flex flex-col gap-4">
+                <div className="bento-card p-5 lg:p-7 h-full flex flex-col gap-4">
                   <div className="flex gap-1">
                     {Array.from({ length: review.stars }).map((_, s) => (
                       <Star key={s} size={14} className="text-brand fill-brand" />
@@ -602,10 +602,10 @@ export default function HomePage() {
           SOBRE NÓS
       ════════════════════════════════════════════════════════== */}
       <section id="sobre" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <ScrollReveal>
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sobre nós</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
               Nascemos para{' '}
               <span className="gradient-text">simplificar</span>{' '}
               a web.
@@ -656,7 +656,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
               Pessoas reais por trás de cada projeto
             </h2>
             <p className="text-neutral-400 mt-4 max-w-xl mx-auto">
@@ -698,7 +698,7 @@ export default function HomePage() {
       <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <ScrollReveal>
-            <div className="relative p-14 md:p-24 rounded-3xl bg-dark-card border border-white/5 text-center overflow-hidden">
+            <div className="relative p-8 sm:p-14 md:p-24 rounded-3xl bg-dark-card border border-white/5 text-center overflow-hidden">
               {/* Ambient glow */}
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -722,7 +722,7 @@ export default function HomePage() {
                 <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-6">
                   Pronto para começar?
                 </p>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
                   Seu site está a{' '}
                   <span className="gradient-text">um clique</span>
                   <br />
