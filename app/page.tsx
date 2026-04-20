@@ -179,7 +179,7 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 w-full pt-4 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+        <div className="relative max-w-7xl mx-auto px-6 w-full pt-24 lg:pt-4 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
 
           {/* LEFT: Copy */}
           <div className="z-10">
