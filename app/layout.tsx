@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   },
   description:
     'A Crably entrega sites premium prontos para produção com design, desenvolvimento e entrega garantidos. Escolha um site, pague e acompanhe seu projeto.',
+  icons: {
+    icon: '/images/icone-crably.png',
+    apple: '/images/icone-crably.png',
+  },
   openGraph: {
     title: 'Crably — Sites premium prontos para lançar',
     description:
