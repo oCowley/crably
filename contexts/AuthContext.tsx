@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth'
+import { onAuthStateChanged, signOut, type User as FirebaseUser, reload } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { getUserProfile } from '@/lib/auth'
 import type { UserProfile } from '@/types'
@@ -11,6 +11,7 @@ interface AuthContextValue {
   profile: UserProfile | null
   loading: boolean
   logout: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextValue>({
   profile: null,
   loading: true,
   logout: async () => {},
+  refreshUser: async () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -43,8 +45,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signOut(auth)
   }
 
+  async function refreshUser() {
+    if (!auth.currentUser) return
+    await reload(auth.currentUser)
+    setUser({ ...auth.currentUser })
+  }
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, logout }}>
+    <AuthContext.Provider value={{ user, profile, loading, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

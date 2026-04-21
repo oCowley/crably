@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { ShoppingBag, FolderOpen, Settings, LogOut, X } from 'lucide-react'
+import { ShoppingBag, FolderOpen, Settings, LogOut, X, LifeBuoy } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const NAV = [
   { href: '/dashboard/contratar', label: 'Contratar site', icon: ShoppingBag },
   { href: '/dashboard/projetos', label: 'Meus projetos', icon: FolderOpen },
+  { href: '/dashboard/tickets', label: 'Suporte', icon: LifeBuoy },
   { href: '/dashboard/configuracoes', label: 'Configurações', icon: Settings },
 ]
 
@@ -54,7 +55,7 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
         ].join(' ')}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center gap-2.5 px-5 border-b border-white/5 shrink-0">
+        <div className="h-24 flex items-center gap-2.5 px-5 border-b border-white/5 shrink-0">
           <Image
             src="/images/icone-crably.png"
             alt="Crably"

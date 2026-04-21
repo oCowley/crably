@@ -1,13 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Plus, ExternalLink, Pencil, Trash2,
   X, Loader2, Link2, ImageIcon, Globe,
-  Eye, Minus, AlertCircle,
+  Eye, Minus, AlertCircle, Upload,
 } from 'lucide-react'
-import { collection, getDocs, addDoc } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { db, storage } from '@/lib/firebase'
 
 // ─── types ───────────────────────────────────────────────────────────────────
 
@@ -55,22 +56,129 @@ function SectionHeader({ icon: Icon, label }: { icon: React.ElementType; label: 
   )
 }
 
+// ─── image upload ─────────────────────────────────────────────────────────────
+
+type ImageEntry =
+  | { kind: 'existing'; url: string }
+  | { kind: 'pending'; file: File; localUrl: string }
+  | { kind: 'empty' }
+
+function ImageSlot({
+  entry,
+  onFileSelect,
+  onRemove,
+  canRemove,
+}: {
+  entry: ImageEntry
+  onFileSelect: (file: File) => void
+  onRemove: () => void
+  canRemove: boolean
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const preview =
+    entry.kind === 'existing' ? entry.url
+    : entry.kind === 'pending' ? entry.localUrl
+    : null
+
+  return (
+    <div className="relative group">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) onFileSelect(file)
+          e.target.value = ''
+        }}
+      />
+
+      {preview ? (
+        <div className="relative h-28 rounded-xl overflow-hidden border border-white/8 bg-white/[0.02]">
+          <img src={preview} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              title="Trocar imagem"
+              className="p-2 rounded-lg bg-black/70 text-white hover:bg-black/90 transition-colors"
+            >
+              <Upload size={13} />
+            </button>
+            {canRemove && (
+              <button
+                type="button"
+                onClick={onRemove}
+                title="Remover"
+                className="p-2 rounded-lg bg-black/70 text-red-400 hover:bg-black/90 transition-colors"
+              >
+                <X size={13} />
+              </button>
+            )}
+          </div>
+          {entry.kind === 'pending' && (
+            <span className="absolute bottom-2 left-2 text-[10px] bg-brand/80 text-white px-1.5 py-0.5 rounded-md font-medium">
+              novo
+            </span>
+          )}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="w-full h-28 rounded-xl border border-dashed border-white/15 bg-white/[0.02] hover:bg-white/[0.04] hover:border-brand/30 transition-all flex flex-col items-center justify-center gap-2 text-neutral-600 hover:text-neutral-400"
+        >
+          <Upload size={18} />
+          <span className="text-xs">Upload</span>
+        </button>
+      )}
+    </div>
+  )
+}
+
+async function uploadImages(slug: string, entries: ImageEntry[]): Promise<string[]> {
+  const urls: string[] = []
+  for (const entry of entries) {
+    if (entry.kind === 'existing') {
+      urls.push(entry.url)
+    } else if (entry.kind === 'pending') {
+      const ext = entry.file.name.split('.').pop() ?? 'jpg'
+      const path = `products/${slug}/${crypto.randomUUID()}.${ext}`
+      const snap = await uploadBytes(storageRef(storage, path), entry.file)
+      urls.push(await getDownloadURL(snap.ref))
+    }
+  }
+  return urls
+}
+
 // ─── modal ───────────────────────────────────────────────────────────────────
 
-function CreateProductModal({
+function ProductModal({
   onClose,
   onCreated,
+  onUpdated,
+  product,
 }: {
   onClose: () => void
-  onCreated: (p: ProductWithStats) => void
+  onCreated?: (p: ProductWithStats) => void
+  onUpdated?: (p: ProductWithStats) => void
+  product?: ProductWithStats
 }) {
-  const [name, setName] = useState('')
-  const [slug, setSlug] = useState('')
-  const [slugEdited, setSlugEdited] = useState(false)
-  const [price, setPrice] = useState('')
-  const [description, setDescription] = useState('')
-  const [images, setImages] = useState<string[]>([''])
-  const [refs, setRefs] = useState<Reference[]>([{ title: '', url: '' }])
+  const isEdit = !!product
+  const [name, setName] = useState(product?.name ?? '')
+  const [slug, setSlug] = useState(product?.slug ?? '')
+  const [slugEdited, setSlugEdited] = useState(isEdit)
+  const [price, setPrice] = useState<number | null>(product?.price ?? null)
+  const [description, setDescription] = useState(product?.description ?? '')
+  const [images, setImages] = useState<ImageEntry[]>(
+    product?.images?.length
+      ? product.images.map((url) => ({ kind: 'existing' as const, url }))
+      : [{ kind: 'empty' as const }]
+  )
+  const [refs, setRefs] = useState<Reference[]>(
+    product?.references?.length ? product.references : [{ title: '', url: '' }],
+  )
   const [previewUrl, setPreviewUrl] = useState('')
   const [iframeError, setIframeError] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -82,9 +190,11 @@ function CreateProductModal({
   }
 
   // images
-  const addImage = () => setImages((p) => [...p, ''])
-  const updateImage = (i: number, v: string) =>
-    setImages((p) => p.map((u, j) => (j === i ? v : u)))
+  const addImage = () => setImages((p) => [...p, { kind: 'empty' as const }])
+  const setImageFile = (i: number, file: File) => {
+    const localUrl = URL.createObjectURL(file)
+    setImages((p) => p.map((e, j) => j === i ? { kind: 'pending' as const, file, localUrl } : e))
+  }
   const removeImage = (i: number) => setImages((p) => p.filter((_, j) => j !== i))
 
   // refs
@@ -96,15 +206,15 @@ function CreateProductModal({
   function triggerPreview(url: string) {
     if (!url.trim()) return
     setIframeError(false)
-    setPreviewUrl(url.trim())
+    const normalized = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`
+    setPreviewUrl(normalized)
   }
 
   function validate() {
     const e: Record<string, string> = {}
     if (!name.trim()) e.name = 'Nome obrigatório.'
     if (!slug.trim()) e.slug = 'Slug obrigatório.'
-    if (!price.trim() || isNaN(Number(price)) || Number(price) <= 0)
-      e.price = 'Informe um preço válido.'
+    if (price === null || price <= 0) e.price = 'Informe um preço válido.'
     if (!description.trim()) e.description = 'Descrição obrigatória.'
     return e
   }
@@ -115,20 +225,27 @@ function CreateProductModal({
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
     try {
+      const currentSlug = slug.trim()
+      const uploadedImages = await uploadImages(currentSlug, images)
       const data = {
         name: name.trim(),
-        slug: slug.trim(),
-        price: Math.round(Number(price) * 100),
+        slug: currentSlug,
+        price: price!,
         description: description.trim(),
-        images: images.filter((u) => u.trim()),
+        images: uploadedImages,
         references: refs
           .filter((r) => r.url.trim())
           .map((r) => ({ title: r.title.trim(), url: r.url.trim() })),
       }
-      const ref = await addDoc(collection(db, 'products'), data)
-      onCreated({ id: ref.id, ...data, sales: 0 })
+      if (isEdit && product) {
+        await updateDoc(doc(db, 'products', product.id), data)
+        onUpdated?.({ id: product.id, ...data, sales: product.sales })
+      } else {
+        const ref = await addDoc(collection(db, 'products'), data)
+        onCreated?.({ id: ref.id, ...data, sales: 0 })
+      }
     } catch {
-      setErrors({ submit: 'Erro ao criar o site. Tente novamente.' })
+      setErrors({ submit: `Erro ao ${isEdit ? 'salvar' : 'criar'} o site. Tente novamente.` })
     } finally {
       setLoading(false)
     }
@@ -145,7 +262,7 @@ function CreateProductModal({
         {/* ── header ── */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 shrink-0">
           <div>
-            <h2 className="text-base font-bold text-white">Novo site</h2>
+            <h2 className="text-base font-bold text-white">{isEdit ? 'Editar site' : 'Novo site'}</h2>
             <p className="text-xs text-neutral-500 mt-0.5">
               Preencha os dados e adicione referências para preview do cliente
             </p>
@@ -204,12 +321,17 @@ function CreateProductModal({
                   </span>
                   <input
                     className={`${inputCls} pl-9`}
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="1997.00"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="0,00"
+                    value={price === null ? '' : (price / 100).toLocaleString('pt-BR', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, '')
+                      setPrice(digits ? parseInt(digits, 10) : null)
+                    }}
                   />
                 </div>
                 {errors.price && <p className="text-xs text-red-400">{errors.price}</p>}
@@ -231,33 +353,20 @@ function CreateProductModal({
             <div className="space-y-3">
               <SectionHeader icon={ImageIcon} label="Imagens" />
               <p className="text-[11px] text-neutral-600 -mt-1">
-                URLs das imagens exibidas na página do produto.
+                Imagens exibidas na página do produto. Fazem upload direto para o Firebase Storage.
               </p>
 
-              {images.map((url, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  {url && (
-                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/8">
-                      <img src={url} alt="" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  <input
-                    className={`${inputCls} flex-1`}
-                    placeholder="https://..."
-                    value={url}
-                    onChange={(e) => updateImage(i, e.target.value)}
+              <div className="grid grid-cols-2 gap-2">
+                {images.map((entry, i) => (
+                  <ImageSlot
+                    key={i}
+                    entry={entry}
+                    onFileSelect={(file) => setImageFile(i, file)}
+                    onRemove={() => removeImage(i)}
+                    canRemove={images.length > 1}
                   />
-                  {images.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="p-1.5 text-neutral-600 hover:text-red-400 transition-colors shrink-0"
-                    >
-                      <Minus size={14} />
-                    </button>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
 
               <button
                 type="button"
@@ -429,7 +538,9 @@ function CreateProductModal({
               className="inline-flex items-center gap-2 px-5 py-2 bg-brand hover:bg-brand-hover disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
-              {loading ? 'Criando...' : 'Criar site'}
+              {loading
+                ? (images.some((e) => e.kind === 'pending') ? 'Enviando imagens...' : (isEdit ? 'Salvando...' : 'Criando...'))
+                : (isEdit ? 'Salvar alterações' : 'Criar site')}
             </button>
           </div>
         </div>
@@ -444,6 +555,9 @@ export default function TemplatesPage() {
   const [products, setProducts] = useState<ProductWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
+  const [editProduct, setEditProduct] = useState<ProductWithStats | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<ProductWithStats | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -479,6 +593,23 @@ export default function TemplatesPage() {
     setShowCreate(false)
   }
 
+  function handleUpdated(product: ProductWithStats) {
+    setProducts((prev) => prev.map((p) => (p.id === product.id ? product : p)))
+    setEditProduct(null)
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return
+    setDeleting(true)
+    try {
+      await deleteDoc(doc(db, 'products', deleteTarget.id))
+      setProducts((prev) => prev.filter((p) => p.id !== deleteTarget.id))
+      setDeleteTarget(null)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   const totalVendas = products.reduce((s, p) => s + p.sales, 0)
   const semVendas = products.filter((p) => p.sales === 0).length
 
@@ -493,10 +624,55 @@ export default function TemplatesPage() {
   return (
     <div className="space-y-8">
       {showCreate && (
-        <CreateProductModal
+        <ProductModal
           onClose={() => setShowCreate(false)}
           onCreated={handleCreated}
         />
+      )}
+
+      {editProduct && (
+        <ProductModal
+          product={editProduct}
+          onClose={() => setEditProduct(null)}
+          onUpdated={handleUpdated}
+        />
+      )}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={() => setDeleteTarget(null)} />
+          <div className="relative w-full max-w-sm bg-[#0e0e0e] border border-white/8 rounded-2xl shadow-2xl p-6 space-y-5 animate-fade-up">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-red-400/10 border border-red-400/10 flex items-center justify-center shrink-0">
+                <Trash2 size={16} className="text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">Remover site</h3>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Tem certeza que deseja remover{' '}
+                  <span className="text-neutral-300 font-medium">{deleteTarget.name}</span>?
+                  Esta ação não pode ser desfeita.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                {deleting && <Loader2 size={13} className="animate-spin" />}
+                {deleting ? 'Removendo...' : 'Remover'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Header */}
@@ -539,17 +715,22 @@ export default function TemplatesPage() {
           {products.map((product) => (
             <div key={product.id} className="bento-card p-5 flex flex-col gap-4">
               {/* Preview */}
-              <div className="h-36 rounded-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/5 flex items-center justify-center relative overflow-hidden">
+              <div className="aspect-[4/3] rounded-xl bg-[#0d0d0d] border border-white/5 relative overflow-hidden">
                 {product.images?.[0] ? (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover rounded-xl"
-                  />
+                  <>
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover object-top"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111111] to-transparent pointer-events-none" />
+                  </>
                 ) : (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
-                    <span className="text-neutral-600 text-xs font-medium relative z-10">Preview</span>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-neutral-600 text-xs font-medium">Sem imagem</span>
+                    </div>
                   </>
                 )}
                 <a
@@ -593,11 +774,17 @@ export default function TemplatesPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-2 pt-1 border-t border-white/5">
-                <button className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <button
+                  onClick={() => setEditProduct(product)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
                   <Pencil size={13} />
                   Editar
                 </button>
-                <button className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-red-400/70 hover:text-red-400 hover:bg-red-400/5 rounded-lg transition-colors">
+                <button
+                  onClick={() => setDeleteTarget(product)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-red-400/70 hover:text-red-400 hover:bg-red-400/5 rounded-lg transition-colors"
+                >
                   <Trash2 size={13} />
                   Remover
                 </button>

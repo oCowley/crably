@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { sendPasswordResetEmail } from 'firebase/auth'
-import { Camera } from 'lucide-react'
-import { db, auth } from '@/lib/firebase'
+import { sendPasswordResetEmail, updateProfile } from 'firebase/auth'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { Camera, Loader2 } from 'lucide-react'
+import { db, auth, storage } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import { maskDocument, maskPhone } from '@/lib/masks'
 
@@ -31,7 +32,7 @@ const inputDisabled =
   'w-full h-9 px-3 rounded-lg bg-white/[0.02] border border-white/5 text-neutral-600 text-sm cursor-not-allowed select-none'
 
 export default function ConfiguracoesPage() {
-  const { user, profile, logout } = useAuth()
+  const { user, profile, logout, refreshUser } = useAuth()
   const router = useRouter()
 
   const [form, setForm] = useState<FormData>({ cpf: '', phone: '', birthDate: '' })
@@ -39,6 +40,9 @@ export default function ConfiguracoesPage() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [passwordSent, setPasswordSent] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [localPhotoUrl, setLocalPhotoUrl] = useState<string | null>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   const uid = user?.uid
 
@@ -96,6 +100,29 @@ export default function ConfiguracoesPage() {
     setTimeout(() => setPasswordSent(false), 5000)
   }
 
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !user) return
+    e.target.value = ''
+
+    const preview = URL.createObjectURL(file)
+    setLocalPhotoUrl(preview)
+    setUploadingPhoto(true)
+    try {
+      const ext = file.name.split('.').pop() ?? 'jpg'
+      const path = `users/${user.uid}/avatar.${ext}`
+      const snap = await uploadBytes(storageRef(storage, path), file)
+      const url = await getDownloadURL(snap.ref)
+      await updateProfile(user, { photoURL: url })
+      await setDoc(doc(db, 'users', user.uid), { photoURL: url }, { merge: true })
+      await refreshUser()
+    } catch {
+      setLocalPhotoUrl(null)
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
   async function handleLogout() {
     await logout()
     router.push('/')
@@ -107,134 +134,123 @@ export default function ConfiguracoesPage() {
 
   if (loadingData) {
     return (
-      <div className="max-w-3xl">
+      <div>
         <div className="h-7 w-36 bg-white/5 rounded-lg animate-pulse mb-6" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2 h-64 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
-          <div className="space-y-4">
-            <div className="h-28 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
-            <div className="h-24 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+          <div className="h-72 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
+          <div className="h-72 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
         </div>
+        <div className="h-20 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl">
+    <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Configurações</h1>
-        <p className="text-neutral-400 mt-1 text-sm">
-          Gerencie seus dados e preferências
-        </p>
+        <p className="text-neutral-400 mt-1 text-sm">Gerencie seus dados e preferências</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      {/* Linha 1 — Dados pessoais + Segurança lado a lado */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+
         {/* Dados pessoais */}
-        <section className="lg:col-span-2 p-5 bg-[#111111] rounded-2xl border border-white/5">
+        <section className="p-5 bg-[#111111] rounded-2xl border border-white/5 flex flex-col">
           <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">
             Dados pessoais
           </h2>
 
-          {/* Foto de perfil — placeholder para implementação futura */}
           <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/5">
-            <div className="relative group">
-              <div className="w-16 h-16 rounded-full bg-brand/10 border-2 border-dashed border-brand/30 flex items-center justify-center shrink-0">
-                {user?.photoURL ? (
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
+            <button
+              type="button"
+              onClick={() => photoInputRef.current?.click()}
+              disabled={uploadingPhoto}
+              className="relative group shrink-0 w-14 h-14 rounded-full focus:outline-none"
+            >
+              <div className="w-14 h-14 rounded-full bg-brand/10 border-2 border-dashed border-brand/30 flex items-center justify-center overflow-hidden">
+                {localPhotoUrl || user?.photoURL ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={user.photoURL}
+                    src={localPhotoUrl ?? user!.photoURL!}
                     alt=""
-                    className="w-full h-full rounded-full object-cover"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-xl font-bold text-brand/60">{initials}</span>
+                  <span className="text-lg font-bold text-brand/60">{initials}</span>
                 )}
               </div>
-              {/* Overlay de câmera */}
-              <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-not-allowed">
-                <Camera size={16} className="text-white/60" />
+              <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                {uploadingPhoto
+                  ? <Loader2 size={15} className="text-white animate-spin" />
+                  : <Camera size={15} className="text-white" />
+                }
               </div>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-white">{profile?.name}</p>
-              <p className="text-xs text-neutral-500 mt-0.5">{user?.email}</p>
-              <p className="text-xs text-neutral-700 mt-1.5 flex items-center gap-1">
-                <Camera size={11} />
-                Upload de foto — em breve
+            </button>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-white truncate">{profile?.name}</p>
+              <p className="text-xs text-neutral-500 mt-0.5 truncate">{user?.email}</p>
+              <p className="text-xs text-neutral-600 mt-1.5">
+                {uploadingPhoto ? 'Enviando foto...' : 'Clique no avatar para trocar a foto'}
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleSave} className="space-y-3">
-            {/* Nome + Email — bloqueados */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <form onSubmit={handleSave} className="space-y-3 flex-1 flex flex-col">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Nome</Label>
-                <input
-                  disabled
-                  value={profile?.name ?? ''}
-                  title="O nome é definido no cadastro"
-                  className={inputDisabled}
-                />
+                <input disabled value={profile?.name ?? ''} className={inputDisabled} />
               </div>
               <div>
                 <Label>Email</Label>
-                <input
-                  disabled
-                  value={user?.email ?? ''}
-                  title="O email não pode ser alterado"
-                  className={inputDisabled}
-                />
+                <input disabled value={user?.email ?? ''} className={inputDisabled} />
               </div>
             </div>
 
-            {/* CPF + Nascimento */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label required>CPF ou CNPJ</Label>
                 <input
                   required
                   value={form.cpf}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, cpf: maskDocument(e.target.value) }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, cpf: maskDocument(e.target.value) }))}
                   placeholder="000.000.000-00"
                   inputMode="numeric"
                   className={inputBase}
                 />
               </div>
               <div>
-                <Label required>Data de nascimento</Label>
+                <Label required>Nascimento</Label>
                 <input
                   required
                   type="date"
                   value={form.birthDate}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, birthDate: e.target.value }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, birthDate: e.target.value }))}
                   className={`${inputBase} [color-scheme:dark]`}
                 />
               </div>
             </div>
 
-            {/* Telefone */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <Label>Telefone</Label>
-                <input
-                  value={form.phone}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, phone: maskPhone(e.target.value) }))
-                  }
-                  placeholder="(11) 99999-9999"
-                  inputMode="numeric"
-                  className={inputBase}
-                />
-              </div>
+            <div>
+              <Label>Telefone</Label>
+              <input
+                value={form.phone}
+                onChange={(e) => setForm((p) => ({ ...p, phone: maskPhone(e.target.value) }))}
+                placeholder="(11) 99999-9999"
+                inputMode="numeric"
+                className={inputBase}
+              />
             </div>
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-3 pt-2 mt-auto">
               <button
                 type="submit"
                 disabled={saving}
@@ -249,43 +265,74 @@ export default function ConfiguracoesPage() {
           </form>
         </section>
 
-        {/* Coluna direita */}
-        <div className="flex flex-col gap-4">
-          {/* Segurança */}
-          <section className="p-4 bg-[#111111] rounded-2xl border border-white/5 flex-1">
-            <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1">
-              Segurança
-            </h2>
-            <p className="text-xs text-neutral-600 mb-3 leading-relaxed">
-              Enviaremos um link de redefinição para{' '}
-              <span className="text-neutral-400">{user?.email}</span>.
-            </p>
-            <button
-              onClick={handlePasswordReset}
-              disabled={passwordSent}
-              className="w-full h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-colors disabled:opacity-60"
-            >
-              {passwordSent ? '✓ Email enviado' : 'Alterar senha'}
-            </button>
-          </section>
+        {/* Segurança */}
+        <section className="p-5 bg-[#111111] rounded-2xl border border-white/5 flex flex-col">
+          <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">
+            Segurança
+          </h2>
 
-          {/* Sessão */}
-          <section className="p-4 bg-[#111111] rounded-2xl border border-red-500/10">
+          <div className="flex-1 flex flex-col justify-between gap-6">
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <p className="text-sm font-medium text-white mb-1">Redefinir senha</p>
+                <p className="text-xs text-neutral-500 leading-relaxed">
+                  Enviaremos um link de redefinição para{' '}
+                  <span className="text-neutral-300">{user?.email}</span>.
+                </p>
+                <button
+                  onClick={handlePasswordReset}
+                  disabled={passwordSent}
+                  className="mt-3 h-9 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-colors disabled:opacity-60"
+                >
+                  {passwordSent ? '✓ Email enviado' : 'Enviar link'}
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <p className="text-sm font-medium text-white mb-1">Autenticação</p>
+                <p className="text-xs text-neutral-500 leading-relaxed">
+                  Login via provedor{' '}
+                  <span className="text-neutral-300 font-medium">
+                    {user?.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email/senha'}
+                  </span>.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <p className="text-sm font-medium text-white mb-1">Última atividade</p>
+                <p className="text-xs text-neutral-500">
+                  Conta criada em{' '}
+                  <span className="text-neutral-300">
+                    {user?.metadata?.creationTime
+                      ? new Date(user.metadata.creationTime).toLocaleDateString('pt-BR')
+                      : '—'}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Linha 2 — Sessão esticada full width */}
+      <section className="p-5 bg-[#111111] rounded-2xl border border-red-500/10">
+        <div className="flex items-center justify-between gap-6 flex-wrap">
+          <div>
             <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1">
               Sessão
             </h2>
-            <p className="text-xs text-neutral-600 mb-3 leading-relaxed">
-              Encerra sua sessão e retorna à página inicial.
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Encerra sua sessão atual e retorna à página inicial.
             </p>
-            <button
-              onClick={handleLogout}
-              className="w-full h-9 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-sm font-semibold transition-colors"
-            >
-              Sair da conta
-            </button>
-          </section>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="shrink-0 h-9 px-5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-sm font-semibold transition-colors"
+          >
+            Sair da conta
+          </button>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

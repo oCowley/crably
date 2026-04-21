@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import AdminSidebar from '@/components/admin/Sidebar'
+import { usePresence } from '@/hooks/usePresence'
+
+function PresenceTracker() {
+  usePresence()
+  return null
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
@@ -21,6 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <AuthGuard allowedRoles={['admin', 'developer']}>
+      <PresenceTracker />
       <div className="min-h-screen bg-[#0B0B0B]">
         <AdminSidebar collapsed={collapsed} onToggle={toggle} />
 

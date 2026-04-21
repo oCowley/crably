@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import {
   ImageIcon, X, ShoppingCart, ExternalLink,
-  AlertCircle, Link2, ChevronLeft, ChevronRight, Eye, Sparkles,
+  Link2, Eye, Sparkles, Globe,
 } from 'lucide-react'
 import ConfigurarPedidoModal from '@/components/dashboard/ConfigurarPedidoModal'
 import { useCart } from '@/contexts/CartContext'
@@ -24,36 +24,118 @@ interface Product {
   references: Reference[]
 }
 
-type MediaItem =
-  | { kind: 'image'; url: string; label: string }
-  | { kind: 'ref';   url: string; label: string }
-
 // ─── helpers ─────────────────────────────────────────────────────────────────
+
+function normalizeUrl(url: string): string {
+  if (!url) return url
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`
+}
+
+function toDomain(url: string): string {
+  try { return new URL(normalizeUrl(url)).hostname.replace('www.', '') }
+  catch { return url }
+}
 
 function fmt(cents: number) {
   return (cents / 100).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   })
-
 }
 
 function discounted(cents: number, pct: number) {
   return Math.round(cents * (1 - pct / 100))
 }
 
-function buildMedia(product: Product): MediaItem[] {
-  return [
-    ...(product.images ?? []).map((url, i) => ({ kind: 'image' as const, url, label: `Imagem ${i + 1}` })),
-    ...(product.references ?? []).map((r, i) => ({ kind: 'ref' as const, url: r.url, label: r.title || `Exemplo ${i + 1}` })),
-  ]
+// ─── model card ───────────────────────────────────────────────────────────────
+
+function ModelCard({ title, url }: { title: string; url: string }) {
+  const [blocked, setBlocked] = useState(false)
+  const normalized = normalizeUrl(url)
+  const domain = toDomain(url)
+
+  return (
+    <div className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/8 bg-[#111] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/70 hover:border-white/15">
+
+      {/* ── browser chrome ── */}
+      <div className="shrink-0 flex items-center gap-3 px-3.5 py-2.5 bg-[#191919] border-b border-white/[0.07]">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+        </div>
+        <div className="flex-1 flex items-center gap-1.5 bg-white/[0.06] rounded-md px-2.5 py-1 min-w-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-400/70 shrink-0" />
+          <span className="text-[11px] text-neutral-500 truncate font-mono leading-none">{domain}</span>
+        </div>
+      </div>
+
+      {/* ── iframe preview ── */}
+      <div className="relative overflow-hidden" style={{ height: 180 }}>
+        {!blocked ? (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <iframe
+              src={normalized}
+              className="border-0 absolute top-0 left-0"
+              title={title || domain}
+              onError={() => setBlocked(true)}
+              style={{
+                width: 1280,
+                height: 720,
+                transform: 'scale(0.25)',
+                transformOrigin: 'top left',
+              }}
+            />
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#111]">
+            <Globe size={26} className="text-neutral-700" />
+            <p className="text-xs text-neutral-600 font-mono">{domain}</p>
+          </div>
+        )}
+
+        {/* bottom fade */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#111] via-[#111]/60 to-transparent pointer-events-none z-10" />
+
+        {/* hover overlay */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-all duration-300 opacity-0 group-hover:opacity-100">
+          <a
+            href={normalized}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black text-xs font-bold shadow-xl scale-90 group-hover:scale-100 transition-transform duration-300"
+          >
+            <ExternalLink size={13} />
+            Abrir site
+          </a>
+        </div>
+      </div>
+
+      {/* ── footer ── */}
+      <div className="px-4 py-3 flex items-center justify-between gap-2 bg-[#111]">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-white truncate">{title || domain}</p>
+          <p className="text-[11px] text-neutral-600 mt-0.5 truncate">{domain}</p>
+        </div>
+        <a
+          href={normalized}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 p-2 rounded-lg text-neutral-600 hover:text-white hover:bg-white/8 transition-colors"
+        >
+          <ExternalLink size={13} />
+        </a>
+      </div>
+    </div>
+  )
 }
 
-// ─── gallery modal ────────────────────────────────────────────────────────────
+// ─── portfolio modal ──────────────────────────────────────────────────────────
 
-function GalleryModal({
+function PortfolioModal({
   product,
   isFirstPurchase,
   onClose,
@@ -64,188 +146,84 @@ function GalleryModal({
   onClose: () => void
   onAddToCart: () => void
 }) {
-  const media = buildMedia(product)
-  const [active, setActive] = useState(0)
-  const [iframeError, setIframeError] = useState(false)
-  const current = media[active]
-
-  function go(delta: number) {
-    setIframeError(false)
-    setActive((i) => (i + delta + media.length) % media.length)
-  }
-
-  function select(i: number) {
-    setIframeError(false)
-    setActive(i)
-  }
-
   const displayPrice = isFirstPurchase ? discounted(product.price, 30) : product.price
+  const refs = product.references ?? []
+  const imgs = product.images ?? []
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
       <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-6xl bg-[#0b0b0b] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
+        className="relative w-full max-w-5xl bg-[#0b0b0b] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
         style={{ maxHeight: '94vh' }}
       >
-        {/* top bar */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06] shrink-0">
-          <span className="text-sm font-semibold text-white">{product.name}</span>
-          <div className="flex items-center gap-3">
-            {current && (
-              <a href={current.url} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-white transition-colors">
-                <ExternalLink size={12} /> Abrir
-              </a>
-            )}
-            <button onClick={onClose}
-              className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors">
-              <X size={15} />
-            </button>
+        {/* header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] shrink-0">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <Link2 size={14} className="text-brand" />
+              <h2 className="text-base font-bold text-white">Portfólio de modelos</h2>
+            </div>
+            <p className="text-xs text-neutral-500 mt-0.5">{product.name}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+          >
+            <X size={15} />
+          </button>
+        </div>
+
+        {/* body — scrollable */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-8">
+
+
+
+            {/* models grid */}
+            <div className="space-y-3">
+              <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-widest">
+                Nossos modelos de projeto — {refs.length} {refs.length === 1 ? 'exemplar' : 'exemplares'}
+              </p>
+
+              {refs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-3">
+                  <Globe size={32} className="text-neutral-700" />
+                  <p className="text-sm text-neutral-600">Nenhum modelo disponível ainda.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {refs.map((r, i) => (
+                    <ModelCard key={i} title={r.title} url={r.url} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* body */}
-        <div className="flex flex-1 overflow-hidden min-h-0">
-
-          {/* main preview */}
-          <div className="flex-1 flex flex-col bg-[#070707] min-w-0 overflow-hidden">
-            <div className="flex-1 relative overflow-hidden">
-              {media.length === 0 && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  <ImageIcon size={36} className="text-neutral-700" />
-                  <p className="text-sm text-neutral-600">Nenhuma mídia disponível.</p>
-                </div>
-              )}
-              {current?.kind === 'image' && (
-                <img src={current.url} alt={current.label} className="w-full h-full object-contain" />
-              )}
-              {current?.kind === 'ref' && !iframeError && (
-                <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute top-0 left-0 origin-top-left"
-                    style={{ width: '200%', height: '200%', transform: 'scale(0.5)' }}>
-                    <iframe key={current.url} src={current.url} className="w-full h-full border-0"
-                      title={current.label} onError={() => setIframeError(true)} />
-                  </div>
-                </div>
-              )}
-              {current?.kind === 'ref' && iframeError && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-10">
-                  <div className="w-14 h-14 rounded-2xl bg-red-400/10 border border-red-400/10 flex items-center justify-center">
-                    <AlertCircle size={24} className="text-red-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-300">Preview bloqueado</p>
-                    <p className="text-xs text-neutral-600 mt-1">Este site não permite incorporação via iframe.</p>
-                  </div>
-                  <a href={current.url} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-brand/30 text-brand text-sm font-medium hover:bg-brand/10 transition-colors">
-                    <ExternalLink size={13} /> Abrir em nova aba
-                  </a>
-                </div>
-              )}
-              {media.length > 1 && (
-                <>
-                  <button onClick={() => go(-1)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-white flex items-center justify-center transition-colors backdrop-blur-sm">
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button onClick={() => go(1)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-white flex items-center justify-center transition-colors backdrop-blur-sm">
-                    <ChevronRight size={16} />
-                  </button>
-                </>
-              )}
-              {media.length > 0 && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-xs text-neutral-400">
-                  {active + 1} / {media.length}
-                </div>
-              )}
-            </div>
-
-            {/* thumbnail strip */}
-            {media.length > 1 && (
-              <div className="shrink-0 border-t border-white/[0.06] p-3 flex gap-2 overflow-x-auto bg-[#090909]">
-                {media.map((item, i) => (
-                  <button key={i} onClick={() => select(i)} title={item.label}
-                    className={[
-                      'shrink-0 w-20 h-14 rounded-xl overflow-hidden border-2 transition-all',
-                      i === active ? 'border-brand shadow-md shadow-brand/20' : 'border-white/[0.07] hover:border-white/20',
-                    ].join(' ')}>
-                    {item.kind === 'image' ? (
-                      <img src={item.url} alt={item.label} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-white/[0.03] flex flex-col items-center justify-center gap-1">
-                        <Link2 size={14} className={i === active ? 'text-brand' : 'text-neutral-600'} />
-                        <span className="text-[9px] text-neutral-600 px-1 truncate w-full text-center">{item.label}</span>
-                      </div>
-                    )}
-                  </button>
-                ))}
+        {/* sticky footer — price + CTA */}
+        <div className="shrink-0 border-t border-white/[0.06] bg-[#0b0b0b] px-6 py-4 flex items-center justify-between gap-6">
+          <div>
+            <p className="text-[10px] text-neutral-600 uppercase tracking-widest font-medium">A partir de</p>
+            {isFirstPurchase ? (
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="text-2xl font-bold text-brand">{fmt(displayPrice)}</span>
+                <span className="text-sm text-neutral-600 line-through">{fmt(product.price)}</span>
+                <span className="text-xs font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">−30%</span>
               </div>
+            ) : (
+              <p className="text-2xl font-bold text-brand mt-0.5">{fmt(product.price)}</p>
             )}
           </div>
-
-          {/* right panel */}
-          <div className="w-64 shrink-0 flex flex-col border-l border-white/[0.06] overflow-y-auto">
-            <div className="flex-1 p-5 flex flex-col gap-5">
-              <div>
-                <h2 className="text-lg font-bold text-white leading-snug">{product.name}</h2>
-                <p className="text-xs text-neutral-500 mt-2 leading-relaxed line-clamp-4">{product.description}</p>
-
-                <div className="mt-5">
-                  <p className="text-[10px] text-neutral-600 uppercase tracking-widest font-medium mb-1">A partir de</p>
-                  {isFirstPurchase ? (
-                    <div>
-                      <p className="text-sm text-neutral-600 line-through">{fmt(product.price)}</p>
-                      <p className="text-3xl font-bold text-brand">{fmt(displayPrice)}</p>
-                      <p className="text-xs text-green-400 font-semibold mt-1">Desconto de 30% aplicado ✓</p>
-                    </div>
-                  ) : (
-                    <p className="text-3xl font-bold text-brand">{fmt(product.price)}</p>
-                  )}
-                </div>
-              </div>
-
-              <button
-                onClick={() => { onClose(); onAddToCart() }}
-                className="w-full h-12 rounded-xl bg-brand hover:bg-brand-hover text-white text-sm font-bold transition-all inline-flex items-center justify-center gap-2 shadow-lg shadow-brand/30 hover:shadow-brand/50 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <ShoppingCart size={15} />
-                Adicionar ao carrinho
-              </button>
-
-              <div className="space-y-1">
-                {(product.images?.length ?? 0) > 0 && (
-                  <div className="flex items-center justify-between py-2 border-b border-white/[0.05]">
-                    <span className="text-xs text-neutral-500">Imagens</span>
-                    <span className="text-xs font-medium text-neutral-300">{product.images.length}</span>
-                  </div>
-                )}
-                {(product.references?.length ?? 0) > 0 && (
-                  <div className="flex items-center justify-between py-2 border-b border-white/[0.05]">
-                    <span className="text-xs text-neutral-500">Exemplos</span>
-                    <span className="text-xs font-medium text-neutral-300">{product.references.length}</span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-xs text-neutral-500">Página pública</span>
-                  <a href={`/products/${product.slug}`} target="_blank" rel="noopener noreferrer"
-                    className="text-xs font-medium text-brand hover:underline">Ver →</a>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-white/[0.025] border border-white/[0.05] p-3.5 space-y-2.5 mt-auto">
-                {['Entrega em até 14 dias', 'Suporte no período de entrega', 'Express em 7 dias (+50%)'].map((item) => (
-                  <div key={item} className="flex items-center gap-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
-                    <span className="text-[11px] text-neutral-400 leading-tight">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => { onClose(); onAddToCart() }}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand hover:bg-brand-hover text-white text-sm font-bold transition-all shadow-lg shadow-brand/30 hover:shadow-brand/50 hover:scale-[1.02] active:scale-[0.98] shrink-0"
+          >
+            <ShoppingCart size={15} />
+            Adicionar ao carrinho
+          </button>
         </div>
       </div>
     </div>
@@ -378,11 +356,21 @@ export default function ContratarPage() {
                 className="flex flex-col rounded-2xl border bg-[#111111] border-white/5 hover:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 overflow-hidden"
               >
                 {/* image */}
-                <div className="h-48 bg-gradient-to-br from-white/[0.04] to-transparent flex items-center justify-center overflow-hidden shrink-0 relative">
+                <div className="aspect-[4/3] relative overflow-hidden shrink-0 bg-[#0d0d0d]">
                   {product.images?.[0] ? (
-                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                    <>
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      {/* fade para o card */}
+                      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111111] to-transparent" />
+                    </>
                   ) : (
-                    <ImageIcon size={28} className="text-neutral-700" />
+                    <div className="w-full h-full flex items-center justify-center">
+                      <ImageIcon size={28} className="text-neutral-700" />
+                    </div>
                   )}
 
                   {/* first purchase badge */}
@@ -393,11 +381,6 @@ export default function ContratarPage() {
                     </div>
                   )}
 
-                  {hasMedia && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                      <span className="text-xs font-medium text-white/70">Clique para ver galeria</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* content */}
@@ -425,16 +408,16 @@ export default function ContratarPage() {
                     {hasMedia && (
                       <button
                         onClick={() => setGallery(product)}
-                        className="flex items-center justify-center gap-1.5 h-10 px-3 rounded-xl border border-white/10 hover:border-white/20 text-neutral-400 hover:text-white text-xs font-medium transition-colors shrink-0"
+                        className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-xl bg-white hover:bg-neutral-100 text-black text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0"
                       >
-                        <Eye size={13} />
+                        <Eye size={14} />
                         Ver exemplos
                       </button>
                     )}
                     <button
                       onClick={() => setConfiguring(product)}
                       className={[
-                        'flex items-center justify-center gap-2 h-10 rounded-xl text-white text-sm font-bold transition-all',
+                        'flex items-center justify-center gap-2 h-11 rounded-xl text-white text-sm font-bold transition-all',
                         'bg-brand hover:bg-brand-hover shadow-lg shadow-brand/20 hover:shadow-brand/40 hover:scale-[1.02] active:scale-[0.98]',
                         hasMedia ? 'flex-1' : 'w-full',
                       ].join(' ')}
@@ -451,7 +434,7 @@ export default function ContratarPage() {
       )}
 
       {gallery && (
-        <GalleryModal
+        <PortfolioModal
           product={gallery}
           isFirstPurchase={isFirstPurchase}
           onClose={() => setGallery(null)}

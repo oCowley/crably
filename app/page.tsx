@@ -23,6 +23,7 @@ import Footer from '@/components/layout/Footer'
 import Button from '@/components/ui/Button'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import SitesGrid from '@/components/sections/SitesGrid'
+import HeroTerminal from '@/components/sections/HeroTerminal'
 
 /* ──────────────────────────────────────────────────────────────
    Sub-components (server)
@@ -254,96 +255,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* RIGHT: Floating mockups */}
-          <div className="relative hidden lg:block h-screen pointer-events-none">
-
-            {/* Mockup 1 — main */}
-            <div
-              className="absolute top-1/2 right-0 -translate-y-1/2 w-80 animate-float"
-              style={{ animationDelay: '0s', animationDuration: '7s' }}
-            >
-              <BrowserMockup
-                url="agencia.crably.io"
-                accentColor="linear-gradient(135deg, #1a0a00, #2d1200)"
-                className=""
-              >
-                <div className="p-5 h-52 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="h-6 w-3/4 rounded-lg bg-brand/20" />
-                    <div className="h-3 w-full rounded bg-white/5" />
-                    <div className="h-3 w-5/6 rounded bg-white/5" />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="h-8 w-24 rounded-lg bg-brand/30" />
-                    <div className="h-8 w-16 rounded-lg bg-white/5" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[1, 2, 3].map((n) => (
-                      <div key={n} className="h-16 rounded-lg bg-white/5" />
-                    ))}
-                  </div>
-                </div>
-              </BrowserMockup>
-            </div>
-
-            {/* Mockup 2 — upper */}
-            <div
-              className="absolute top-[18%] right-16 w-56 animate-float-rev"
-              style={{ animationDelay: '1.5s', animationDuration: '9s' }}
-            >
-              <BrowserMockup
-                url="saas.crably.io"
-                accentColor="linear-gradient(135deg, #000d1a, #001433)"
-                className="opacity-90"
-              >
-                <div className="p-4 h-36 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="h-4 w-2/3 rounded bg-blue-400/20" />
-                    <div className="h-2.5 w-full rounded bg-white/5" />
-                    <div className="h-2.5 w-4/5 rounded bg-white/5" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="h-12 rounded-lg bg-white/5 flex items-center justify-center">
-                      <div className="w-6 h-6 rounded-full bg-blue-400/20" />
-                    </div>
-                    <div className="h-12 rounded-lg bg-white/5" />
-                  </div>
-                </div>
-              </BrowserMockup>
-            </div>
-
-            {/* Mockup 3 — lower */}
-            <div
-              className="absolute bottom-[18%] right-24 w-48 animate-float"
-              style={{ animationDelay: '3s', animationDuration: '10s' }}
-            >
-              <BrowserMockup
-                url="loja.crably.io"
-                accentColor="linear-gradient(135deg, #0a0f00, #141f00)"
-                className="opacity-80"
-              >
-                <div className="p-4 h-28 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="h-3 w-3/5 rounded bg-green-400/20" />
-                    <div className="h-2 w-full rounded bg-white/5" />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1 h-10 rounded-lg bg-white/5" />
-                    <div className="w-10 h-10 rounded-lg bg-green-400/20" />
-                  </div>
-                </div>
-              </BrowserMockup>
-            </div>
-
-            {/* Glow behind mockups */}
-            <div
-              className="absolute top-1/2 right-20 -translate-y-1/2 w-72 h-72 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)',
-                filter: 'blur(32px)',
-              }}
-            />
-          </div>
+          {/* RIGHT: Terminal */}
+          <HeroTerminal />
         </div>
         
       </section>
@@ -428,7 +341,6 @@ export default function HomePage() {
                 <p className="text-neutral-400 text-sm leading-relaxed">
                   Pagamento único, 100% adiantado. Sem surpresas, sem parcelamento, sem cobranças extras no final.
                 </p>
-                <p className="mt-4 text-3xl font-bold text-brand">R$ 997+</p>
               </div>
             </ScrollReveal>
 
@@ -538,36 +450,42 @@ export default function HomePage() {
                 role: 'Fundador, AgênciaPulse',
                 text: 'Entrega impecável. Em 6 dias tinha meu site no ar, com um design que minha equipe toda elogiou. Valeu cada centavo — sem estresse, sem revisão infinita.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/men/32.jpg',
               },
               {
                 name: 'Camila Ferreira',
                 role: 'CEO, Loja Vista',
                 text: 'Já tentei com dois freelas antes da Crably. A diferença é absurda. Processo claro, prazo cumprido e o resultado ficou muito acima do que eu esperava.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/women/44.jpg',
               },
               {
                 name: 'Bruno Alves',
                 role: 'Co-founder, SaaSly',
                 text: 'O dashboard de acompanhamento é incrível. Sabia o que estava acontecendo a cada etapa. Paguei, acompanhei e recebi o site no prazo combinado.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/men/76.jpg',
               },
               {
                 name: 'Juliana Costa',
                 role: 'Diretora, Clínica Espaço Bem',
                 text: 'Nunca imaginei que ter um site profissional fosse tão simples. Paguei, acompanhei pelo dashboard e recebi tudo pronto no prazo. Recomendo demais.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/women/68.jpg',
               },
               {
                 name: 'Thiago Rocha',
                 role: 'Marketing, TechFlow',
                 text: 'A relação custo-benefício é excelente. Preço fixo, pagamento único e o site entregue dentro do prazo. Processo direto, sem enrolação.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/men/54.jpg',
               },
               {
                 name: 'Mariana Lima',
                 role: 'Empreendedora',
                 text: 'Fiquei com medo no começo por ser online, mas a experiência superou tudo. Comunicação ativa, entrega no prazo e o site ficou lindo.',
                 stars: 5,
+                photo: 'https://randomuser.me/api/portraits/women/17.jpg',
               },
             ].map((review, i) => (
               <ScrollReveal key={i} delay={((i % 3) + 1) as 1 | 2 | 3}>
@@ -580,11 +498,11 @@ export default function HomePage() {
                   <p className="text-neutral-300 text-sm leading-relaxed flex-1">"{review.text}"</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-white/5">
                     <Image
-                      src={`https://api.dicebear.com/9.x/avataaars/png?seed=${encodeURIComponent(review.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=50`}
+                      src={review.photo}
                       alt={review.name}
                       width={36}
                       height={36}
-                      className="rounded-full shrink-0"
+                      className="rounded-full shrink-0 object-cover"
                     />
                     <div>
                       <p className="text-sm font-semibold text-white">{review.name}</p>
@@ -653,42 +571,71 @@ export default function HomePage() {
           NOSSA EQUIPE
       ════════════════════════════════════════════════════════== */}
       <section id="equipe" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <ScrollReveal className="text-center mb-16">
-            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-              Pessoas reais por trás de cada projeto
-            </h2>
-            <p className="text-neutral-400 mt-4 max-w-xl mx-auto">
-              Um time enxuto, especializado e apaixonado por entregar resultados de verdade.
-            </p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+          {/* Foto */}
+          <ScrollReveal>
+            <div className="relative rounded-3xl overflow-hidden border border-white/8 shadow-2xl shadow-black/60">
+              <Image
+                src="/images/owners.png"
+                alt="Equipe Crably"
+                width={720}
+                height={540}
+                className="w-full h-full object-cover"
+              />
+              {/* gradient bottom */}
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0B0B0B]/80 to-transparent pointer-events-none" />
+              {/* badge */}
+              <div className="absolute bottom-5 left-5 flex items-center gap-2 px-3 py-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
+                <span className="text-xs font-medium text-white">Time disponível agora</span>
+              </div>
+            </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: 'Oliver Cowley', role: 'Fundador & CEO', bio: 'Apaixonado por produtos digitais e experiências que convertem.' },
-              { name: 'Caio Guimarães', role: 'Design Lead', bio: 'Especialista em UI/UX com foco em interfaces de alta conversão.' },
-              { name: 'Gustavo Pavaneli', role: 'Fundador & CO-CEO', bio: 'Fullstack sênior com experiência em entregas ágeis e escaláveis.' },
-              { name: 'Fernanda Ramos', role: 'Customer Success', bio: 'Garante que cada cliente tenha a melhor experiência do início ao fim.' },
-            ].map((member, i) => (
-              <ScrollReveal key={i} delay={((i % 4) + 1) as 1 | 2 | 3 | 4}>
-                <div className="bento-card p-6 flex flex-col items-center text-center gap-4">
-                  <Image
-                    src={`https://api.dicebear.com/9.x/avataaars/png?seed=${encodeURIComponent(member.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=12`}
-                    alt={member.name}
-                    width={64}
-                    height={64}
-                    className="rounded-2xl"
-                  />
-                  <div>
-                    <p className="font-semibold text-white">{member.name}</p>
-                    <p className="text-xs text-brand mt-0.5">{member.role}</p>
+          {/* Copy */}
+          <ScrollReveal delay={2}>
+            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Pode contar{' '}
+              <span className="gradient-text">com a gente.</span>
+            </h2>
+            <p className="text-neutral-400 leading-relaxed mb-10">
+              Somos um time enxuto, ágil e apaixonado por resultados reais. Cada projeto é tratado com seriedade, código limpo e entrega no prazo — sem desculpas.
+            </p>
+
+            <div className="space-y-4 mb-10">
+              {[
+                { icon: Zap,        title: 'Rápido por padrão',     desc: 'Processos otimizados para entregar em 14 dias sem abrir mão da qualidade.' },
+                { icon: ShieldCheck, title: 'Confiável de verdade',  desc: 'Compromisso com o prazo, preço fixo e comunicação transparente do início ao fim.' },
+                { icon: Rocket,     title: 'Ágil e sem burocracia', desc: 'Da contratação ao site no ar com o mínimo de atrito possível para você.' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-brand/20 transition-colors">
+                  <div className="p-2 rounded-xl bg-brand/10 shrink-0">
+                    <item.icon size={16} className="text-brand" />
                   </div>
-                  <p className="text-xs text-neutral-500 leading-relaxed">{member.bio}</p>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{item.title}</p>
+                    <p className="text-xs text-neutral-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
-              </ScrollReveal>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-8">
+              {[
+                { value: '120+', label: 'Projetos entregues' },
+                { value: '14 dias', label: 'Prazo garantido' },
+                { value: '100%', label: 'Preço fixo' },
+              ].map((stat, i) => (
+                <div key={i}>
+                  <p className="text-2xl font-bold text-white">{stat.value}</p>
+                  <p className="text-xs text-neutral-500 mt-0.5">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+
         </div>
       </section>
 

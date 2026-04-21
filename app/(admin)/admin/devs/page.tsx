@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, type FormEvent, type ReactNode } from 'react'
+import { useState, useEffect, useMemo, type FormEvent, type ReactNode } from 'react'
 import {
   collection, query, where, onSnapshot,
   getDocs, getDoc, doc, updateDoc, deleteDoc, serverTimestamp,
+  type Timestamp,
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { createDevUser } from '@/lib/admin-auth'
@@ -15,17 +16,26 @@ import {
 
 /* ─── UI types ─────────────────────────────────────────────── */
 
-type DevStatus = 'ocupado' | 'inativo'
+type DevStatus = 'online' | 'ocupado' | 'offline'
 
-type Dev = {
+type DevBase = {
   id: string
   name: string
   email: string
   specialty: string[]
-  status: DevStatus
   activeProjects: number
   completedProjects: number
   joinedAt: string
+}
+
+type PresenceData = {
+  isOnline: boolean
+  lastSeen: Timestamp | null
+}
+
+type Dev = DevBase & {
+  status: DevStatus
+  lastSeen: Date | null
 }
 
 type RichProject = {
@@ -40,14 +50,25 @@ type RichProject = {
 
 const ACTIVE_STATUSES = new Set<ProjectStatus>(['paid', 'queued', 'assigned', 'in_progress', 'review'])
 
+// A presence is considered stale if lastSeen > STALE_MS ago (safeguard for missed disconnects)
+const STALE_MS = 5 * 60_000
+
 const DEV_STATUS_STYLES: Record<DevStatus, string> = {
+  online:  'text-green-400 bg-green-400/10 border-green-400/20',
   ocupado: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
-  inativo: 'text-neutral-500 bg-neutral-500/10 border-neutral-500/20',
+  offline: 'text-neutral-500 bg-neutral-500/10 border-neutral-500/20',
 }
 
 const DEV_STATUS_LABELS: Record<DevStatus, string> = {
+  online:  'Disponível',
   ocupado: 'Ocupado',
-  inativo: 'Offline',
+  offline: 'Offline',
+}
+
+const DOT_COLORS: Record<DevStatus, string> = {
+  online:  'bg-green-400',
+  ocupado: 'bg-yellow-400',
+  offline: 'bg-neutral-600',
 }
 
 const PROJECT_STATUS_COLORS: Record<ProjectStatus, string> = {
@@ -68,7 +89,37 @@ const ALL_SPECIALTIES = [
 
 const inputCls = 'w-full px-3.5 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors'
 
+/* ─── Helpers ──────────────────────────────────────────────── */
+
+function resolveStatus(isOnline: boolean, lastSeen: Date | null, activeProjects: number): DevStatus {
+  if (!isOnline) return 'offline'
+  if (lastSeen && Date.now() - lastSeen.getTime() > STALE_MS) return 'offline'
+  return activeProjects > 0 ? 'ocupado' : 'online'
+}
+
+function formatLastSeen(d: Date | null): string {
+  if (!d) return ''
+  const diff = Date.now() - d.getTime()
+  const mins = Math.floor(diff / 60_000)
+  if (mins < 1) return 'agora mesmo'
+  if (mins < 60) return `${mins}min atrás`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `${hours}h atrás`
+  return d.toLocaleDateString('pt-BR')
+}
+
 /* ─── Shared primitives ────────────────────────────────────── */
+
+function OnlineDot({ status }: { status: DevStatus }) {
+  return (
+    <span className="relative flex h-2.5 w-2.5 shrink-0">
+      {status !== 'offline' && (
+        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-50 ${DOT_COLORS[status]}`} />
+      )}
+      <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${DOT_COLORS[status]}`} />
+    </span>
+  )
+}
 
 function DevAvatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) {
   const initials = name.split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
@@ -223,17 +274,17 @@ function ModalFooter({ onClose, loading, closeDisabled, submitLabel, loadingLabe
 /* ─── Create modal ─────────────────────────────────────────── */
 
 function CreateDevModal({ onSuccess, onClose }: { onSuccess: () => void; onClose: () => void }) {
-  const [name, setName]                           = useState('')
-  const [email, setEmail]                         = useState('')
-  const [password, setPassword]                   = useState('')
-  const [confirmPassword, setConfirmPassword]     = useState('')
-  const [showPassword, setShowPassword]           = useState(false)
-  const [showConfirm, setShowConfirm]             = useState(false)
-  const [passwordError, setPasswordError]         = useState('')
-  const [firebaseError, setFirebaseError]         = useState('')
-  const [loading, setLoading]                     = useState(false)
-  const [specialties, setSpecialties]             = useState<string[]>([])
-  const [customSkill, setCustomSkill]             = useState('')
+  const [name, setName]                       = useState('')
+  const [email, setEmail]                     = useState('')
+  const [password, setPassword]               = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword]       = useState(false)
+  const [showConfirm, setShowConfirm]         = useState(false)
+  const [passwordError, setPasswordError]     = useState('')
+  const [firebaseError, setFirebaseError]     = useState('')
+  const [loading, setLoading]                 = useState(false)
+  const [specialties, setSpecialties]         = useState<string[]>([])
+  const [customSkill, setCustomSkill]         = useState('')
 
   function toggleSpecialty(s: string) {
     setSpecialties((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s])
@@ -248,8 +299,8 @@ function CreateDevModal({ onSuccess, onClose }: { onSuccess: () => void; onClose
     e.preventDefault()
     setPasswordError('')
     setFirebaseError('')
-    if (password.length < 6)          { setPasswordError('A senha deve ter no mínimo 6 caracteres.'); return }
-    if (password !== confirmPassword)  { setPasswordError('As senhas não coincidem.'); return }
+    if (password.length < 6)         { setPasswordError('A senha deve ter no mínimo 6 caracteres.'); return }
+    if (password !== confirmPassword) { setPasswordError('As senhas não coincidem.'); return }
 
     setLoading(true)
     const result = await createDevUser({ email: email.trim(), password, name: name.trim(), specialty: specialties })
@@ -279,7 +330,7 @@ function CreateDevModal({ onSuccess, onClose }: { onSuccess: () => void; onClose
           <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/5">
             <Wifi size={14} className="text-neutral-500 mt-0.5 shrink-0" />
             <p className="text-xs text-neutral-500 leading-relaxed">
-              O status é definido automaticamente — <span className="text-neutral-300">ocupado</span> quando tem projetos ativos e <span className="text-neutral-300">offline</span> quando não.
+              Presença detectada automaticamente — <span className="text-green-400">disponível</span> quando online sem projetos, <span className="text-yellow-400">ocupado</span> quando online com projetos ativos.
             </p>
           </div>
 
@@ -406,6 +457,23 @@ function DeleteDevModal({ dev, onSuccess, onClose }: { dev: Dev; onSuccess: () =
 
 /* ─── Projects modal ───────────────────────────────────────── */
 
+function ProjectRow({ project }: { project: RichProject }) {
+  return (
+    <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-white truncate">{project.product}</p>
+        <p className="text-xs text-neutral-500 mt-0.5 truncate">{project.customer}</p>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-xs text-neutral-600 hidden sm:block">{project.date}</span>
+        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${PROJECT_STATUS_COLORS[project.status]}`}>
+          {PROJECT_STATUS_LABELS[project.status]}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function ProjectsModal({ dev, onClose }: { dev: Dev; onClose: () => void }) {
   const [projects, setProjects] = useState<RichProject[]>([])
   const [loading, setLoading]   = useState(true)
@@ -414,7 +482,6 @@ function ProjectsModal({ dev, onClose }: { dev: Dev; onClose: () => void }) {
   useEffect(() => {
     async function load() {
       try {
-        // 1. Orders assigned to this dev
         const ordersSnap = await getDocs(
           query(collection(db, 'orders'), where('assignedDevId', '==', dev.id))
         )
@@ -426,10 +493,9 @@ function ProjectsModal({ dev, onClose }: { dev: Dev; onClose: () => void }) {
           productId:     d.data().productId as string,
           userId:        d.data().userId as string,
           projectStatus: d.data().projectStatus as ProjectStatus,
-          createdAt:     d.data().createdAt,
+          createdAt:     d.data().createdAt as Timestamp | null,
         }))
 
-        // 2. Batch-fetch products and customers (deduplicated)
         const productIds  = [...new Set(orders.map((o) => o.productId))]
         const customerIds = [...new Set(orders.map((o) => o.userId))]
 
@@ -517,27 +583,11 @@ function ProjectsModal({ dev, onClose }: { dev: Dev; onClose: () => void }) {
   )
 }
 
-function ProjectRow({ project }: { project: RichProject }) {
-  return (
-    <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-white truncate">{project.product}</p>
-        <p className="text-xs text-neutral-500 mt-0.5 truncate">{project.customer}</p>
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="text-xs text-neutral-600 hidden sm:block">{project.date}</span>
-        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${PROJECT_STATUS_COLORS[project.status]}`}>
-          {PROJECT_STATUS_LABELS[project.status]}
-        </span>
-      </div>
-    </div>
-  )
-}
-
 /* ─── Page ─────────────────────────────────────────────────── */
 
 export default function DevsPage() {
-  const [devs, setDevs]                           = useState<Dev[]>([])
+  const [devBase, setDevBase]                     = useState<Map<string, DevBase>>(new Map())
+  const [presence, setPresence]                   = useState<Map<string, PresenceData>>(new Map())
   const [pageLoading, setPageLoading]             = useState(true)
   const [pageError, setPageError]                 = useState('')
   const [creating, setCreating]                   = useState(false)
@@ -545,7 +595,7 @@ export default function DevsPage() {
   const [deleting, setDeleting]                   = useState<Dev | null>(null)
   const [viewingProjects, setViewingProjects]     = useState<Dev | null>(null)
 
-  /* Real-time listener: devs + their order stats */
+  /* Subscription 1: devs (users with role=developer) + their order stats */
   useEffect(() => {
     const devsQ = query(collection(db, 'users'), where('role', '==', 'developer'))
 
@@ -553,50 +603,70 @@ export default function DevsPage() {
       devsQ,
       async (snap) => {
         try {
-          // Fetch all orders in one shot to compute per-dev stats
           const ordersSnap = await getDocs(collection(db, 'orders'))
           const allOrders = ordersSnap.docs.map((d) => ({
-            assignedDevId:  (d.data().assignedDevId  ?? '') as string,
-            projectStatus:  d.data().projectStatus    as ProjectStatus,
+            assignedDevId: (d.data().assignedDevId ?? '') as string,
+            projectStatus: d.data().projectStatus as ProjectStatus,
           }))
 
-          const mapped: Dev[] = snap.docs.map((d) => {
-            const data        = d.data()
-            const mine        = allOrders.filter((o) => o.assignedDevId === d.id)
-            const active      = mine.filter((o) => ACTIVE_STATUSES.has(o.projectStatus)).length
-            const completed   = mine.filter((o) => o.projectStatus === 'completed' || o.projectStatus === 'delivered').length
+          const map = new Map<string, DevBase>()
+          snap.docs.forEach((d) => {
+            const data     = d.data()
+            const mine     = allOrders.filter((o) => o.assignedDevId === d.id)
+            const active   = mine.filter((o) => ACTIVE_STATUSES.has(o.projectStatus)).length
+            const completed = mine.filter((o) => o.projectStatus === 'completed' || o.projectStatus === 'delivered').length
 
-            return {
-              id:               d.id,
-              name:             data.name     ?? '',
-              email:            data.email    ?? '',
-              specialty:        data.specialty ?? [],
-              status:           active > 0 ? 'ocupado' : 'inativo',
-              activeProjects:   active,
+            map.set(d.id, {
+              id:                d.id,
+              name:              data.name      ?? '',
+              email:             data.email     ?? '',
+              specialty:         data.specialty ?? [],
+              activeProjects:    active,
               completedProjects: completed,
-              joinedAt:         data.createdAt?.toDate().toISOString().slice(0, 10) ?? '—',
-            }
+              joinedAt:          data.createdAt?.toDate().toISOString().slice(0, 10) ?? '—',
+            })
           })
-
-          setDevs(mapped)
+          setDevBase(map)
         } catch {
           setPageError('Erro ao calcular estatísticas.')
         } finally {
           setPageLoading(false)
         }
       },
-      () => {
-        setPageError('Erro ao carregar desenvolvedores.')
-        setPageLoading(false)
-      }
+      () => { setPageError('Erro ao carregar desenvolvedores.'); setPageLoading(false) }
     )
 
     return unsub
   }, [])
 
-  const online      = devs.filter((d) => d.status === 'ocupado').length
-  const totalAtivos = devs.reduce((s, d) => s + d.activeProjects, 0)
-  const totalFeitos = devs.reduce((s, d) => s + d.completedProjects, 0)
+  /* Subscription 2: presence collection (real-time online status) */
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, 'presence'), (snap) => {
+      const map = new Map<string, PresenceData>()
+      snap.docs.forEach((d) => {
+        map.set(d.id, {
+          isOnline: d.data().isOnline ?? false,
+          lastSeen: d.data().lastSeen ?? null,
+        })
+      })
+      setPresence(map)
+    })
+    return unsub
+  }, [])
+
+  /* Merge devs + presence */
+  const devs: Dev[] = useMemo(() => {
+    return Array.from(devBase.values()).map((base) => {
+      const p = presence.get(base.id)
+      const lastSeen = p?.lastSeen?.toDate() ?? null
+      const status = resolveStatus(p?.isOnline ?? false, lastSeen, base.activeProjects)
+      return { ...base, status, lastSeen }
+    })
+  }, [devBase, presence])
+
+  const onlineCount  = devs.filter((d) => d.status !== 'offline').length
+  const totalAtivos  = devs.reduce((s, d) => s + d.activeProjects, 0)
+  const totalFeitos  = devs.reduce((s, d) => s + d.completedProjects, 0)
 
   return (
     <>
@@ -619,7 +689,7 @@ export default function DevsPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: 'Total de devs',      value: devs.length },
-            { label: 'Ocupados',           value: online },
+            { label: 'Online agora',       value: onlineCount },
             { label: 'Projetos ativos',    value: totalAtivos },
             { label: 'Projetos entregues', value: totalFeitos },
           ].map((s) => (
@@ -651,7 +721,12 @@ export default function DevsPage() {
               <div key={dev.id} className="bento-card p-5 flex flex-col gap-4">
                 {/* Top row */}
                 <div className="flex items-start gap-3">
-                  <DevAvatar name={dev.name} />
+                  <div className="relative shrink-0">
+                    <DevAvatar name={dev.name} />
+                    <span className="absolute -bottom-0.5 -right-0.5">
+                      <OnlineDot status={dev.status} />
+                    </span>
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-semibold text-white text-sm">{dev.name}</h3>
@@ -660,6 +735,11 @@ export default function DevsPage() {
                       </span>
                     </div>
                     <p className="text-xs text-neutral-500 mt-0.5 truncate">{dev.email}</p>
+                    {dev.status === 'offline' && dev.lastSeen && (
+                      <p className="text-[11px] text-neutral-600 mt-0.5">
+                        Visto {formatLastSeen(dev.lastSeen)}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -683,6 +763,7 @@ export default function DevsPage() {
                   </div>
                   <div className="bg-white/[0.03] rounded-xl p-3 border border-white/5">
                     <div className="flex items-center gap-1.5 mb-1">
+                      <CheckCircle2 size={12} className="text-green-400" />
                       <span className="text-xs text-neutral-500">Entregues</span>
                     </div>
                     <p className="text-xl font-bold text-white">{dev.completedProjects}</p>
