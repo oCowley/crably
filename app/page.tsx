@@ -23,7 +23,7 @@ import Footer from '@/components/layout/Footer'
 import Button from '@/components/ui/Button'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import SitesGrid from '@/components/sections/SitesGrid'
-import HeroTerminal from '@/components/sections/HeroTerminal'
+import LiveBuilder from '@/components/ui/LiveBuilder'
 
 /* ──────────────────────────────────────────────────────────────
    Sub-components (server)
@@ -255,8 +255,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* RIGHT: Terminal */}
-          <HeroTerminal />
+          {/* RIGHT: Live Builder */}
+          <LiveBuilder />
         </div>
         
       </section>
