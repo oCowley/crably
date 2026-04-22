@@ -1,89 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { X } from 'lucide-react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
+import { collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { auth, db } from '@/lib/firebase'
 import { createUserProfile, getUserProfile } from '@/lib/auth'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 
-type SiteProduct = {
+type Product = {
+  id: string
   name: string
-  desc: string
-  prazo: string
-  tag: string
-  tagHex: string
-  originalPrice: string
-  discountPrice: string
-  bg: string
-  featured?: boolean
+  slug: string
+  price: number
+  description: string
+  images: string[]
 }
-
-const SITES: SiteProduct[] = [
-  {
-    name: 'Landing Page',
-    desc: '1 página, até 6 seções',
-    prazo: 'Entrega em 7 dias',
-    tag: 'Maior desconto',
-    tagHex: '#F97316',
-    originalPrice: 'R$ 1.200',
-    discountPrice: 'R$ 840',
-    bg: 'linear-gradient(135deg, #1a0a00 0%, #2d1200 50%, #1a0800 100%)',
-  },
-  {
-    name: 'Blog / Portal',
-    desc: 'CMS + listagem + posts',
-    prazo: 'Entrega em 10 dias',
-    tag: 'Ótimo custo-benefício',
-    tagHex: '#22c55e',
-    originalPrice: 'R$ 1.800',
-    discountPrice: 'R$ 1.260',
-    bg: 'linear-gradient(135deg, #0d0014 0%, #1a0033 50%, #0d0014 100%)',
-  },
-  {
-    name: 'Loja de Infoprodutos',
-    desc: 'Checkout + área do aluno',
-    prazo: 'Entrega em 10 dias',
-    tag: 'Mais procurado',
-    tagHex: '#f43f5e',
-    originalPrice: 'R$ 2.200',
-    discountPrice: 'R$ 1.540',
-    bg: 'linear-gradient(135deg, #000d1a 0%, #001433 50%, #000a1a 100%)',
-  },
-  {
-    name: 'Site Institucional',
-    desc: 'Até 5 páginas + contato',
-    prazo: 'Entrega em 14 dias',
-    tag: 'Mais vendido',
-    tagHex: '#F97316',
-    originalPrice: 'R$ 2.800',
-    discountPrice: 'R$ 1.960',
-    bg: 'linear-gradient(135deg, #0a0f00 0%, #141f00 50%, #0a0f00 100%)',
-    featured: true,
-  },
-  {
-    name: 'E-commerce',
-    desc: 'Catálogo + carrinho + checkout',
-    prazo: 'Entrega em 14 dias',
-    tag: 'Completo',
-    tagHex: '#3b82f6',
-    originalPrice: 'R$ 4.500',
-    discountPrice: 'R$ 3.150',
-    bg: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%)',
-  },
-  {
-    name: 'SaaS / App Web',
-    desc: 'Auth + dashboard + lógica',
-    prazo: 'Entrega em 14–21 dias',
-    tag: 'Premium',
-    tagHex: '#f59e0b',
-    originalPrice: 'R$ 7.000',
-    discountPrice: 'R$ 4.900',
-    bg: 'linear-gradient(135deg, #05001a 0%, #0a0033 50%, #05001a 100%)',
-  },
-]
 
 const ERROR_MESSAGES: Record<string, string> = {
   'auth/invalid-credential': 'E-mail ou senha incorretos.',
@@ -102,6 +36,21 @@ const inputCls =
 
 export default function SitesGrid() {
   const router = useRouter()
+
+  const [products, setProducts] = useState<Product[]>([])
+  const [loadingProducts, setLoadingProducts] = useState(true)
+
+  useEffect(() => {
+    getDocs(query(collection(db, 'products'), orderBy('name')))
+      .then((snap) => {
+        const list: Product[] = snap.docs.map((d) => ({
+          id: d.id,
+          ...(d.data() as Omit<Product, 'id'>),
+        }))
+        setProducts(list)
+      })
+      .finally(() => setLoadingProducts(false))
+  }, [])
 
   // Modal state
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
@@ -154,55 +103,56 @@ export default function SitesGrid() {
     }
   }
 
+  if (loadingProducts) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="rounded-2xl border border-white/5 bg-dark-card overflow-hidden animate-pulse">
+            <div className="h-48 bg-white/5" />
+            <div className="p-5 space-y-3">
+              <div className="h-4 w-1/2 rounded bg-white/8" />
+              <div className="h-3 w-3/4 rounded bg-white/5" />
+              <div className="h-8 w-full rounded-xl bg-white/5 mt-4" />
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <>
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SITES.map((t, i) => (
-          <ScrollReveal key={t.name} delay={((i % 3) + 1) as 1 | 2 | 3}>
-            <div
-              className={`group relative rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 overflow-hidden bg-dark-card cursor-pointer ${
-                t.featured
-                  ? 'border-[#F97316]/40 hover:border-[#F97316]/70'
-                  : 'border-white/5 hover:border-white/20'
-              }`}
-            >
+        {products.map((product, i) => (
+          <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3}>
+            <div className="group relative rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 overflow-hidden bg-dark-card cursor-pointer">
               {/* Preview area */}
-              <div className="h-48 relative overflow-hidden" style={{ background: t.bg }}>
-                {/* Category badge */}
-                <span
-                  className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full text-xs font-semibold border"
-                  style={{
-                    color: t.tagHex,
-                    background: `${t.tagHex}22`,
-                    borderColor: `${t.tagHex}44`,
-                  }}
-                >
-                  {t.tag}
-                </span>
-
-                {/* Discount badge */}
-                <span className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full bg-[#F97316] text-white text-xs font-semibold">
-                  30% OFF primeira compra
-                </span>
-
-                {/* Fake website skeleton */}
-                <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-50 group-hover:opacity-70 transition-opacity">
-                  <div className="mt-8 space-y-2">
-                    <div className="h-4 w-2/3 rounded-lg bg-white/10" />
-                    <div className="h-2.5 w-full rounded bg-white/6" />
-                    <div className="h-2.5 w-5/6 rounded bg-white/6" />
+              <div className="h-48 relative overflow-hidden bg-[#0d0d0d]">
+                {product.images?.[0] ? (
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-40 group-hover:opacity-60 transition-opacity" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)' }}>
+                    <div className="mt-8 space-y-2">
+                      <div className="h-4 w-2/3 rounded-lg bg-white/10" />
+                      <div className="h-2.5 w-full rounded bg-white/6" />
+                      <div className="h-2.5 w-5/6 rounded bg-white/6" />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-7 w-20 rounded-lg bg-brand/40 group-hover:bg-brand/60 transition-colors" />
+                      <div className="h-7 w-14 rounded-lg bg-white/6" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[0, 1, 2].map((n) => (
+                        <div key={n} className="h-10 rounded-lg bg-white/5" />
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <div className="h-7 w-20 rounded-lg bg-brand/40 group-hover:bg-brand/60 transition-colors" />
-                    <div className="h-7 w-14 rounded-lg bg-white/6" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[0, 1, 2].map((n) => (
-                      <div key={n} className="h-10 rounded-lg bg-white/5" />
-                    ))}
-                  </div>
-                </div>
+                )}
 
                 {/* Bottom fade */}
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent" />
@@ -210,19 +160,19 @@ export default function SitesGrid() {
 
               {/* Card body */}
               <div className="p-5">
-                <h3 className="font-semibold text-white text-base mb-0.5 group-hover:text-brand transition-colors">
-                  {t.name}
+                <h3 className="font-semibold text-white text-base mb-1 group-hover:text-brand transition-colors">
+                  {product.name}
                 </h3>
-                <p className="text-sm text-neutral-500 mb-1">{t.desc}</p>
-                <p className="text-xs text-neutral-600 mb-4">{t.prazo}</p>
+                <p className="text-sm text-neutral-500 mb-4 line-clamp-2">{product.description}</p>
 
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-sm text-neutral-500 line-through">{t.originalPrice}</span>
-                  <span className="text-2xl font-bold text-[#F97316]">{t.discountPrice}</span>
+                  <span className="text-2xl font-bold text-[#F97316]">
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price / 100)}
+                  </span>
                 </div>
 
                 <button
-                  onClick={() => openModal(t.name)}
+                  onClick={() => openModal(product.name)}
                   className="w-full h-10 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/30 transition-all duration-200 active:scale-[0.97]"
                 >
                   Contratar →

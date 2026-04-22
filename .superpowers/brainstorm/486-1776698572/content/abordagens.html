@@ -1,0 +1,40 @@
+<h2>Como abordar a responsividade?</h2>
+<p class="subtitle">Três estratégias com trade-offs diferentes. Recomendo a B.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Correções pontuais</h3>
+      <p>Arrumar só os elementos que <em>quebram</em> em 375px: o heading do hero (muito grande), os stats em linha, o padding excessivo das seções e o CTA final apertado. Rápido, mínimo risco de regressão.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Mudanças mínimas</li><li>Risco baixo</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Problemas voltam a aparecer</li><li>Sem consistência entre seções</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Revisão sistemática do site público ✦ recomendado</h3>
+      <p>Passar por todas as seções do site público (landing, catálogo, detalhe do produto, SitesGrid) com um padrão consistente: padding de seção, escala de tipografia, grids e modais. Abrange tudo sem reescrever.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Consistência visual</li><li>Cobre todos os breakpoints</li><li>Sem redesenho</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Mais arquivos editados</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Mobile-first rewrite das seções críticas</h3>
+      <p>Reescrever as seções mais complexas (hero, bento, steps) do zero com lógica mobile-first, aproveitando para reorganizar o layout do hero no mobile (ex: mockups visíveis em tablets).</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Resultado mais polido</li><li>Flexível para crescer</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Risco de mudar o visual atual</li><li>Mais tempo</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

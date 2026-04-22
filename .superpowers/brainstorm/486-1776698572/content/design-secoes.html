@@ -1,0 +1,87 @@
+<h2>Design — Restante das seções</h2>
+<p class="subtitle">Mudanças sistemáticas aplicadas em todo o site público.</p>
+
+<div class="section">
+  <h3>1. Padding de seção (todas as seções)</h3>
+  <p>O espaçamento vertical <code>py-32</code> (128px) é excessivo em mobile. Escala progressiva:</p>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> <code>py-32 px-6</code>
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> <code>py-16 sm:py-24 lg:py-32 px-4 sm:px-6</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Tipografia de títulos (h2 das seções)</h3>
+  <p>Headings <code>text-4xl md:text-5xl</code> perdem o breakpoint <code>sm:</code>. Adicionamos:</p>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> <code>text-4xl md:text-5xl</code>
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> <code>text-3xl sm:text-4xl md:text-5xl</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. Bento grid — padding dos cards</h3>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> <code>p-8</code>
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> <code>p-6 lg:p-8</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>4. Steps "Como funciona" — gap e ícone</h3>
+  <p>O gap de 32px entre ícone e texto fica apertado em 375px.</p>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> <code>flex gap-8</code> + ícone <code>w-16 h-16</code>
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> <code>flex gap-4 sm:gap-8</code> + ícone <code>w-12 h-12 sm:w-16 sm:h-16</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>5. CTA final — padding e heading</h3>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> <code>p-14 md:p-24</code> + <code>text-4xl md:text-6xl</code>
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> <code>p-8 sm:p-14 md:p-24</code> + <code>text-3xl sm:text-4xl md:text-6xl</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>6. SitesGrid — modal responsivo</h3>
+  <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+    <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Antes:</strong> modal <code>max-w-md p-8</code> fixo
+    </div>
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 16px;font-size:13px">
+      <strong>Depois:</strong> modal <code>w-full max-w-md mx-4 sm:mx-auto p-6 sm:p-8</code>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>7. Catálogo e detalhe de produto</h3>
+  <ul style="color:#a3a3a3;font-size:14px;line-height:1.8;margin-top:8px">
+    <li>Catálogo: grid já ok (<code>grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code>), ajustar gap e padding</li>
+    <li>Detalhe: <code>gap-16</code> → <code>gap-8 lg:gap-16</code>, sticky só em lg+</li>
+  </ul>
+</div>
+
+<p class="subtitle" style="margin-top:16px">Essas 7 mudanças cobrem todo o site público de forma consistente. Aprova?</p>

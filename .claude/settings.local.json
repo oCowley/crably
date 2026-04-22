@@ -10,7 +10,8 @@
       "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -path ./node_modules -prune -o -type f \\\\\\(-name *auth* -o -name *user* -o -name *role* -o -name *firestore* \\\\\\) -print)",
       "Bash(npm run *)",
       "Bash(npx next *)",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -type f \\\\\\(-name *.json -o -name *.ts -o -name *.tsx \\\\\\) -path */data/* -o -path */constants/*)"
     ]
   }
 }

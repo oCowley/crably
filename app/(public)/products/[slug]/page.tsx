@@ -1,73 +1,71 @@
-import { notFound } from 'next/navigation'
-import type { Metadata } from 'next'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 
-const PRODUCTS: Record<string, { name: string; price: number; description: string; features: string[] }> = {
-  'agency-pro': {
-    name: 'Agency Pro',
-    price: 299700,
-    description:
-      'Landing page arrojada e focada em conversão para agências e estúdios criativos. Tudo que você precisa para conquistar clientes online — do hero impactante ao portfólio e contato.',
-    features: [
-      'Hero com headline animada',
-      'Seção de serviços',
-      'Portfólio / cases',
-      'Depoimentos',
-      'Formulário de contato',
-      'Responsivo para mobile',
-      'Otimizado para SEO',
-      'Entrega em 7 dias',
-    ],
-  },
-  'saas-launch': {
-    name: 'SaaS Launch',
-    price: 199700,
-    description:
-      'Landing page moderna para SaaS com tabela de preços, grid de features, FAQ e CTAs otimizados para converter visitantes em usuários.',
-    features: [
-      'Grid de features',
-      'Tabela de preços (3 planos)',
-      'FAQ em acordeão',
-      'Prova social / logos',
-      'CTA de captura de e-mail',
-      'Responsivo para mobile',
-      'Otimizado para SEO',
-      'Entrega em 5 dias',
-    ],
-  },
-  'local-business': {
-    name: 'Negócio Local',
-    price: 99700,
-    description:
-      'Site limpo e profissional para negócios locais. Inclui formulário de contato, integração com Google Maps, serviços e seção sobre.',
-    features: [
-      'Vitrine de serviços',
-      'Seção sobre',
-      'Mapa Google incorporado',
-      'Formulário de contato',
-      'CTA WhatsApp',
-      'Responsivo para mobile',
-      'Otimizado para SEO',
-      'Entrega em 3 dias',
-    ],
-  },
+type Product = {
+  id: string
+  name: string
+  slug: string
+  price: number
+  description: string
+  images: string[]
+  references: { title: string; url: string }[]
 }
 
-type Props = { params: Promise<{ slug: string }> }
+export default function ProductDetailPage() {
+  const params = useParams()
+  const slug = params.slug as string
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const product = PRODUCTS[slug]
-  if (!product) return {}
-  return { title: product.name, description: product.description }
-}
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
 
-export default async function ProductDetailPage({ params }: Props) {
-  const { slug } = await params
-  const product = PRODUCTS[slug]
+  useEffect(() => {
+    getDocs(query(collection(db, 'products'), where('slug', '==', slug)))
+      .then((snap) => {
+        if (snap.empty) {
+          setNotFound(true)
+        } else {
+          const d = snap.docs[0]
+          setProduct({ id: d.id, ...(d.data() as Omit<Product, 'id'>) })
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [slug])
 
-  if (!product) notFound()
+  if (loading) {
+    return (
+      <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto animate-pulse space-y-8">
+          <div className="h-4 w-32 rounded bg-white/5" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            <div className="aspect-video rounded-2xl bg-white/5" />
+            <div className="space-y-4">
+              <div className="h-8 w-2/3 rounded bg-white/8" />
+              <div className="h-4 w-full rounded bg-white/5" />
+              <div className="h-4 w-5/6 rounded bg-white/5" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (notFound || !product) {
+    return (
+      <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6 text-center">
+        <p className="text-neutral-400">Site não encontrado.</p>
+        <Link href="/products" className="text-brand text-sm mt-4 inline-block hover:underline">
+          Ver todos os sites
+        </Link>
+      </div>
+    )
+  }
 
   const price = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -90,18 +88,39 @@ export default async function ProductDetailPage({ params }: Props) {
           {/* Left — Visual */}
           <div className="lg:sticky lg:top-28">
             <div className="aspect-video rounded-2xl bg-dark-card border border-white/5 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+              {product.images?.[0] ? (
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-full h-full object-cover object-top"
+                />
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <p className="text-sm text-neutral-600">Preview em breve</p>
+                    </div>
                   </div>
-                  <p className="text-sm text-neutral-600">Preview em breve</p>
-                </div>
-              </div>
+                </>
+              )}
             </div>
+
+            {/* Additional images */}
+            {product.images?.length > 1 && (
+              <div className="grid grid-cols-3 gap-2 mt-3">
+                {product.images.slice(1).map((img, i) => (
+                  <div key={i} className="aspect-video rounded-xl overflow-hidden border border-white/5">
+                    <img src={img} alt="" className="w-full h-full object-cover object-top" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right — Details */}
@@ -109,24 +128,31 @@ export default async function ProductDetailPage({ params }: Props) {
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{product.name}</h1>
             <p className="text-neutral-400 leading-relaxed mb-8">{product.description}</p>
 
-            {/* Features */}
-            <div className="mb-10">
-              <h2 className="text-sm font-semibold text-white uppercase tracking-widest mb-4">
-                O que está incluído
-              </h2>
-              <ul className="space-y-3">
-                {product.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-neutral-300">
-                    <div className="w-5 h-5 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* References */}
+            {product.references?.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-sm font-semibold text-white uppercase tracking-widest mb-4">
+                  Referências
+                </h2>
+                <ul className="space-y-2">
+                  {product.references.map((ref, i) => (
+                    <li key={i}>
+                      <a
+                        href={ref.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-brand hover:underline"
+                      >
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        {ref.title || ref.url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Price + CTA */}
             <div className="p-6 rounded-2xl bg-dark-card border border-white/5">

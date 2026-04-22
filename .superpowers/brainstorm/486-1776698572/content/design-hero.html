@@ -1,0 +1,66 @@
+<h2>Design — Hero em mobile (375px)</h2>
+<p class="subtitle">Antes vs depois. O conteúdo não muda, só o dimensionamento.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">❌ Antes (quebrado em 375px)</div>
+    <div class="mockup-body" style="background:#0B0B0B; padding:20px; font-family:sans-serif; color:white; min-height:400px">
+      <!-- Badge -->
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;border:1px solid rgba(249,115,22,0.3);background:rgba(249,115,22,0.05);margin-bottom:20px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#F97316"></span>
+        <span style="font-size:10px;color:#F97316;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px">Desenvolvimento web · Entrega em 14 dias</span>
+      </div>
+      <!-- Heading - too big -->
+      <div style="font-size:48px;font-weight:800;line-height:0.95;margin-bottom:16px;color:white">
+        Seu site no ar em<br>
+        <span style="background:linear-gradient(135deg,#F97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent">14 dias.</span>
+      </div>
+      <!-- Subtitle -->
+      <p style="font-size:14px;color:#737373;margin-bottom:20px;line-height:1.6">A Crably desenvolve sites profissionais com entrega garantida em 14 dias, preço fixo e sem enrolação.</p>
+      <!-- CTAs ok -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+        <div style="background:#F97316;border-radius:8px;padding:12px;text-align:center;font-size:14px;font-weight:600">Ver sites →</div>
+        <div style="border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;text-align:center;font-size:14px;color:#d4d4d4">Como funciona</div>
+      </div>
+      <!-- Stats - overflow risk -->
+      <div style="display:flex;align-items:center;gap:24px;overflow:hidden">
+        <div><div style="font-size:18px;font-weight:700">100+</div><div style="font-size:10px;color:#525252">Projetos</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:24px"><div style="font-size:18px;font-weight:700">14 dias</div><div style="font-size:10px;color:#525252">Prazo padrão</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:24px"><div style="font-size:18px;font-weight:700">100%</div><div style="font-size:10px;color:#525252">Preço fixo</div></div>
+      </div>
+      <p style="font-size:10px;color:#ef4444;margin-top:8px">⚠ Heading 60px cortado, stats estouram em 375px</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">✅ Depois (responsivo)</div>
+    <div class="mockup-body" style="background:#0B0B0B; padding:20px; font-family:sans-serif; color:white; min-height:400px">
+      <!-- Badge -->
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;border:1px solid rgba(249,115,22,0.3);background:rgba(249,115,22,0.05);margin-bottom:20px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#F97316"></span>
+        <span style="font-size:10px;color:#F97316;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px">Desenvolvimento web · Entrega em 14 dias</span>
+      </div>
+      <!-- Heading - correct size -->
+      <div style="font-size:36px;font-weight:800;line-height:0.95;margin-bottom:16px;color:white">
+        Seu site no ar em<br>
+        <span style="background:linear-gradient(135deg,#F97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent">14 dias.</span>
+      </div>
+      <!-- Subtitle -->
+      <p style="font-size:14px;color:#737373;margin-bottom:20px;line-height:1.6">A Crably desenvolve sites profissionais com entrega garantida em 14 dias, preço fixo e sem enrolação.</p>
+      <!-- CTAs ok -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+        <div style="background:#F97316;border-radius:8px;padding:12px;text-align:center;font-size:14px;font-weight:600">Ver sites →</div>
+        <div style="border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;text-align:center;font-size:14px;color:#d4d4d4">Como funciona</div>
+      </div>
+      <!-- Stats - wrap safe -->
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+        <div><div style="font-size:18px;font-weight:700">100+</div><div style="font-size:10px;color:#525252">Projetos</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:16px"><div style="font-size:18px;font-weight:700">14 dias</div><div style="font-size:10px;color:#525252">Prazo padrão</div></div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:16px"><div style="font-size:18px;font-weight:700">100%</div><div style="font-size:10px;color:#525252">Preço fixo</div></div>
+      </div>
+      <p style="font-size:10px;color:#22c55e;margin-top:8px">✓ Heading 36px (4xl), stats com flex-wrap, cabe em 375px</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px">Isso parece certo? Confirme para ver o restante das mudanças.</p>
