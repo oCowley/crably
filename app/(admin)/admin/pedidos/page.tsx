@@ -10,7 +10,7 @@ import {
   User, Package, Calendar, DollarSign, Code2, AlertTriangle,
 } from 'lucide-react'
 import { db } from '@/lib/firebase'
-import { PROJECT_STATUS_LABELS, type ProjectStatus } from '@/types'
+import { PROJECT_STATUS_LABELS, type ProjectStatus, PROJECT_STAGE_LABELS, type ProjectStage } from '@/types'
 
 /* ─── Types ─────────────────────────────────────────────────── */
 
@@ -28,6 +28,8 @@ type OrderRow = {
   price: number
   businessName: string
   adminNotes: string
+  deployUrl: string | null
+  projectStage: string
 }
 
 type DevUser = { id: string; name: string }
@@ -145,16 +147,20 @@ function EditModal({
   order: OrderRow
   devs: DevUser[]
   saving: boolean
-  onSave: (id: string, status: ProjectStatus, devId: string | null, notes: string) => void
+  onSave: (id: string, status: ProjectStatus, devId: string | null, notes: string, deployUrl: string, projectStage: ProjectStage) => void
   onClose: () => void
 }) {
-  const [status, setStatus] = useState<ProjectStatus>(order.status)
-  const [devId, setDevId]   = useState(order.assignedDevId ?? '')
-  const [notes, setNotes]   = useState(order.adminNotes)
+  const [status, setStatus]             = useState<ProjectStatus>(order.status)
+  const [devId, setDevId]               = useState(order.assignedDevId ?? '')
+  const [notes, setNotes]               = useState(order.adminNotes)
+  const [deployUrl, setDeployUrl]       = useState(order.deployUrl ?? '')
+  const [projectStage, setProjectStage] = useState<ProjectStage>(
+    (order.projectStage as ProjectStage) ?? 'briefing'
+  )
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    onSave(order.id, status, devId || null, notes)
+    onSave(order.id, status, devId || null, notes, deployUrl, projectStage)
   }
 
   return (
@@ -205,6 +211,32 @@ function EditModal({
                 <option value="" className="bg-[#1a1a1a]">Sem dev atribuído</option>
                 {devs.map((d) => (
                   <option key={d.id} value={d.id} className="bg-[#1a1a1a]">{d.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Deploy URL */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-neutral-400">URL de preview (deploy)</label>
+              <input
+                type="url"
+                value={deployUrl}
+                onChange={(e) => setDeployUrl(e.target.value)}
+                placeholder="https://projeto-preview.vercel.app"
+                className={inputCls}
+              />
+            </div>
+
+            {/* Project stage */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-neutral-400">Etapa do projeto (cliente)</label>
+              <select
+                value={projectStage}
+                onChange={(e) => setProjectStage(e.target.value as ProjectStage)}
+                className={selectCls}
+              >
+                {(Object.entries(PROJECT_STAGE_LABELS) as [ProjectStage, string][]).map(([key, label]) => (
+                  <option key={key} value={key} className="bg-[#1a1a1a]">{label}</option>
                 ))}
               </select>
             </div>
@@ -343,6 +375,8 @@ export default function PedidosPage() {
           price:         product.price,
           businessName:  details?.businessName ?? '',
           adminNotes:    data.adminNotes ?? '',
+          deployUrl:     data.deployUrl ?? null,
+          projectStage:  data.projectStage ?? 'briefing',
         }
       })
 
@@ -354,7 +388,7 @@ export default function PedidosPage() {
     fetchAll().finally(() => setLoading(false))
   }, [])
 
-  async function handleSave(id: string, status: ProjectStatus, devId: string | null, adminNotes: string) {
+  async function handleSave(id: string, status: ProjectStatus, devId: string | null, adminNotes: string, deployUrl: string, projectStage: ProjectStage) {
     setSaving(true)
     try {
       const prev = orders.find((o) => o.id === id)!
@@ -363,6 +397,8 @@ export default function PedidosPage() {
         projectStatus: status,
         assignedDevId: devId ?? null,
         adminNotes,
+        deployUrl: deployUrl || null,
+        projectStage,
       })
 
       if (prev.status !== status) {
@@ -378,7 +414,7 @@ export default function PedidosPage() {
       setOrders((prev) =>
         prev.map((o) =>
           o.id === id
-            ? { ...o, status, assignedDevId: devId, devName: dev?.name ?? null, adminNotes }
+            ? { ...o, status, assignedDevId: devId, devName: dev?.name ?? null, adminNotes, deployUrl: deployUrl || null, projectStage }
             : o
         )
       )
