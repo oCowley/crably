@@ -138,8 +138,5 @@ export interface DashboardOrder {
   briefingNotes?: string
   references?: string[]
   meetSlotId?: string
-  domainHost?: string
-  domainUser?: string
-  domainPass?: string
-  domainNotes?: string
+  domainName?: string
 }
