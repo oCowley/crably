@@ -5,22 +5,29 @@ import { useSearchParams } from 'next/navigation'
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import type { DashboardOrder } from '@/types'
-import { RefreshCw, Loader2, CheckCircle2, ArrowRight, SkipForward } from 'lucide-react'
+import { RefreshCw, Loader2, CheckCircle2, ArrowRight, SkipForward, AlertCircle } from 'lucide-react'
 
 export default function RevisaoStage({ order }: { order: DashboardOrder; active: boolean; done: boolean }) {
   const [loading, setLoading]   = useState(false)
   const [skipping, setSkipping] = useState(false)
+  const [error, setError]       = useState<string | null>(null)
   const searchParams            = useSearchParams()
   const revisaoPaga             = searchParams.get('revisao') === 'paga'
 
   async function handleRequestRevision() {
     setLoading(true)
+    setError(null)
     try {
       const res  = await fetch(`/api/projetos/${order.id}/revision`, { method: 'POST' })
       const data = await res.json() as { url?: string; error?: string }
-      if (data.url) window.location.href = data.url
-      else setLoading(false)
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setError(data.error ?? 'Não foi possível iniciar o pagamento. Tente novamente.')
+        setLoading(false)
+      }
     } catch {
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
       setLoading(false)
     }
   }
@@ -62,6 +69,13 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
           <li>+5 dias úteis adicionados ao prazo de entrega</li>
         </ul>
       </div>
+
+      {error && (
+        <div className="flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+          <AlertCircle size={14} className="text-red-400 mt-0.5 shrink-0" />
+          <p className="text-xs text-red-400">{error}</p>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-3 items-center">
         <button
