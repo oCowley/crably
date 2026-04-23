@@ -19,41 +19,55 @@ import {
   FileText,
   Link2,
 } from 'lucide-react'
-import type { DashboardOrder, DashboardProjectStatus } from '@/types'
-import { DASHBOARD_STATUS_LABELS } from '@/types'
+import type { DashboardOrder, ProjectStage } from '@/types'
+import { PROJECT_STAGE_LABELS } from '@/types'
 
-const STATUS_ORDER: DashboardProjectStatus[] = [
-  'aguardando',
+const STATUS_ORDER: ProjectStage[] = [
+  'briefing',
+  'agendamento',
+  'meet_confirmado',
   'em_desenvolvimento',
   'em_revisao',
+  'aguardando_dominio',
   'entregue',
 ]
 
 const STATUS_CONFIG: Record<
-  DashboardProjectStatus,
-  { color: string; bg: string; border: string; glow: string; icon: React.ReactNode; label: string }
+  ProjectStage,
+  { color: string; bg: string; border: string; icon: React.ReactNode; label: string }
 > = {
   pending_payment: {
     color: 'text-yellow-400',
     bg: 'bg-yellow-500/10',
     border: 'border-yellow-500/20',
-    glow: 'shadow-yellow-500/10',
     icon: <Loader2 size={13} className="animate-spin" />,
     label: 'Processando pagamento…',
   },
-  aguardando: {
+  briefing: {
     color: 'text-orange-400',
     bg: 'bg-orange-500/10',
     border: 'border-orange-500/20',
-    glow: 'shadow-orange-500/10',
+    icon: <FileText size={13} />,
+    label: 'Briefing pendente',
+  },
+  agendamento: {
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/20',
+    icon: <Calendar size={13} />,
+    label: 'Agendar meet',
+  },
+  meet_confirmado: {
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
     icon: <Clock size={13} />,
-    label: 'Aguardando início',
+    label: 'Meet agendado',
   },
   em_desenvolvimento: {
     color: 'text-blue-400',
     bg: 'bg-blue-500/10',
     border: 'border-blue-500/20',
-    glow: 'shadow-blue-500/15',
     icon: <Zap size={13} />,
     label: 'Em desenvolvimento',
   },
@@ -61,15 +75,20 @@ const STATUS_CONFIG: Record<
     color: 'text-purple-400',
     bg: 'bg-purple-500/10',
     border: 'border-purple-500/20',
-    glow: 'shadow-purple-500/10',
     icon: <Eye size={13} />,
     label: 'Em revisão',
+  },
+  aguardando_dominio: {
+    color: 'text-teal-400',
+    bg: 'bg-teal-500/10',
+    border: 'border-teal-500/20',
+    icon: <Link2 size={13} />,
+    label: 'Conexão de domínio',
   },
   entregue: {
     color: 'text-green-400',
     bg: 'bg-green-500/10',
     border: 'border-green-500/20',
-    glow: 'shadow-green-500/10',
     icon: <CheckCircle2 size={13} />,
     label: 'Entregue',
   },
@@ -101,15 +120,18 @@ function getDaysRemaining(deadline: Date): { days: number; urgent: boolean; over
   return { days: diff, urgent: diff <= 3 && diff >= 0, overdue: diff < 0 }
 }
 
-function getProgressPercent(status: DashboardProjectStatus): number {
-  const map: Record<DashboardProjectStatus, number> = {
+function getProgressPercent(stage: ProjectStage): number {
+  const map: Record<ProjectStage, number> = {
     pending_payment: 0,
-    aguardando: 10,
-    em_desenvolvimento: 50,
-    em_revisao: 80,
+    briefing: 10,
+    agendamento: 20,
+    meet_confirmado: 30,
+    em_desenvolvimento: 55,
+    em_revisao: 75,
+    aguardando_dominio: 88,
     entregue: 100,
   }
-  return map[status]
+  return map[stage]
 }
 
 async function confirmSession(sessionId: string): Promise<boolean> {
@@ -126,9 +148,9 @@ async function confirmSession(sessionId: string): Promise<boolean> {
   }
 }
 
-function StatusTimeline({ status }: { status: DashboardProjectStatus }) {
-  if (status === 'pending_payment') return null
-  const currentIndex = STATUS_ORDER.indexOf(status)
+function StatusTimeline({ stage }: { stage: ProjectStage }) {
+  if (stage === 'pending_payment') return null
+  const currentIndex = STATUS_ORDER.indexOf(stage)
 
   return (
     <div className="flex items-center gap-0 mt-4">
@@ -160,7 +182,7 @@ function StatusTimeline({ status }: { status: DashboardProjectStatus }) {
                   done ? 'text-brand' : active ? cfg.color : 'text-neutral-600'
                 }`}
               >
-                {DASHBOARD_STATUS_LABELS[s]}
+                {PROJECT_STAGE_LABELS[s]}
               </span>
             </div>
             {i < STATUS_ORDER.length - 1 && (
@@ -225,7 +247,12 @@ export default function ProjetosPage() {
               reference: (data.reference as string) || '',
               prazo: (data.prazo as '14dias' | '7dias') || '14dias',
               price: (data.price as number) || 0,
-              status: (data.status as DashboardProjectStatus) ?? 'aguardando',
+              projectStage: (data.projectStage as ProjectStage) ?? 'briefing',
+              deployUrl: (data.deployUrl as string | null) ?? null,
+              meetLink: (data.meetLink as string | null) ?? null,
+              meetDate: (data.meetDate as string | null) ?? null,
+              revisionPaid: (data.revisionPaid as boolean) ?? false,
+              developmentStartedAt: null,
               stripeSessionId: (data.stripeSessionId as string) || '',
               deliveryUrl: (data.deliveryUrl as string | null) ?? null,
               createdAt:
@@ -271,8 +298,8 @@ export default function ProjetosPage() {
     )
   }
 
-  const pendingOrders = orders.filter((o) => o.status === 'pending_payment')
-  const activeOrders = orders.filter((o) => o.status !== 'pending_payment')
+  const pendingOrders = orders.filter((o) => o.projectStage === 'pending_payment')
+  const activeOrders  = orders.filter((o) => o.projectStage !== 'pending_payment')
 
   return (
     <div>
@@ -355,11 +382,11 @@ export default function ProjetosPage() {
       ) : (
         <div className="space-y-4">
           {activeOrders.map((order) => {
-            const cfg = STATUS_CONFIG[order.status]
+            const cfg = STATUS_CONFIG[order.projectStage]
             const deadline = formatDeadline(order.createdAt, order.prazo)
             const { days, urgent, overdue } = getDaysRemaining(deadline)
-            const progress = getProgressPercent(order.status)
-            const isDelivered = order.status === 'entregue'
+            const progress = getProgressPercent(order.projectStage)
+            const isDelivered = order.projectStage === 'entregue'
 
             return (
               <div
@@ -391,7 +418,7 @@ export default function ProjetosPage() {
                           className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${cfg.bg} ${cfg.border} ${cfg.color}`}
                         >
                           {cfg.icon}
-                          {DASHBOARD_STATUS_LABELS[order.status]}
+                          {PROJECT_STAGE_LABELS[order.projectStage]}
                         </span>
                         {order.prazo === '7dias' && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border bg-brand/10 border-brand/20 text-brand">
@@ -414,6 +441,12 @@ export default function ProjetosPage() {
                       <span className={`text-xl font-bold ${isDelivered ? 'text-green-400' : 'text-brand'}`}>
                         {formatPrice(order.price)}
                       </span>
+                      <Link
+                        href={`/dashboard/projetos/${order.id}`}
+                        className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-xs font-semibold border border-white/10 transition-colors"
+                      >
+                        Ver projeto <ExternalLink size={12} />
+                      </Link>
                       {isDelivered && order.deliveryUrl && (
                         <a
                           href={order.deliveryUrl}
@@ -499,7 +532,7 @@ export default function ProjetosPage() {
                   </div>
 
                   {/* Timeline */}
-                  <StatusTimeline status={order.status} />
+                  <StatusTimeline stage={order.projectStage} />
                 </div>
               </div>
             )
