@@ -38,7 +38,8 @@ export async function POST(req: NextRequest) {
       await Promise.all(
         orderIds.map((orderId) =>
           updateDoc(doc(db, 'orders', orderId), {
-            status: 'aguardando',
+            status: 'aguardando',        // keep for admin pedidos page backward compat
+            projectStage: 'briefing',    // new field for the project flow
             updatedAt: serverTimestamp(),
           })
         )
