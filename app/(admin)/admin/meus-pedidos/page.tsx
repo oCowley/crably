@@ -20,46 +20,54 @@ export default function MeusPedidosPage() {
   const [loading, setLoading] = useState(true)
 
   const fetchOrders = useCallback(async () => {
-    if (!user?.uid) return
+    if (!user?.uid) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
-    const snap = await getDocs(
-      query(collection(db, 'orders'), where('assignedDevId', '==', user.uid))
-    )
-    const rows: DashboardOrder[] = snap.docs.map((d) => {
-      const data = d.data()
-      return {
-        id:                   d.id,
-        userId:               data.userId ?? '',
-        assignedDevId:        data.assignedDevId ?? null,
-        productName:          data.productName ?? '',
-        productType:          data.productType ?? '',
-        projectName:          data.projectName ?? data.productName ?? '',
-        briefing:             data.briefing ?? '',
-        reference:            data.reference ?? '',
-        prazo:                data.prazo ?? '14dias',
-        price:                data.price ?? 0,
-        stripeSessionId:      data.stripeSessionId ?? '',
-        deliveryUrl:          data.deliveryUrl ?? null,
-        createdAt:            toDate(data.createdAt),
-        projectStage:         (data.projectStage ?? 'em_desenvolvimento') as ProjectStage,
-        meetLink:             data.meetLink ?? null,
-        meetDate:             data.meetDate ?? null,
-        deployUrl:            data.deployUrl ?? null,
-        devProgress:          data.devProgress ?? 0,
-        revisionPaid:         data.revisionPaid ?? false,
-        developmentStartedAt: data.developmentStartedAt ? toDate(data.developmentStartedAt) : null,
-        briefingNotes:        data.briefingNotes,
-        references:           data.references,
-        meetSlotId:           data.meetSlotId,
-        domainHost:           data.domainHost,
-        domainUser:           data.domainUser,
-        domainPass:           data.domainPass,
-        domainNotes:          data.domainNotes,
-      }
-    })
-    rows.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    setOrders(rows)
-    setLoading(false)
+    try {
+      const snap = await getDocs(
+        query(collection(db, 'orders'), where('assignedDevId', '==', user.uid))
+      )
+      const rows: DashboardOrder[] = snap.docs.map((d) => {
+        const data = d.data()
+        return {
+          id:                   d.id,
+          userId:               data.userId ?? '',
+          assignedDevId:        data.assignedDevId ?? null,
+          productName:          data.productName ?? '',
+          productType:          data.productType ?? '',
+          projectName:          data.projectName ?? data.productName ?? '',
+          briefing:             data.briefing ?? '',
+          reference:            data.reference ?? '',
+          prazo:                data.prazo ?? '14dias',
+          price:                data.price ?? 0,
+          stripeSessionId:      data.stripeSessionId ?? '',
+          deliveryUrl:          data.deliveryUrl ?? null,
+          createdAt:            toDate(data.createdAt),
+          projectStage:         (data.projectStage ?? 'em_desenvolvimento') as ProjectStage,
+          meetLink:             data.meetLink ?? null,
+          meetDate:             data.meetDate ?? null,
+          deployUrl:            data.deployUrl ?? null,
+          devProgress:          data.devProgress ?? 0,
+          revisionPaid:         data.revisionPaid ?? false,
+          developmentStartedAt: data.developmentStartedAt ? toDate(data.developmentStartedAt) : null,
+          briefingNotes:        data.briefingNotes,
+          references:           data.references,
+          meetSlotId:           data.meetSlotId,
+          domainHost:           data.domainHost,
+          domainUser:           data.domainUser,
+          domainPass:           data.domainPass,
+          domainNotes:          data.domainNotes,
+        }
+      })
+      rows.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      setOrders(rows)
+    } catch (err) {
+      console.error('Failed to fetch orders', err)
+    } finally {
+      setLoading(false)
+    }
   }, [user?.uid])
 
   useEffect(() => {
