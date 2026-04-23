@@ -98,7 +98,7 @@ export interface MeetSlot {
   meetLink?: string
 }
 
-// Backward-compat aliases
+// Deprecated: use ProjectStage directly. Will be removed after Task 3 migration.
 export type DashboardProjectStatus = ProjectStage
 export const DASHBOARD_STATUS_LABELS = PROJECT_STAGE_LABELS
 
@@ -124,17 +124,16 @@ export interface DashboardOrder {
   reference: string
   prazo: '14dias' | '7dias'
   price: number
-  status: DashboardProjectStatus
   stripeSessionId: string
   deliveryUrl: string | null
   createdAt: Date
   projectStage: ProjectStage
+  meetLink: string | null
+  meetDate: string | null
+  deployUrl: string | null
+  revisionPaid: boolean
+  developmentStartedAt: Date | null
   briefingNotes?: string
   references?: string[]
   meetSlotId?: string
-  meetLink?: string | null
-  meetDate?: string | null
-  deployUrl?: string | null
-  revisionPaid?: boolean
-  developmentStartedAt?: Date | null
 }
