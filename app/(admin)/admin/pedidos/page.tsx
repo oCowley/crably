@@ -351,7 +351,7 @@ export default function PedidosPage() {
       )
 
       const devUsers: DevUser[] = usersSnap.docs
-        .filter((d) => d.data().role === 'developer')
+        .filter((d) => ['developer', 'admin'].includes(d.data().role as string))
         .map((d) => ({ id: d.id, name: d.data().name as string }))
 
       const rows: OrderRow[] = ordersSnap.docs.map((d) => {
@@ -369,7 +369,7 @@ export default function PedidosPage() {
           customer:      customer.name,
           email:         customer.email,
           product:       product.name,
-          status:        data.projectStatus as ProjectStatus,
+          status:        (data.projectStatus ?? 'queued') as ProjectStatus,
           devName:       dev?.name ?? null,
           date:          toDate(data.createdAt),
           price:         product.price,
@@ -394,7 +394,7 @@ export default function PedidosPage() {
       const prev = orders.find((o) => o.id === id)!
 
       await updateDoc(doc(db, 'orders', id), {
-        projectStatus: status,
+        projectStatus: status ?? 'queued',
         assignedDevId: devId ?? null,
         adminNotes,
         deployUrl: deployUrl || null,

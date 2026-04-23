@@ -30,7 +30,8 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
           }))
           .filter((s) => {
             const slotDate = new Date(s.date + 'T00:00:00')
-            return slotDate > today && slotDate <= cutoff
+            const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+            return slotDate >= todayMidnight && slotDate <= cutoff
           })
           .sort((a, b) => `${a.date}${a.hour}`.localeCompare(`${b.date}${b.hour}`))
         setSlots(rows)
@@ -91,7 +92,7 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
               <p className="text-xs text-neutral-400 mt-0.5">{order.meetDate}</p>
             )}
             <a
-              href={order.meetLink}
+              href={order.meetLink.startsWith('http') ? order.meetLink : `https://${order.meetLink}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-brand hover:underline"

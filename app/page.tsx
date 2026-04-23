@@ -448,42 +448,42 @@ export default function HomePage() {
               {
                 name: 'Rafael Mendes',
                 role: 'Fundador, AgênciaPulse',
-                text: 'Entrega impecável. Em 6 dias tinha meu site no ar, com um design que minha equipe toda elogiou. Valeu cada centavo — sem estresse, sem revisão infinita.',
+                text: 'Cara, em menos de uma semana o site já estava no ar. Minha equipe ficou olhando e perguntando quem tinha feito. Não esperava que fosse tão rápido e tão bem feito assim.',
                 stars: 5,
                 photo: 'https://randomuser.me/api/portraits/men/32.jpg',
               },
               {
-                name: 'Camila Ferreira',
-                role: 'CEO, Loja Vista',
-                text: 'Já tentei com dois freelas antes da Crably. A diferença é absurda. Processo claro, prazo cumprido e o resultado ficou muito acima do que eu esperava.',
-                stars: 5,
-                photo: 'https://randomuser.me/api/portraits/women/44.jpg',
+                name: 'Ana Paula Santos',
+                role: 'Professora, Ensino Médio',
+                text: 'Precisava de um site para divulgar minhas aulas particulares e fiquei impressionada com o resultado. Processo simples, entrega no prazo e meus alunos conseguem me encontrar facilmente. Recomendo muito.',
+                stars: 4.5,
+                photo: 'https://randomuser.me/api/portraits/women/26.jpg',
               },
               {
                 name: 'Bruno Alves',
                 role: 'Co-founder, SaaSly',
-                text: 'O dashboard de acompanhamento é incrível. Sabia o que estava acontecendo a cada etapa. Paguei, acompanhei e recebi o site no prazo combinado.',
+                text: 'O que mais me surpreendeu foi conseguir acompanhar tudo pelo dashboard. Cada etapa aparecendo lá, sem precisar ficar mandando mensagem perguntando como tava. Pra mim isso fez toda a diferença.',
                 stars: 5,
                 photo: 'https://randomuser.me/api/portraits/men/76.jpg',
               },
               {
                 name: 'Juliana Costa',
                 role: 'Diretora, Clínica Espaço Bem',
-                text: 'Nunca imaginei que ter um site profissional fosse tão simples. Paguei, acompanhei pelo dashboard e recebi tudo pronto no prazo. Recomendo demais.',
+                text: 'Sempre achei que ter um site ia ser uma dor de cabeça enorme. Não foi. Paguei, acompanhei pelo painel e quando percebi o site já estava pronto. Simples assim.',
                 stars: 5,
                 photo: 'https://randomuser.me/api/portraits/women/68.jpg',
               },
               {
                 name: 'Thiago Rocha',
                 role: 'Marketing, TechFlow',
-                text: 'A relação custo-benefício é excelente. Preço fixo, pagamento único e o site entregue dentro do prazo. Processo direto, sem enrolação.',
+                text: 'Sem surpresa de preço no final, sem aquela enrolação de "mais uma revisãozinha aqui". Pagou, combinou, entregou. Exatamente o que eu precisava.',
                 stars: 5,
                 photo: 'https://randomuser.me/api/portraits/men/54.jpg',
               },
               {
                 name: 'Mariana Lima',
                 role: 'Empreendedora',
-                text: 'Fiquei com medo no começo por ser online, mas a experiência superou tudo. Comunicação ativa, entrega no prazo e o site ficou lindo.',
+                text: 'Confesso que fiquei receosa no começo, nunca tinha contratado nada assim pela internet. Mas fui acompanhando tudo e quando o site ficou pronto eu falei "nossa, é isso". Adorei.',
                 stars: 5,
                 photo: 'https://randomuser.me/api/portraits/women/17.jpg',
               },
@@ -491,9 +491,23 @@ export default function HomePage() {
               <ScrollReveal key={i} delay={((i % 3) + 1) as 1 | 2 | 3}>
                 <div className="bento-card p-5 lg:p-7 h-full flex flex-col gap-4">
                   <div className="flex gap-1">
-                    {Array.from({ length: review.stars }).map((_, s) => (
-                      <Star key={s} size={14} className="text-brand fill-brand" />
-                    ))}
+                    {Array.from({ length: 5 }).map((_, s) => {
+                      const filled = s < Math.floor(review.stars);
+                      const half = !filled && s < review.stars;
+                      return (
+                        <span key={s} className="relative inline-block w-[14px] h-[14px]">
+                          <Star size={14} className="text-neutral-700 fill-neutral-700" />
+                          {(filled || half) && (
+                            <span
+                              className="absolute inset-0 overflow-hidden"
+                              style={half ? { width: '50%' } : undefined}
+                            >
+                              <Star size={14} className="text-brand fill-brand" />
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                   <p className="text-neutral-300 text-sm leading-relaxed flex-1">"{review.text}"</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-white/5">
