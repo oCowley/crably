@@ -25,21 +25,30 @@ export default function DominioStage({ order }: { order: DashboardOrder; active:
     order.projectStage === 'entregue'
 
   async function handleCopy(value: string) {
-    await navigator.clipboard.writeText(value)
-    setCopied(value)
-    setTimeout(() => setCopied(null), 2000)
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(value)
+      setTimeout(() => setCopied(null), 2000)
+    } catch {
+      // clipboard unavailable (HTTP or permissions denied) — silently ignore
+    }
   }
 
   async function handleSubmit() {
     if (!domainName.trim() || !confirmed) return
     setSaving(true)
-    await fetch(`/api/projetos/${order.id}/domain`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domainName: domainName.trim() }),
-    })
-    setSaved(true)
-    setSaving(false)
+    try {
+      const res = await fetch(`/api/projetos/${order.id}/domain`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domainName: domainName.trim() }),
+      })
+      if (res.ok) setSaved(true)
+    } catch {
+      // network error — user can retry
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (isConfirmed) {
