@@ -26,6 +26,7 @@ export default function ProjetoDetailPage() {
       setOrder({
         id: snap.id,
         userId: data.userId,
+        assignedDevId: data.assignedDevId ?? null,
         productName: data.productName ?? '',
         productType: data.productType ?? '',
         projectName: data.projectName ?? '',
@@ -40,6 +41,7 @@ export default function ProjetoDetailPage() {
         meetLink: data.meetLink ?? null,
         meetDate: data.meetDate ?? null,
         revisionPaid: data.revisionPaid ?? false,
+        devProgress: data.devProgress ?? 0,
         createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(),
         developmentStartedAt: data.developmentStartedAt instanceof Timestamp
           ? data.developmentStartedAt.toDate()

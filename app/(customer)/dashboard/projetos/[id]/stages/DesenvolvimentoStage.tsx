@@ -22,7 +22,7 @@ function addBusinessDays(date: Date, days: number): Date {
 }
 
 export default function DesenvolvimentoStage({ order }: { order: DashboardOrder; active: boolean; done: boolean }) {
-  const devProgress: number = (order as DashboardOrder & { devProgress?: number }).devProgress ?? 0
+  const devProgress: number = order.devProgress ?? 0
 
   const startDate = order.developmentStartedAt ?? new Date()
   const totalDays = order.prazo === '7dias' ? 7 : 14

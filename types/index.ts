@@ -117,6 +117,7 @@ export interface CartItem {
 export interface DashboardOrder {
   id: string
   userId: string
+  assignedDevId: string | null
   productName: string
   productType: string
   projectName: string
@@ -131,9 +132,14 @@ export interface DashboardOrder {
   meetLink: string | null
   meetDate: string | null
   deployUrl: string | null
+  devProgress: number
   revisionPaid: boolean
   developmentStartedAt: Date | null
   briefingNotes?: string
   references?: string[]
   meetSlotId?: string
+  domainHost?: string
+  domainUser?: string
+  domainPass?: string
+  domainNotes?: string
 }

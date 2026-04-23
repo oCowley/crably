@@ -240,6 +240,7 @@ export default function ProjetosPage() {
             return {
               id: docSnap.id,
               userId: data.userId as string,
+              assignedDevId: (data.assignedDevId as string | null) ?? null,
               productName: data.productName as string,
               productType: (data.productType as string) || '',
               projectName: (data.projectName as string) || '',
@@ -252,6 +253,7 @@ export default function ProjetosPage() {
               meetLink: (data.meetLink as string | null) ?? null,
               meetDate: (data.meetDate as string | null) ?? null,
               revisionPaid: (data.revisionPaid as boolean) ?? false,
+              devProgress: (data.devProgress as number) ?? 0,
               developmentStartedAt: null,
               stripeSessionId: (data.stripeSessionId as string) || '',
               deliveryUrl: (data.deliveryUrl as string | null) ?? null,
