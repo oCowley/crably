@@ -2,20 +2,35 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 import type { DashboardOrder } from '@/types'
-import { RefreshCw, Loader2, CheckCircle2, ArrowRight } from 'lucide-react'
+import { RefreshCw, Loader2, CheckCircle2, ArrowRight, SkipForward } from 'lucide-react'
 
 export default function RevisaoStage({ order }: { order: DashboardOrder; active: boolean; done: boolean }) {
   const [loading, setLoading]   = useState(false)
+  const [skipping, setSkipping] = useState(false)
   const searchParams            = useSearchParams()
   const revisaoPaga             = searchParams.get('revisao') === 'paga'
 
   async function handleRequestRevision() {
     setLoading(true)
-    const res  = await fetch(`/api/projetos/${order.id}/revision`, { method: 'POST' })
-    const data = await res.json() as { url?: string }
-    if (data.url) window.location.href = data.url
-    else setLoading(false)
+    try {
+      const res  = await fetch(`/api/projetos/${order.id}/revision`, { method: 'POST' })
+      const data = await res.json() as { url?: string; error?: string }
+      if (data.url) window.location.href = data.url
+      else setLoading(false)
+    } catch {
+      setLoading(false)
+    }
+  }
+
+  async function handleSkip() {
+    setSkipping(true)
+    await updateDoc(doc(db, 'orders', order.id), {
+      projectStage: 'aguardando_dominio',
+      updatedAt: serverTimestamp(),
+    })
   }
 
   if (revisaoPaga || order.revisionPaid) {
@@ -51,15 +66,20 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
       <div className="flex flex-wrap gap-3 items-center">
         <button
           onClick={handleRequestRevision}
-          disabled={loading}
+          disabled={loading || skipping}
           className="flex items-center gap-2 h-10 px-5 rounded-xl bg-brand hover:bg-brand-hover text-white text-sm font-semibold transition-colors disabled:opacity-50"
         >
           {loading ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
           {loading ? 'Redirecionando…' : 'Solicitar revisão'}
         </button>
-        <p className="text-xs text-neutral-600">
-          Ou pule esta etapa — seu projeto avança para conexão de domínio.
-        </p>
+        <button
+          onClick={handleSkip}
+          disabled={loading || skipping}
+          className="flex items-center gap-2 h-10 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-sm font-medium transition-colors disabled:opacity-50 border border-white/10"
+        >
+          {skipping ? <Loader2 size={14} className="animate-spin" /> : <SkipForward size={14} />}
+          {skipping ? 'Avançando…' : 'Pular etapa'}
+        </button>
       </div>
     </div>
   )
