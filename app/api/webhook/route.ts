@@ -45,6 +45,15 @@ export async function POST(req: NextRequest) {
         )
       )
 
+      // Revisão paga: move o pedido para em_revisao
+      if (meta.type === 'revision' && meta.orderId) {
+        await updateDoc(doc(db, 'orders', meta.orderId), {
+          projectStage: 'em_revisao',
+          revisionPaid: true,
+          updatedAt: serverTimestamp(),
+        })
+      }
+
       // Marca primeira compra como concluída no perfil do usuário
       if (userId) {
         await setDoc(
