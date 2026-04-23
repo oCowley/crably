@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase'
 import type { DashboardOrder, ProjectStage } from '@/types'
 import {
   ChevronDown, ChevronUp, ExternalLink, Loader2,
-  Clock, CheckCircle2, Zap, AlertTriangle, Lock,
+  Clock, CheckCircle2, Zap,
 } from 'lucide-react'
 
 const DEV_STEPS = [
@@ -251,41 +251,11 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
         )}
       </div>
 
-      {/* ── Domain Credentials (conditional) ── */}
-      {showDomain && (order.domainHost || order.domainUser) && (
-        <div className="border border-purple-500/20 bg-purple-500/5 rounded-xl p-3.5 space-y-2">
-          <div className="flex items-center gap-1.5">
-            <Lock size={12} className="text-purple-400" />
-            <p className="text-xs font-semibold text-purple-400">Credenciais de domínio</p>
-          </div>
-          <div className="flex items-start gap-1.5 text-[11px] text-orange-400/80">
-            <AlertTriangle size={11} className="mt-0.5 shrink-0" />
-            <span>Não compartilhe estas credenciais.</span>
-          </div>
-          {order.domainHost && (
-            <div>
-              <p className="text-[10px] text-neutral-600 mb-0.5">Host / Painel</p>
-              <p className="text-xs text-neutral-300 font-mono">{order.domainHost}</p>
-            </div>
-          )}
-          {order.domainUser && (
-            <div>
-              <p className="text-[10px] text-neutral-600 mb-0.5">Usuário</p>
-              <p className="text-xs text-neutral-300 font-mono">{order.domainUser}</p>
-            </div>
-          )}
-          {order.domainPass && (
-            <div>
-              <p className="text-[10px] text-neutral-600 mb-0.5">Senha</p>
-              <p className="text-xs text-neutral-300 font-mono">{order.domainPass}</p>
-            </div>
-          )}
-          {order.domainNotes && (
-            <div>
-              <p className="text-[10px] text-neutral-600 mb-0.5">Observações</p>
-              <p className="text-xs text-neutral-400">{order.domainNotes}</p>
-            </div>
-          )}
+      {/* ── Domain Name (conditional) ── */}
+      {showDomain && order.domainName && (
+        <div className="border border-teal-500/20 bg-teal-500/5 rounded-xl p-3.5 space-y-1">
+          <p className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wide">Domínio do cliente</p>
+          <p className="text-sm font-mono text-teal-300">{order.domainName}</p>
         </div>
       )}
 
