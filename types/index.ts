@@ -67,20 +67,40 @@ export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
   completed: 'Concluído',
 }
 
-export type DashboardProjectStatus =
+// Replace DashboardProjectStatus with ProjectStage
+export type ProjectStage =
   | 'pending_payment'
-  | 'aguardando'
+  | 'briefing'
+  | 'agendamento'
+  | 'meet_confirmado'
   | 'em_desenvolvimento'
   | 'em_revisao'
+  | 'aguardando_dominio'
   | 'entregue'
 
-export const DASHBOARD_STATUS_LABELS: Record<DashboardProjectStatus, string> = {
-  pending_payment: 'Processando pagamento…',
-  aguardando: 'Aguardando início',
+export const PROJECT_STAGE_LABELS: Record<ProjectStage, string> = {
+  pending_payment:    'Processando pagamento…',
+  briefing:           'Briefing',
+  agendamento:        'Agendamento do meet',
+  meet_confirmado:    'Meet agendado',
   em_desenvolvimento: 'Em desenvolvimento',
-  em_revisao: 'Em revisão',
-  entregue: 'Entregue',
+  em_revisao:         'Em revisão',
+  aguardando_dominio: 'Conexão de domínio',
+  entregue:           'Entregue',
 }
+
+export interface MeetSlot {
+  id: string
+  date: string      // 'YYYY-MM-DD'
+  hour: string      // '09:00'
+  available: boolean
+  orderId?: string
+  meetLink?: string
+}
+
+// Backward-compat aliases
+export type DashboardProjectStatus = ProjectStage
+export const DASHBOARD_STATUS_LABELS = PROJECT_STAGE_LABELS
 
 export interface CartItem {
   id: string
@@ -108,4 +128,13 @@ export interface DashboardOrder {
   stripeSessionId: string
   deliveryUrl: string | null
   createdAt: Date
+  projectStage: ProjectStage
+  briefingNotes?: string
+  references?: string[]
+  meetSlotId?: string
+  meetLink?: string | null
+  meetDate?: string | null
+  deployUrl?: string | null
+  revisionPaid?: boolean
+  developmentStartedAt?: Date | null
 }
