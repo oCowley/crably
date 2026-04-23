@@ -17,6 +17,7 @@ import {
   LogOut,
   X,
   Menu,
+  CalendarDays,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -32,6 +33,7 @@ const NAV = [
   { href: '/admin/clientes', label: 'Clientes', icon: Users },
   { href: '/admin/tickets', label: 'Tickets', icon: MessageSquare },
   { href: '/admin/devs', label: 'Devs', icon: Code2 },
+  { href: '/admin/agendamentos', label: 'Agendamentos', icon: CalendarDays },
 ]
 
 export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
