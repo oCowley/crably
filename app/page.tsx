@@ -16,6 +16,7 @@ import {
   Star,
   Heart,
   Globe,
+  Flame,
 } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -117,10 +118,16 @@ export default function HomePage() {
 
           {/* LEFT: Copy */}
           <div className="z-10">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 mb-8 animate-fade-up">
-              <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
-              <span className="text-sm font-medium text-brand">Desenvolvimento web · Entrega em 14 dias</span>
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-3 mb-8 animate-fade-up">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5">
+                <span className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+                <span className="text-sm font-medium text-brand">Desenvolvimento web · Entrega em 14 dias</span>
+              </div>
+              <div className="discount-badge inline-flex items-center gap-1.5 px-3 py-2 rounded-full discount-shimmer">
+                <Flame size={13} className="text-white shrink-0" />
+                <span className="text-sm font-bold text-white">30% OFF</span>
+              </div>
             </div>
 
             {/* Headline */}
@@ -314,15 +321,55 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
+          PROMO BANNER
+      ════════════════════════════════════════════════════════== */}
+      <section className="relative py-6 sm:py-8 px-4 sm:px-6 border-t border-brand/20 border-b border-b-brand/20 overflow-hidden">
+        {/* Ambient glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.06) 50%, transparent 100%)',
+          }}
+        />
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center relative z-10">
+          <div className="flex items-center gap-2">
+            <span className="urgency-dot w-2.5 h-2.5 rounded-full bg-green-400 shrink-0" />
+            <span className="text-sm font-bold text-green-400 uppercase tracking-wider">Oferta ativa</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Flame size={18} className="text-brand shrink-0" />
+            <span className="text-base sm:text-lg font-bold text-white">
+              Primeira compra com <span className="text-brand">30% de desconto</span>
+            </span>
+          </div>
+          <Link
+            href="#sites"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-sm font-semibold text-brand hover:bg-brand/20 transition-colors"
+          >
+            Ver ofertas
+            <span className="text-xs">→</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
           TEMPLATES PREVIEW
       ════════════════════════════════════════════════════════== */}
       <section id="sites" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="mb-16">
-            <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sites</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white">
-              Feitos para converter
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sites</p>
+                <h2 className="text-4xl md:text-5xl font-bold text-white">
+                  Feitos para converter
+                </h2>
+              </div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 shrink-0">
+                <Flame size={14} className="text-brand" />
+                <span className="text-sm font-semibold text-brand">30% off na 1ª compra</span>
+              </div>
+            </div>
           </ScrollReveal>
 
           <SitesGrid />
@@ -613,9 +660,10 @@ export default function HomePage() {
               />
 
               <div className="relative z-10">
-                <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-6">
-                  Pronto para começar?
-                </p>
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand/30 bg-brand/10 mb-6 discount-badge">
+                  <Flame size={16} className="text-brand" />
+                  <span className="text-sm font-bold text-brand uppercase tracking-wide">30% off — Oferta ativa</span>
+                </div>
                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
                   Seu site está a{' '}
                   <span className="gradient-text">um clique</span>
@@ -623,7 +671,7 @@ export default function HomePage() {
                   de distância.
                 </h2>
                 <p className="text-lg text-neutral-400 mb-10 max-w-lg mx-auto">
-                  Sem freelancers. Sem surpresas no preço. Primeira compra com 30% off. Site entregue em até 14 dias.
+                  Sem freelancers. Sem surpresas no preço. Sua primeira compra tem <span className="text-brand font-semibold">30% de desconto</span>. Site entregue em até 14 dias.
                 </p>
                 <Link href="/login?mode=register">
                   <Button

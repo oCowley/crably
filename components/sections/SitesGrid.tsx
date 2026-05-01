@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { X } from 'lucide-react'
+import { X, Flame, Zap, TrendingUp, Award, Star, Sparkles, Target, Users, BarChart3, ShoppingCart, Globe, Brush, Layout, Rocket, Eye, FileText, Building2, BookOpen, DollarSign } from 'lucide-react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { auth, db } from '@/lib/firebase'
@@ -17,6 +17,89 @@ type Product = {
   price: number
   description: string
   images: string[]
+}
+
+const fmt = (cents: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100)
+
+const discountedPrice = (cents: number) => Math.round(cents * 0.7)
+
+type Tag = { label: string; icon: typeof Zap; color: string; bg: string }
+
+// ── Tags contextuais por tipo de produto ──
+// Cada produto tem combinação ÚNICA de labels + cores + ícones. Zero repetição.
+const TAG_MAP: { keywords: string[]; featured: boolean; tags: Tag[] }[] = [
+  {
+    keywords: ['landing'],
+    featured: true,
+    tags: [
+      { label: 'Para negócios locais', icon: Target, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
+      { label: 'Captura leads 24h', icon: Zap, color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
+      { label: '#1 entre profissionais', icon: TrendingUp, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
+    ],
+  },
+  {
+    keywords: ['saas', 'app web'],
+    featured: true,
+    tags: [
+      { label: 'Para startups', icon: Rocket, color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
+      { label: 'Login + painel inclusos', icon: Layout, color: 'text-cyan-400', bg: 'bg-cyan-400/10 border-cyan-400/20' },
+      { label: 'Escolha de 12+ startups', icon: Users, color: 'text-rose-400', bg: 'bg-rose-400/10 border-rose-400/20' },
+    ],
+  },
+  {
+    keywords: ['portf', 'portfolio', 'portfólio'],
+    featured: false,
+    tags: [
+      { label: 'Para criativos e agências', icon: Brush, color: 'text-fuchsia-400', bg: 'bg-fuchsia-400/10 border-fuchsia-400/20' },
+      { label: 'Impressione clientes', icon: Eye, color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
+    ],
+  },
+  {
+    keywords: ['info produto', 'infoproduto', 'info-produto'],
+    featured: false,
+    tags: [
+      { label: 'Para infoprodutores', icon: BookOpen, color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/20' },
+      { label: 'Venda no automático', icon: DollarSign, color: 'text-lime-400', bg: 'bg-lime-400/10 border-lime-400/20' },
+    ],
+  },
+  {
+    keywords: ['ecommerce', 'e-commerce', 'loja'],
+    featured: false,
+    tags: [
+      { label: 'Para lojas online', icon: ShoppingCart, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
+      { label: 'Checkout integrado', icon: Award, color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/20' },
+    ],
+  },
+  {
+    keywords: ['blog', 'portal', 'conteúdo', 'conteudo'],
+    featured: false,
+    tags: [
+      { label: 'Para criadores de conteúdo', icon: FileText, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
+      { label: 'SEO otimizado', icon: BarChart3, color: 'text-teal-400', bg: 'bg-teal-400/10 border-teal-400/20' },
+    ],
+  },
+  {
+    keywords: ['institucional', 'empresa', 'corporat'],
+    featured: false,
+    tags: [
+      { label: 'Para empresas', icon: Building2, color: 'text-indigo-400', bg: 'bg-indigo-400/10 border-indigo-400/20' },
+      { label: 'Credibilidade online', icon: Globe, color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
+    ],
+  },
+]
+
+const FALLBACK_TAGS: Tag[] = [
+  { label: 'Site profissional', icon: Star, color: 'text-neutral-300', bg: 'bg-neutral-300/10 border-neutral-300/20' },
+]
+
+function getProductMeta(name: string) {
+  const lower = name.toLowerCase()
+  const match = TAG_MAP.find((entry) => entry.keywords.some((kw) => lower.includes(kw)))
+  return {
+    featured: match?.featured ?? false,
+    tags: match?.tags ?? FALLBACK_TAGS,
+  }
 }
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -105,10 +188,10 @@ export default function SitesGrid() {
 
   if (loadingProducts) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="rounded-2xl border border-white/5 bg-dark-card overflow-hidden animate-pulse">
-            <div className="h-48 bg-white/5" />
+            <div className="aspect-[16/10] bg-white/5" />
             <div className="p-5 space-y-3">
               <div className="h-4 w-1/2 rounded bg-white/8" />
               <div className="h-3 w-3/4 rounded bg-white/5" />
@@ -120,67 +203,123 @@ export default function SitesGrid() {
     )
   }
 
+  // Sort: featured first, then rest
+  const sorted = [...products].sort((a, b) => {
+    const aF = getProductMeta(a.name).featured ? 0 : 1
+    const bF = getProductMeta(b.name).featured ? 0 : 1
+    return aF - bF
+  })
+
   return (
     <>
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product, i) => (
-          <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3}>
-            <div className="group relative rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50 overflow-hidden bg-dark-card cursor-pointer">
-              {/* Preview area */}
-              <div className="h-48 relative overflow-hidden bg-[#0d0d0d]">
-                {product.images?.[0] ? (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-40 group-hover:opacity-60 transition-opacity" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)' }}>
-                    <div className="mt-8 space-y-2">
-                      <div className="h-4 w-2/3 rounded-lg bg-white/10" />
-                      <div className="h-2.5 w-full rounded bg-white/6" />
-                      <div className="h-2.5 w-5/6 rounded bg-white/6" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {sorted.map((product, i) => {
+          const meta = getProductMeta(product.name)
+
+          return (
+            <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3} className="flex">
+              <div
+                className={`group relative rounded-2xl bg-dark-card cursor-pointer transition-all duration-300 lg:hover:-translate-y-1.5 lg:hover:z-30 flex flex-col w-full ${
+                  meta.featured
+                    ? 'border border-brand/20 lg:hover:border-brand/40 lg:hover:shadow-brand/15 featured-card'
+                    : 'border border-white/5 lg:hover:border-white/15 lg:hover:shadow-black/40'
+                }`}
+              >
+                {/* ── Discount badge (sobre a imagem, canto direito) ── */}
+                <div className="absolute top-3 right-3 z-20 discount-badge">
+                  <div className="discount-shimmer text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-lg">
+                    <Flame size={11} className="shrink-0" />
+                    −30%
+                  </div>
+                </div>
+
+                {/* ── Preview (clipped) ── */}
+                <div className="aspect-[16/10] relative overflow-hidden bg-[#0d0d0d] rounded-t-2xl">
+                  {product.images?.[0] ? (
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover object-top sm:group-hover:object-bottom sm:group-hover:scale-110 transition-[object-position,transform] duration-[3s] ease-in-out"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-30 group-hover:opacity-50 transition-opacity" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)' }}>
+                      <div className="mt-8 space-y-2">
+                        <div className="h-4 w-2/3 rounded-lg bg-white/10" />
+                        <div className="h-2.5 w-full rounded bg-white/6" />
+                        <div className="h-2.5 w-5/6 rounded bg-white/6" />
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="h-7 w-20 rounded-lg bg-brand/30" />
+                        <div className="h-7 w-14 rounded-lg bg-white/6" />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <div className="h-7 w-20 rounded-lg bg-brand/40 group-hover:bg-brand/60 transition-colors" />
-                      <div className="h-7 w-14 rounded-lg bg-white/6" />
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {[0, 1, 2].map((n) => (
-                        <div key={n} className="h-10 rounded-lg bg-white/5" />
-                      ))}
-                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent opacity-60 lg:group-hover:opacity-20 transition-opacity duration-500" />
+                </div>
+
+                {/* ── Floating expanded image on hover (desktop only) ── */}
+                {product.images?.[0] && (
+                  <div className="hidden lg:block absolute inset-x-[-12px] top-[-12px] z-30 rounded-2xl overflow-hidden shadow-2xl shadow-black/90 border border-white/10 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-500 ease-out pointer-events-none origin-top max-h-[70vh] overflow-y-auto">
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full"
+                    />
                   </div>
                 )}
 
-                {/* Bottom fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent" />
-              </div>
+                {/* ── Body ── */}
+                <div className="p-5 flex flex-col flex-1">
+                  {/* Destaque label + contextual tags */}
+                  <div className="flex flex-wrap items-center gap-1.5 mb-3">
+                    {meta.featured && (
+                      <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-bold bg-brand/10 border-brand/25 text-brand">
+                        <Sparkles size={10} />
+                        Destaque
+                      </div>
+                    )}
+                    {meta.tags.map((tag, ti) => (
+                      <div key={ti} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-semibold ${tag.bg} ${tag.color}`}>
+                        <tag.icon size={10} />
+                        {tag.label}
+                      </div>
+                    ))}
+                  </div>
 
-              {/* Card body */}
-              <div className="p-5">
-                <h3 className="font-semibold text-white text-base mb-1 group-hover:text-brand transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-neutral-500 mb-4 line-clamp-2">{product.description}</p>
+                  <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-brand transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-neutral-500 mb-4 line-clamp-2 leading-relaxed flex-1">{product.description}</p>
 
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-2xl font-bold text-[#F97316]">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price / 100)}
-                  </span>
+                  {/* Pricing */}
+                  <div className="flex items-center gap-2.5 mb-1.5">
+                    <span className="text-xl font-bold text-[#F97316]">
+                      {fmt(discountedPrice(product.price))}
+                    </span>
+                    <span className="price-slash text-xs text-neutral-600 font-medium">
+                      {fmt(product.price)}
+                    </span>
+                  </div>
+                  <p className="flex items-center gap-1 text-[11px] text-green-400 font-medium mb-4">
+                    <Zap size={10} />
+                    1ª compra com 30% off
+                  </p>
+
+                  <button
+                    onClick={() => openModal(product.name)}
+                    className={`w-full h-9 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover transition-all duration-200 active:scale-[0.97] ${
+                      meta.featured
+                        ? 'lg:hover:shadow-lg lg:hover:shadow-brand/30 glow-brand-sm'
+                        : 'lg:hover:shadow-md lg:hover:shadow-brand/20'
+                    }`}
+                  >
+                    Contratar →
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => openModal(product.name)}
-                  className="w-full h-10 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/30 transition-all duration-200 active:scale-[0.97]"
-                >
-                  Contratar →
-                </button>
               </div>
-            </div>
-          </ScrollReveal>
-        ))}
+            </ScrollReveal>
+          )
+        })}
       </div>
 
       {/* Single modal — rendered at this level, outside any card */}
