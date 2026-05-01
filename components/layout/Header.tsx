@@ -33,9 +33,9 @@ export default function Header() {
             alt="Crably"
             width={64}
             height={64}
-            className="rounded-xl"
+            className="rounded-xl w-10 h-10 lg:w-12 lg:h-12 xl:w-16 xl:h-16"
           />
-          <span className={`${spaceGrotesk.className} text-white text-4xl tracking-tight`}>crably</span>
+          <span className={`${spaceGrotesk.className} text-white text-2xl lg:text-3xl xl:text-4xl tracking-tight`}>crably</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

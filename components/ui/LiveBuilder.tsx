@@ -128,11 +128,11 @@ export default function LiveBuilder() {
 
   return (
     <div
-      className="relative hidden lg:flex flex-col items-center justify-center h-screen pointer-events-none"
+      className="relative hidden lg:flex flex-col items-center justify-center pointer-events-none"
       style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.4s ease' }}
     >
       <div
-        className="w-full rounded-2xl overflow-hidden border border-white/[0.08]"
+        className="w-full max-w-[540px] rounded-2xl overflow-hidden border border-white/[0.08]"
         style={{
           background: '#0d0d0d',
           boxShadow: '0 0 60px rgba(249,115,22,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
@@ -163,13 +163,13 @@ export default function LiveBuilder() {
         </div>
 
         {/* ── Two panels ── */}
-        <div className="grid grid-cols-2" style={{ minHeight: '360px' }}>
+        <div className="grid grid-cols-2" style={{ minHeight: '320px' }}>
 
           {/* LEFT: Code editor */}
           <div
             ref={editorRef}
             className="border-r border-white/5 overflow-y-auto"
-            style={{ background: '#0a0a0a', padding: '20px 16px', maxHeight: '360px', scrollBehavior: 'smooth' }}
+            style={{ background: '#0a0a0a', padding: '16px 14px', maxHeight: '320px', scrollBehavior: 'smooth' }}
           >
             {/* Completed lines */}
             {Array.from({ length: lineIdx > TOTAL_LINES ? TOTAL_LINES : lineIdx }, (_, i) => (
@@ -216,7 +216,7 @@ export default function LiveBuilder() {
           </div>
 
           {/* RIGHT: Preview */}
-          <div className="relative overflow-hidden" style={{ background: '#ffffff', minHeight: '360px' }}>
+          <div className="relative overflow-hidden" style={{ background: '#ffffff', minHeight: '320px' }}>
             {/* Browser sub-bar */}
             <div
               className="flex items-center gap-2"
@@ -238,7 +238,7 @@ export default function LiveBuilder() {
             </div>
 
             {/* Preview content */}
-            <div style={{ background: '#0B0B0B', minHeight: '330px' }}>
+            <div style={{ background: '#0B0B0B', minHeight: '290px' }}>
 
               {/* Navbar */}
               <div
@@ -401,9 +401,9 @@ export default function LiveBuilder() {
                   }}
                 >
                   {[
-                    { v: '100+', l: 'Projetos' },
+                    { v: '30+', l: 'Projetos' },
                     { v: '14d', l: 'Prazo padrão' },
-                    { v: '100%', l: 'Preço fixo' },
+                    { v: '30%', l: '1ª compra off' },
                   ].map((s, i) => (
                     <div
                       key={i}

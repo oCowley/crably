@@ -5,7 +5,7 @@ import {
   Sparkles,
   Palette,
   Smartphone,
-  Lock,
+  CreditCard,
   Rocket,
   CheckCircle,
   Gem,
@@ -14,7 +14,6 @@ import {
   Target,
   ShieldCheck,
   Star,
-  Users,
   Heart,
   Globe,
 } from 'lucide-react'
@@ -46,86 +45,20 @@ function WordReveal({ words, baseDelay = 0 }: { words: string[]; baseDelay?: num
   )
 }
 
-function BrowserMockup({
-  url,
-  accentColor,
-  children,
-  className = '',
-}: {
-  url: string
-  accentColor: string
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <div className={`rounded-2xl overflow-hidden border border-white/8 shadow-2xl shadow-black/60 ${className}`}>
-      <div className="bg-[#161616] px-4 py-3 flex items-center gap-2.5 border-b border-white/5">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
-        <div className="flex-1 mx-4 bg-white/5 rounded-md h-5 flex items-center px-3">
-          <span className="text-[10px] text-neutral-600 truncate">{url}</span>
-        </div>
-      </div>
-      <div style={{ background: accentColor }} className="relative overflow-hidden">
-        {children}
-      </div>
-    </div>
-  )
-}
-
 const MARQUEE_ITEMS = [
-  { icon: Zap, label: 'Express em 7 dias' },
+  { icon: Zap, label: 'Pacote express: 7 dias' },
   { icon: Sparkles, label: 'Preço fixo garantido' },
   { icon: Palette, label: 'Design profissional' },
   { icon: Smartphone, label: '100% responsivo' },
-  { icon: Lock, label: 'Pagamento 100% adiantado' },
-  { icon: Rocket, label: 'Entrega em 14 dias' },
+  { icon: CreditCard, label: '30% off na 1ª compra' },
+  { icon: Rocket, label: 'Entrega em até 14 dias' },
   { icon: CheckCircle, label: 'Escopo fixo e claro' },
   { icon: Gem, label: 'Sites de alta conversão' },
 ]
 
-const BENTO = [
-  {
-    size: 'col-span-2 row-span-1',
-    title: 'Entregue em dias, não meses',
-    desc: 'Do pagamento ao site no ar em até 14 dias. Com pacote express, em 7 dias.',
-    icon: Zap,
-    accent: true,
-  },
-  {
-    size: 'col-span-1 row-span-1',
-    title: 'Preço fixo',
-    desc: 'Sem surpresas. Você sabe o valor antes de comprar.',
-    icon: DollarSign,
-    accent: false,
-  },
-  {
-    size: 'col-span-1 row-span-1',
-    title: 'Acompanhe em tempo real',
-    desc: 'Dashboard com status do projeto atualizado em cada etapa.',
-    icon: Radio,
-    accent: false,
-  },
-  {
-    size: 'col-span-1 row-span-1',
-    title: 'Design de alta conversão',
-    desc: 'Sites criados para converter visitantes em clientes.',
-    icon: Target,
-    accent: false,
-  },
-  {
-    size: 'col-span-2 row-span-1',
-    title: 'Sem dor de cabeça com freelancers',
-    desc: 'Contrate, acompanhe e receba tudo em um único lugar. Processo garantido do início ao fim.',
-    icon: ShieldCheck,
-    accent: false,
-  },
-]
-
 const STEPS = [
   { n: '01', title: 'Escolha o site', desc: 'Navegue pelo catálogo e encontre o estilo certo para o seu negócio.' },
-  { n: '02', title: 'Finalize o pagamento', desc: 'Pagamento 100% adiantado via checkout seguro. Quer prioridade? Adicione o pacote express e receba em 7 dias.' },
+  { n: '02', title: 'Finalize o pagamento', desc: 'Checkout seguro via Stripe. Primeira compra com 30% de desconto automático. Quer prioridade? Adicione o pacote express.' },
   { n: '03', title: 'Acompanhe o projeto', desc: 'Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.' },
   { n: '04', title: 'Receba seu site', desc: 'Site entregue em até 14 dias. Com pacote express, em 7 dias. Pronto para publicar.' },
 ]
@@ -180,7 +113,7 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 lg:pt-4 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+        <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 items-center min-h-screen">
 
           {/* LEFT: Copy */}
           <div className="z-10">
@@ -191,7 +124,7 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-7xl xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
               <span className="block text-white overflow-hidden">
                 <WordReveal words={['Seu', 'site', 'no', 'ar', 'em']} baseDelay={200} />
               </span>
@@ -207,10 +140,10 @@ export default function HomePage() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-neutral-400 max-w-lg leading-relaxed mb-10 animate-fade-up"
+              className="text-base lg:text-lg xl:text-xl text-neutral-400 max-w-lg leading-relaxed mb-10 animate-fade-up"
               style={{ animationDelay: '650ms' }}
             >
-              A Crably desenvolve sites profissionais com entrega garantida em 14 dias, preço fixo e sem enrolação. Precisa de urgência? Entre na fila prioritária e receba em 7 dias.
+              Sites profissionais com preço fixo, entrega garantida em 14 dias e sem enrolação. Sua primeira compra tem 30% de desconto.
             </p>
 
             {/* CTAs */}
@@ -243,9 +176,9 @@ export default function HomePage() {
               style={{ animationDelay: '900ms' }}
             >
               {[
-                { v: '100+', l: 'Projetos' },
+                { v: '30+', l: 'Projetos entregues' },
                 { v: '14 dias', l: 'Prazo padrão' },
-                { v: '100%', l: 'Preço fixo' },
+                { v: '30%', l: 'Off na 1ª compra' },
               ].map((s, i) => (
                 <div key={i} className={i > 0 ? 'sm:border-l sm:border-white/8 sm:pl-6' : ''}>
                   <p className="text-2xl font-bold text-white">{s.v}</p>
@@ -313,7 +246,7 @@ export default function HomePage() {
                   <Zap size={36} className="mb-4 text-brand" />
                   <h3 className="text-xl font-bold text-white mb-2">Entregue em 14 dias, garantido</h3>
                   <p className="text-neutral-400 leading-relaxed">
-                    Do pagamento ao site no ar em até 14 dias. Precisa antes? Ative o pacote express e receba em 7 dias, com fila prioritária.
+                    Do pagamento ao site no ar em até 14 dias. Precisa antes? Ative o pacote express e receba em 7 dias.
                   </p>
                 </div>
                 <div className="absolute bottom-6 right-6 flex gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
@@ -337,9 +270,9 @@ export default function HomePage() {
                   style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.05) 0%, transparent 70%)' }}
                 />
                 <DollarSign size={36} className="mb-4 text-brand" />
-                <h3 className="text-xl font-bold text-white mb-2">Preço fixo</h3>
+                <h3 className="text-xl font-bold text-white mb-2">Preço fixo, sem surpresas</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">
-                  Pagamento único, 100% adiantado. Sem surpresas, sem parcelamento, sem cobranças extras no final.
+                  Preço definido antes de começar. Sem cobranças extras. Primeira compra com 30% de desconto.
                 </p>
               </div>
             </ScrollReveal>
@@ -546,12 +479,12 @@ export default function HomePage() {
               A Crably surgiu da frustração com um mercado cheio de promessas e poucas entregas. Freelancers que somem, agências que cobram caro demais e projetos que nunca terminam.
             </p>
             <p className="text-neutral-400 leading-relaxed mb-8">
-              Nossa missão é simples: desenvolver sites profissionais com pagamento único, entrega em 14 dias e processo 100% transparente. Do pagamento ao site no ar — sem surpresas.
+              Nossa missão é simples: entregar sites profissionais com preço justo, prazo real de 14 dias e processo 100% transparente. Do pagamento ao site no ar — sem surpresas.
             </p>
             <div className="flex flex-wrap gap-6">
               {[
-                { label: 'Projetos entregues', value: '120+' },
-                { label: 'Clientes satisfeitos', value: '98%' },
+                { label: 'Projetos entregues', value: '30+' },
+                { label: 'Entregas no prazo', value: '100%' },
                 { label: 'Prazo padrão', value: '14 dias' },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col">
@@ -638,9 +571,9 @@ export default function HomePage() {
 
             <div className="flex flex-wrap gap-8">
               {[
-                { value: '120+', label: 'Projetos entregues' },
+                { value: '30+', label: 'Projetos entregues' },
                 { value: '14 dias', label: 'Prazo garantido' },
-                { value: '100%', label: 'Preço fixo' },
+                { value: '30%', label: 'Off na 1ª compra' },
               ].map((stat, i) => (
                 <div key={i}>
                   <p className="text-2xl font-bold text-white">{stat.value}</p>
@@ -690,7 +623,7 @@ export default function HomePage() {
                   de distância.
                 </h2>
                 <p className="text-lg text-neutral-400 mb-10 max-w-lg mx-auto">
-                  Sem freelancers. Sem surpresas no preço. Pagamento único, site entregue em 14 dias — ou em 7 com prioridade express.
+                  Sem freelancers. Sem surpresas no preço. Primeira compra com 30% off. Site entregue em até 14 dias.
                 </p>
                 <Link href="/login?mode=register">
                   <Button
