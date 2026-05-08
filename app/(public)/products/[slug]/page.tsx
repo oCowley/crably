@@ -172,7 +172,7 @@ export default function ProductDetailPage() {
                 </Button>
               </Link>
               <p className="text-xs text-neutral-600 text-center mt-4">
-                Checkout seguro via Stripe. Confirmação imediata.
+                Checkout seguro via Abacate Pay. Confirmação imediata.
               </p>
             </div>
           </div>

@@ -59,7 +59,7 @@ const MARQUEE_ITEMS = [
 
 const STEPS = [
   { n: '01', title: 'Escolha o site', desc: 'Navegue pelo catálogo e encontre o estilo certo para o seu negócio.' },
-  { n: '02', title: 'Finalize o pagamento', desc: 'Checkout seguro via Stripe. Primeira compra com 30% de desconto automático. Quer prioridade? Adicione o pacote express.' },
+  { n: '02', title: 'Finalize o pagamento', desc: 'Checkout seguro via Abacate Pay. Primeira compra com 30% de desconto automático. Quer prioridade? Adicione o pacote express.' },
   { n: '03', title: 'Acompanhe o projeto', desc: 'Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.' },
   { n: '04', title: 'Receba seu site', desc: 'Site entregue em até 14 dias. Com pacote express, em 7 dias. Pronto para publicar.' },
 ]

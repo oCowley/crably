@@ -125,7 +125,7 @@ export interface DashboardOrder {
   reference: string
   prazo: '14dias' | '7dias'
   price: number
-  stripeSessionId: string
+  checkoutId: string
   deliveryUrl: string | null
   createdAt: Date
   projectStage: ProjectStage

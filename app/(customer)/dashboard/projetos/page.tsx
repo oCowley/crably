@@ -255,7 +255,7 @@ export default function ProjetosPage() {
               revisionPaid: (data.revisionPaid as boolean) ?? false,
               devProgress: (data.devProgress as number) ?? 0,
               developmentStartedAt: null,
-              stripeSessionId: (data.stripeSessionId as string) || '',
+              checkoutId: (data.checkoutId as string) || '',
               deliveryUrl: (data.deliveryUrl as string | null) ?? null,
               createdAt:
                 createdAtRaw instanceof Timestamp
@@ -278,9 +278,9 @@ export default function ProjetosPage() {
   }, [uid])
 
   async function handleVerifyOrder(order: DashboardOrder) {
-    if (!order.stripeSessionId) return
+    if (!order.checkoutId) return
     setVerifying(order.id)
-    await confirmSession(order.stripeSessionId)
+    await confirmSession(order.checkoutId)
     setTimeout(() => setVerifying(null), 1500)
   }
 
@@ -351,7 +351,7 @@ export default function ProjetosPage() {
               <span className="text-sm font-bold text-yellow-400 shrink-0">
                 {formatPrice(order.price)}
               </span>
-              {order.stripeSessionId && (
+              {order.checkoutId && (
                 <button
                   onClick={() => handleVerifyOrder(order)}
                   disabled={verifying === order.id}

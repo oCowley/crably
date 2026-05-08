@@ -42,7 +42,7 @@ export default function MeusPedidosPage() {
           reference:            data.reference ?? '',
           prazo:                data.prazo ?? '14dias',
           price:                data.price ?? 0,
-          stripeSessionId:      data.stripeSessionId ?? '',
+          checkoutId:           data.checkoutId ?? '',
           deliveryUrl:          data.deliveryUrl ?? null,
           createdAt:            toDate(data.createdAt),
           projectStage:         (data.projectStage ?? 'em_desenvolvimento') as ProjectStage,

@@ -35,7 +35,7 @@ export default function ProjetoDetailPage() {
         prazo: data.prazo ?? '14dias',
         price: data.price ?? 0,
         projectStage: (data.projectStage as ProjectStage) ?? 'briefing',
-        stripeSessionId: data.stripeSessionId ?? '',
+        checkoutId: data.checkoutId ?? '',
         deliveryUrl: data.deliveryUrl ?? null,
         deployUrl: data.deployUrl ?? null,
         meetLink: data.meetLink ?? null,

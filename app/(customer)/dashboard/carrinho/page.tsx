@@ -104,7 +104,7 @@ export default function CarrinhoPage() {
     setLoading(true)
     setCheckoutError(null)
     try {
-      // Persiste dados do comprador antes de ir ao Stripe (sem máscara)
+      // Persiste dados do comprador antes de ir ao Abacate Pay (sem máscara)
       await setDoc(
         doc(db, 'users', user.uid),
         { cpf: cpf.replace(/\D/g, ''), birthDate, updatedAt: serverTimestamp() },
@@ -354,7 +354,7 @@ export default function CarrinhoPage() {
             )}
 
             <p className="text-xs text-neutral-600 text-center mt-3">
-              Pagamento seguro via Stripe
+              Pagamento seguro via Abacate Pay
             </p>
           </div>
         </div>
