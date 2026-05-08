@@ -111,11 +111,19 @@ export default function CarrinhoPage() {
         { merge: true }
       )
 
+      // Aplica desconto de primeira compra nos preços antes de enviar ao servidor
+      const itemsWithDiscount = isFirstPurchase
+        ? items.map((item) => ({
+            ...item,
+            finalPrice: Math.round(item.finalPrice * 0.7),
+          }))
+        : items
+
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items,
+          items: itemsWithDiscount,
           userId: user.uid,
           userEmail: user.email ?? '',
         }),
@@ -129,8 +137,8 @@ export default function CarrinhoPage() {
       const data = (await res.json()) as { url?: string; error?: string }
 
       if (data.url) {
-        clearCart()
         window.location.href = data.url
+        clearCart()
       } else {
         setCheckoutError(data.error ?? 'Erro desconhecido. Tente novamente.')
       }

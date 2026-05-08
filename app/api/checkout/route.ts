@@ -26,27 +26,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 })
     }
 
-    // 1. Verifica se é primeira compra
+    // 1. Busca dados do usuário
     const userSnap = await getDoc(doc(db, 'users', userId))
-    const firstPurchaseDone: boolean = userSnap.exists()
-      ? ((userSnap.data().firstPurchaseDone as boolean | undefined) ?? false)
-      : false
-    const isFirstPurchase = !firstPurchaseDone
-
-    // 2. Busca CPF do usuário para criar customer no Abacate Pay
     const userCpf = userSnap.exists() ? (userSnap.data().cpf as string | undefined) : undefined
     const userName = userSnap.exists() ? (userSnap.data().name as string | undefined) : undefined
 
-    // 3. Cria customer no Abacate Pay
+    // 2. Cria customer no Abacate Pay
     const customer = await createCustomer(userEmail, userCpf, userName)
 
-    // 4. Aplica desconto de primeira compra no servidor (30%)
-    const discountRate = isFirstPurchase ? 0.3 : 0
-
-    // 5. Persiste os pedidos no Firestore ANTES do checkout
+    // 3. Persiste os pedidos no Firestore ANTES do checkout
+    // O preço já vem com desconto aplicado pelo cliente
     const orderRefs = await Promise.all(
       items.map((item) => {
-        const discountedPrice = Math.round(item.finalPrice * (1 - discountRate))
         return addDoc(collection(db, 'orders'), {
           userId,
           productName: item.productName,
@@ -55,7 +46,7 @@ export async function POST(req: NextRequest) {
           briefing: item.briefing,
           reference: item.reference,
           prazo: item.prazo,
-          price: discountedPrice,
+          price: item.finalPrice,
           status: 'pending_payment',
           deliveryUrl: null,
           checkoutId: '',
@@ -66,18 +57,17 @@ export async function POST(req: NextRequest) {
 
     const orderIds = orderRefs.map((r) => r.id).join(',')
 
-    // 6. Cria products on-the-fly no Abacate Pay e monta items do checkout
+    // 4. Cria products on-the-fly no Abacate Pay e monta items do checkout
     const checkoutItems = await Promise.all(
       items.map(async (item) => {
-        const discountedPrice = Math.round(item.finalPrice * (1 - discountRate))
-        const priceInCents = Math.round(discountedPrice * 100)
+        const priceInCents = Math.round(item.finalPrice * 100)
         const externalId = `${item.productType}_${priceInCents}`
         const product = await getOrCreateProduct(item.productName, priceInCents, externalId)
         return { id: product.id, quantity: 1 }
       })
     )
 
-    // 7. Cria checkout no Abacate Pay
+    // 5. Cria checkout no Abacate Pay
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const checkout = await createCheckout({
       items: checkoutItems,
@@ -88,7 +78,7 @@ export async function POST(req: NextRequest) {
       metadata: { userId, orderIds },
     })
 
-    // 8. Vincula o checkoutId aos pedidos criados
+    // 6. Vincula o checkoutId aos pedidos criados
     await Promise.all(
       orderRefs.map((ref) =>
         updateDoc(ref, { checkoutId: checkout.id })

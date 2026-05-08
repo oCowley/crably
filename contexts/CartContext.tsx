@@ -1,7 +1,9 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import type { CartItem } from '@/types'
+
+const STORAGE_KEY = 'crably_cart'
 
 interface CartContextValue {
   items: CartItem[]
@@ -19,8 +21,30 @@ const CartContext = createContext<CartContextValue>({
   clearCart: () => {},
 })
 
+function loadCart(): CartItem[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as CartItem[]) : []
+  } catch {
+    return []
+  }
+}
+
+function saveCart(items: CartItem[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+  } catch {
+    // storage full or unavailable
+  }
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [items, setItems] = useState<CartItem[]>(() => loadCart())
+
+  useEffect(() => {
+    saveCart(items)
+  }, [items])
 
   function addItem(item: Omit<CartItem, 'id'>) {
     const id = crypto.randomUUID()
