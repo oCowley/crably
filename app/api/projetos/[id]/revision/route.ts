@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getOrCreateProduct, createCheckout } from '@/lib/abacatepay'
 import { db } from '@/lib/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 
@@ -10,29 +10,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!snap.exists()) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [{
-        quantity: 1,
-        price_data: {
-          currency: 'brl',
-          unit_amount: 29700,
-          product_data: {
-            name: 'Revisão do projeto',
-            description: 'Inclui meet de alinhamento + ajustes no projeto + 5 dias úteis adicionais',
-          },
-        },
-      }],
-      client_reference_id: id,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/projetos/${id}?revisao=paga`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/projetos/${id}`,
+    const product = await getOrCreateProduct('Revisão do projeto', 29700, 'revision_29700')
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const checkout = await createCheckout({
+      items: [{ id: product.id, quantity: 1 }],
+      returnUrl: `${appUrl}/dashboard/projetos/${id}?revisao=paga`,
+      completionUrl: `${appUrl}/api/webhook`,
+      methods: ['PIX', 'CARD'],
       metadata: { orderId: id, type: 'revision' },
     })
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: checkout.url })
   } catch (err) {
-    console.error('Stripe error:', err)
+    console.error('AbacatePay error:', err)
     return NextResponse.json({ error: 'Falha ao criar sessão de pagamento' }, { status: 500 })
   }
 }

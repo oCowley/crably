@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getOrCreateProduct, createCheckout } from '@/lib/abacatepay'
 import type { CartItem } from '@/types'
 
 interface CartCheckoutBody {
@@ -17,27 +17,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Carrinho vazio' }, { status: 400 })
     }
 
-    const lineItems = items.map((item) => {
-      const discountedPrice = Math.round(item.finalPrice * (1 - discountRate))
-      return {
-        quantity: 1,
-        price_data: {
-          currency: 'brl',
-          unit_amount: discountedPrice * 100,
-          product_data: {
-            name: item.productName,
-            description: item.briefing.substring(0, 500),
-          },
-        },
-      }
-    })
+    const checkoutItems = await Promise.all(
+      items.map(async (item) => {
+        const discountedPrice = Math.round(item.finalPrice * (1 - discountRate))
+        const priceInCents = Math.round(discountedPrice * 100)
+        const externalId = `${item.productType}_${priceInCents}`
+        const product = await getOrCreateProduct(item.productName, priceInCents, externalId)
+        return { id: product.id, quantity: 1 }
+      })
+    )
 
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/projetos?checkout=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/carrinho`,
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const checkout = await createCheckout({
+      items: checkoutItems,
+      returnUrl: `${appUrl}/dashboard/projetos?checkout=success`,
+      completionUrl: `${appUrl}/api/webhook`,
+      methods: ['PIX', 'CARD'],
       metadata: {
         userId,
         itemCount: items.length.toString(),
@@ -45,7 +40,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: checkout.url })
   } catch (error) {
     console.error('[checkout/cart]', error)
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 })

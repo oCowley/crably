@@ -1,45 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import crypto from 'node:crypto'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import type Stripe from 'stripe'
+
+const ABACATEPAY_PUBLIC_KEY =
+  't9dXRhHHo3yDEj5pVDYz0frf7q6bMKyMRmxxCPIPp3RCplBfXRxqlC6ZpiWmOqj4L63qEaeUOtrCI8P0VMUgo6iIga2ri9ogaHFs0WIIywSMg0q7RmBfybe1E5XJcfC4IW3alNqym0tXoAKkzvfEjZxV6bE0oG2zJrNNYmUCKZyV0KZ3JS8Votf9EAWWYdiDkMkpbMdPggfh1EqHlVkMiTady6jOR3hyzGEHrIz2Ret0xHKMbiqkr9HS1JhNHDX9'
+
+function verifySignature(rawBody: string, signatureFromHeader: string): boolean {
+  const bodyBuffer = Buffer.from(rawBody, 'utf8')
+  const expectedSig = crypto
+    .createHmac('sha256', ABACATEPAY_PUBLIC_KEY)
+    .update(bodyBuffer)
+    .digest('base64')
+
+  const A = Buffer.from(expectedSig)
+  const B = Buffer.from(signatureFromHeader)
+
+  return A.length === B.length && crypto.timingSafeEqual(A, B)
+}
+
+interface WebhookPayload {
+  id: string
+  event: string
+  apiVersion: number
+  devMode: boolean
+  data: {
+    metadata?: Record<string, string>
+    [key: string]: unknown
+  }
+}
 
 export async function POST(req: NextRequest) {
-  const body = await req.text()
-  const sig = req.headers.get('stripe-signature')
-
-  // Em produção: STRIPE_WEBHOOK_SECRET vem do endpoint real configurado no Stripe Dashboard
-  if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
-    return NextResponse.json({ error: 'Missing signature' }, { status: 400 })
+  // Layer 1: Verify webhook secret in query string
+  const webhookSecret = req.nextUrl.searchParams.get('webhookSecret')
+  if (webhookSecret !== process.env.ABACATEPAY_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  let event: Stripe.Event
+  // Layer 2: Verify HMAC-SHA256 signature
+  const rawBody = await req.text()
+  const signature = req.headers.get('x-webhook-signature')
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    )
-  } catch (err) {
-    console.error('[webhook] Assinatura inválida', err)
+  if (!signature || !verifySignature(rawBody, signature)) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session
-    const meta = session.metadata ?? {}
-    const userId = meta.userId ?? session.client_reference_id
+  const payload = JSON.parse(rawBody) as WebhookPayload
+
+  if (payload.event === 'checkout.completed') {
+    const meta = payload.data.metadata ?? {}
+    const userId = meta.userId
     const orderIds = (meta.orderIds ?? '').split(',').filter(Boolean)
 
     try {
       // Atualiza cada pedido de 'pending_payment' → 'aguardando'
-      // Os pedidos já existem no Firestore com todos os dados (criados em /api/checkout)
       await Promise.all(
         orderIds.map((orderId) =>
           updateDoc(doc(db, 'orders', orderId), {
-            status: 'aguardando',        // keep for admin pedidos page backward compat
-            projectStage: 'briefing',    // new field for the project flow
+            status: 'aguardando',
+            projectStage: 'briefing',
             updatedAt: serverTimestamp(),
           })
         )
@@ -54,7 +73,7 @@ export async function POST(req: NextRequest) {
         })
       }
 
-      // Marca primeira compra como concluída no perfil do usuário
+      // Marca primeira compra como concluída
       if (userId) {
         await setDoc(
           doc(db, 'users', userId),
