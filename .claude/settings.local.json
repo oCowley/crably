@@ -14,7 +14,11 @@
       "Bash(find /c/Users/olive/OneDrive/Documentos/pessoal/cowly -type f \\\\\\(-name *.json -o -name *.ts -o -name *.tsx \\\\\\) -path */data/* -o -path */constants/*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(xargs cat:*)",
+      "WebFetch(domain:docs.abacatepay.com)",
+      "Bash(rm lib/stripe.ts)",
+      "Bash(npm uninstall:*)"
     ]
   }
 }
