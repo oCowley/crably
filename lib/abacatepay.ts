@@ -16,10 +16,17 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     ...(body ? { body: JSON.stringify(body) } : {}),
   })
 
-  const json = await res.json()
+  const text = await res.text()
+  let json: Record<string, unknown>
 
-  if (!json.success && json.error) {
-    throw new Error(`AbacatePay error: ${json.error}`)
+  try {
+    json = JSON.parse(text)
+  } catch {
+    throw new Error(`AbacatePay: resposta inválida (${res.status}): ${text.slice(0, 200)}`)
+  }
+
+  if (!res.ok || json.error) {
+    throw new Error(`AbacatePay [${res.status}] ${method} ${path}: ${json.error ?? text.slice(0, 200)}`)
   }
 
   return json.data as T

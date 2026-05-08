@@ -137,7 +137,7 @@ export default function CarrinhoPage() {
       const data = (await res.json()) as { url?: string; error?: string }
 
       if (data.url) {
-        window.location.href = data.url
+        window.open(data.url, '_blank', 'noopener,noreferrer')
         clearCart()
       } else {
         setCheckoutError(data.error ?? 'Erro desconhecido. Tente novamente.')

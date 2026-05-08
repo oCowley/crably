@@ -21,7 +21,7 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
       const res  = await fetch(`/api/projetos/${order.id}/revision`, { method: 'POST' })
       const data = await res.json() as { url?: string; error?: string }
       if (data.url) {
-        window.location.href = data.url
+        window.open(data.url, '_blank', 'noopener,noreferrer')
       } else {
         setError(data.error ?? 'Não foi possível iniciar o pagamento. Tente novamente.')
         setLoading(false)

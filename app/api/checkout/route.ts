@@ -87,7 +87,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: checkout.url })
   } catch (error) {
-    console.error('[checkout]', error)
-    return NextResponse.json({ error: 'Erro interno no checkout' }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('[checkout] ERRO:', msg)
+    return NextResponse.json({ error: `Erro no checkout: ${msg}` }, { status: 500 })
   }
 }
