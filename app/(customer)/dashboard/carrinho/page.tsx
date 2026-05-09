@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Trash2, Pencil, ShoppingBag } from 'lucide-react'
+import { Trash2, Pencil, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { useAuth } from '@/contexts/AuthContext'
 import ConfigurarPedidoModal from '@/components/dashboard/ConfigurarPedidoModal'
@@ -39,6 +39,7 @@ export default function CarrinhoPage() {
   const [checkingDiscount, setCheckingDiscount] = useState(true)
   const [loading, setLoading] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null)
 
   // Dados do comprador
   const [cpf, setCpf] = useState('')
@@ -137,7 +138,7 @@ export default function CarrinhoPage() {
       const data = (await res.json()) as { url?: string; error?: string }
 
       if (data.url) {
-        window.open(data.url, '_blank', 'noopener,noreferrer')
+        setCheckoutUrl(data.url)
         clearCart()
       } else {
         setCheckoutError(data.error ?? 'Erro desconhecido. Tente novamente.')
@@ -149,7 +150,7 @@ export default function CarrinhoPage() {
     }
   }
 
-  if (items.length === 0) {
+  if (items.length === 0 && !checkoutUrl) {
     return (
       <div>
         <div className="mb-8">
@@ -383,6 +384,34 @@ export default function CarrinhoPage() {
           onClose={() => setEditingItem(null)}
           onConfirm={handleEditConfirm}
         />
+      )}
+
+      {/* Checkout iframe modal */}
+      {checkoutUrl && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setCheckoutUrl(null)}
+          />
+          <div className="relative w-full max-w-lg bg-[#0e0e0e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+               style={{ height: '85vh' }}>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+              <p className="text-sm font-semibold text-white">Finalizar pagamento</p>
+              <button
+                onClick={() => setCheckoutUrl(null)}
+                className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <iframe
+              src={checkoutUrl}
+              className="w-full border-0"
+              style={{ height: 'calc(85vh - 49px)' }}
+              allow="payment"
+            />
+          </div>
+        </div>
       )}
     </div>
   )

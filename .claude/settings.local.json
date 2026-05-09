@@ -18,7 +18,10 @@
       "Bash(xargs cat:*)",
       "WebFetch(domain:docs.abacatepay.com)",
       "Bash(rm lib/stripe.ts)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(grep -r \"localStorage\\\\|sessionStorage\" --include=*.tsx --include=*.ts src/ app/ lib/ contexts/ components/)",
+      "Bash(curl -sI https://pay.abacatepay.com)",
+      "Bash(curl -sI https://abacatepay.com/pay)"
     ]
   }
 }
