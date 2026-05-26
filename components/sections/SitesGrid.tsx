@@ -1,13 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { X, Flame, Zap, TrendingUp, Award, Star, Sparkles, Target, Users, BarChart3, ShoppingCart, Globe, Brush, Layout, Rocket, Eye, FileText, Building2, BookOpen, DollarSign } from 'lucide-react'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
-import { auth, db } from '@/lib/firebase'
-import { createUserProfile, getUserProfile } from '@/lib/auth'
+import { db } from '@/lib/firebase'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 
 type Product = {
@@ -26,14 +23,13 @@ const discountedPrice = (cents: number) => Math.round(cents * 0.7)
 
 type Tag = { label: string; icon: typeof Zap; color: string; bg: string }
 
-// ── Tags contextuais por tipo de produto ──
-// Cada produto tem combinação ÚNICA de labels + cores + ícones. Zero repetição.
-const TAG_MAP: { keywords: string[]; featured: boolean; tags: Tag[] }[] = [
+const TAG_MAP: { keywords: string[]; featured: boolean; category: string; tags: Tag[] }[] = [
   {
     keywords: ['landing'],
     featured: true,
+    category: 'Landing Page',
     tags: [
-      { label: 'Para negócios locais', icon: Target, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
+      { label: 'Para negocios locais', icon: Target, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
       { label: 'Captura leads 24h', icon: Zap, color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
       { label: '#1 entre profissionais', icon: TrendingUp, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
     ],
@@ -41,6 +37,7 @@ const TAG_MAP: { keywords: string[]; featured: boolean; tags: Tag[] }[] = [
   {
     keywords: ['saas', 'app web'],
     featured: true,
+    category: 'SaaS',
     tags: [
       { label: 'Para startups', icon: Rocket, color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
       { label: 'Login + painel inclusos', icon: Layout, color: 'text-cyan-400', bg: 'bg-cyan-400/10 border-cyan-400/20' },
@@ -48,40 +45,45 @@ const TAG_MAP: { keywords: string[]; featured: boolean; tags: Tag[] }[] = [
     ],
   },
   {
-    keywords: ['portf', 'portfolio', 'portfólio'],
+    keywords: ['portf', 'portfolio', 'portfolio'],
     featured: false,
+    category: 'Portfolio',
     tags: [
-      { label: 'Para criativos e agências', icon: Brush, color: 'text-fuchsia-400', bg: 'bg-fuchsia-400/10 border-fuchsia-400/20' },
+      { label: 'Para criativos e agencias', icon: Brush, color: 'text-fuchsia-400', bg: 'bg-fuchsia-400/10 border-fuchsia-400/20' },
       { label: 'Impressione clientes', icon: Eye, color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
     ],
   },
   {
     keywords: ['info produto', 'infoproduto', 'info-produto'],
     featured: false,
+    category: 'E-commerce',
     tags: [
       { label: 'Para infoprodutores', icon: BookOpen, color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/20' },
-      { label: 'Venda no automático', icon: DollarSign, color: 'text-lime-400', bg: 'bg-lime-400/10 border-lime-400/20' },
+      { label: 'Venda no automatico', icon: DollarSign, color: 'text-lime-400', bg: 'bg-lime-400/10 border-lime-400/20' },
     ],
   },
   {
     keywords: ['ecommerce', 'e-commerce', 'loja'],
     featured: false,
+    category: 'E-commerce',
     tags: [
       { label: 'Para lojas online', icon: ShoppingCart, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
       { label: 'Checkout integrado', icon: Award, color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/20' },
     ],
   },
   {
-    keywords: ['blog', 'portal', 'conteúdo', 'conteudo'],
+    keywords: ['blog', 'portal', 'conteudo', 'conteudo'],
     featured: false,
+    category: 'Blog',
     tags: [
-      { label: 'Para criadores de conteúdo', icon: FileText, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
+      { label: 'Para criadores de conteudo', icon: FileText, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
       { label: 'SEO otimizado', icon: BarChart3, color: 'text-teal-400', bg: 'bg-teal-400/10 border-teal-400/20' },
     ],
   },
   {
     keywords: ['institucional', 'empresa', 'corporat'],
     featured: false,
+    category: 'Institucional',
     tags: [
       { label: 'Para empresas', icon: Building2, color: 'text-indigo-400', bg: 'bg-indigo-400/10 border-indigo-400/20' },
       { label: 'Credibilidade online', icon: Globe, color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
@@ -98,30 +100,20 @@ function getProductMeta(name: string) {
   const match = TAG_MAP.find((entry) => entry.keywords.some((kw) => lower.includes(kw)))
   return {
     featured: match?.featured ?? false,
+    category: match?.category ?? 'Outros',
     tags: match?.tags ?? FALLBACK_TAGS,
   }
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
-  'auth/invalid-credential': 'E-mail ou senha incorretos.',
-  'auth/user-not-found': 'E-mail ou senha incorretos.',
-  'auth/wrong-password': 'E-mail ou senha incorretos.',
-  'auth/email-already-in-use': 'E-mail já cadastrado.',
-  'auth/weak-password': 'Senha fraca. Use pelo menos 6 caracteres.',
-  'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
-  'auth/invalid-email': 'E-mail inválido.',
-}
-
-type Mode = 'register' | 'login'
-
-const inputCls =
-  'w-full h-11 px-4 rounded-xl bg-[#0B0B0B] border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#F97316]/40 focus:ring-1 focus:ring-[#F97316]/15 transition-all'
+const FILTER_CATEGORIES = ['Todos', 'Landing Page', 'SaaS', 'Portfolio', 'E-commerce', 'Blog', 'Institucional']
 
 export default function SitesGrid() {
   const router = useRouter()
 
   const [products, setProducts] = useState<Product[]>([])
   const [loadingProducts, setLoadingProducts] = useState(true)
+  const [activeFilter, setActiveFilter] = useState('Todos')
+  const [previewProduct, setPreviewProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     getDocs(query(collection(db, 'products'), orderBy('name')))
@@ -135,67 +127,30 @@ export default function SitesGrid() {
       .finally(() => setLoadingProducts(false))
   }, [])
 
-  // Modal state
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
-  const [mode, setMode] = useState<Mode>('register')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  function openModal(productName: string) {
-    setSelectedProduct(productName)
-    setMode('register')
-    setName('')
-    setEmail('')
-    setPassword('')
-    setError('')
-  }
-
-  function closeModal() {
-    setSelectedProduct(null)
-    setError('')
-    setLoading(false)
-  }
-
-  function switchMode(next: Mode) {
-    setMode(next)
-    setError('')
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      if (mode === 'register') {
-        const { user } = await createUserWithEmailAndPassword(auth, email, password)
-        await createUserProfile(user.uid, email, name.trim())
-        router.push('/dashboard')
-      } else {
-        const { user } = await signInWithEmailAndPassword(auth, email, password)
-        const profile = await getUserProfile(user.uid)
-        const isStaff = profile?.role === 'admin' || profile?.role === 'developer'
-        router.push(isStaff ? '/admin' : '/dashboard')
-      }
-    } catch (err: unknown) {
-      const code = (err as { code?: string }).code ?? ''
-      setError(ERROR_MESSAGES[code] ?? 'Erro inesperado. Tente novamente.')
-      setLoading(false)
+  // ESC to close preview modal
+  useEffect(() => {
+    if (!previewProduct) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setPreviewProduct(null)
     }
-  }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [previewProduct])
+
+  const handleContract = useCallback((slug: string) => {
+    router.push(`/login?mode=register&redirect=/products/${slug}`)
+  }, [router])
 
   if (loadingProducts) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-2xl border border-white/5 bg-dark-card overflow-hidden animate-pulse">
-            <div className="aspect-[16/10] bg-white/5" />
+          <div key={i} className="rounded-2xl border border-border bg-surface overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-elevated" />
             <div className="p-5 space-y-3">
-              <div className="h-4 w-1/2 rounded bg-white/8" />
-              <div className="h-3 w-3/4 rounded bg-white/5" />
-              <div className="h-8 w-full rounded-xl bg-white/5 mt-4" />
+              <div className="h-4 w-1/2 rounded bg-elevated" />
+              <div className="h-3 w-3/4 rounded bg-elevated" />
+              <div className="h-8 w-full rounded-xl bg-elevated mt-4" />
             </div>
           </div>
         ))}
@@ -203,74 +158,101 @@ export default function SitesGrid() {
     )
   }
 
-  // Sort: featured first, then rest
+  // Sort: featured first
   const sorted = [...products].sort((a, b) => {
     const aF = getProductMeta(a.name).featured ? 0 : 1
     const bF = getProductMeta(b.name).featured ? 0 : 1
     return aF - bF
   })
 
+  // Filter
+  const filtered = activeFilter === 'Todos'
+    ? sorted
+    : sorted.filter((p) => getProductMeta(p.name).category === activeFilter)
+
   return (
     <>
+      {/* Filter tabs */}
+      <div className="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+        {FILTER_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveFilter(cat)}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              activeFilter === cat
+                ? 'bg-brand text-white shadow-lg shadow-brand/20'
+                : 'bg-elevated text-secondary hover:bg-elevated hover:text-foreground border border-border'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {sorted.map((product, i) => {
+        {filtered.map((product, i) => {
           const meta = getProductMeta(product.name)
 
           return (
             <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3} className="flex">
               <div
-                className={`group relative rounded-2xl bg-dark-card cursor-pointer transition-all duration-300 lg:hover:-translate-y-1.5 lg:hover:z-30 flex flex-col w-full ${
+                className={`group relative rounded-2xl bg-surface transition-all duration-300 lg:hover:-translate-y-1.5 lg:hover:z-30 flex flex-col w-full ${
                   meta.featured
                     ? 'border border-brand/20 lg:hover:border-brand/40 lg:hover:shadow-brand/15 featured-card'
-                    : 'border border-white/5 lg:hover:border-white/15 lg:hover:shadow-black/40'
+                    : 'border border-border lg:hover:border-border-strong lg:hover:shadow-black/10 dark:lg:hover:shadow-black/40'
                 }`}
               >
-                {/* ── Discount badge (sobre a imagem, canto direito) ── */}
-                <div className="absolute top-3 right-3 z-20 discount-badge">
-                  <div className="discount-shimmer text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-lg">
+                {/* Discount badge */}
+                <div className="absolute top-3 right-3 z-20">
+                  <div className="discount-shimmer text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-lg opacity-80">
                     <Flame size={11} className="shrink-0" />
-                    −30%
+                    -30%
                   </div>
                 </div>
 
-                {/* ── Preview (clipped) ── */}
-                <div className="aspect-[16/10] relative overflow-hidden bg-[#0d0d0d] rounded-t-2xl">
+                {/* Preview image */}
+                <div className="aspect-[16/10] relative overflow-hidden bg-inset rounded-t-2xl">
                   {product.images?.[0] ? (
                     <img
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-full h-full object-cover object-top sm:group-hover:object-bottom sm:group-hover:scale-110 transition-[object-position,transform] duration-[3s] ease-in-out"
+                      className="w-full h-full object-cover object-top transition-[object-position] duration-[3s] ease-in-out sm:group-hover:object-bottom"
                     />
                   ) : (
-                    <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-30 group-hover:opacity-50 transition-opacity" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)' }}>
+                    <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-30 group-hover:opacity-50 transition-opacity" style={{ background: 'linear-gradient(135deg, var(--inset) 0%, var(--elevated) 100%)' }}>
                       <div className="mt-8 space-y-2">
-                        <div className="h-4 w-2/3 rounded-lg bg-white/10" />
-                        <div className="h-2.5 w-full rounded bg-white/6" />
-                        <div className="h-2.5 w-5/6 rounded bg-white/6" />
+                        <div className="h-4 w-2/3 rounded-lg bg-elevated" />
+                        <div className="h-2.5 w-full rounded bg-elevated" />
+                        <div className="h-2.5 w-5/6 rounded bg-elevated" />
                       </div>
                       <div className="flex gap-2">
                         <div className="h-7 w-20 rounded-lg bg-brand/30" />
-                        <div className="h-7 w-14 rounded-lg bg-white/6" />
+                        <div className="h-7 w-14 rounded-lg bg-elevated" />
                       </div>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-card via-transparent to-transparent opacity-60 lg:group-hover:opacity-20 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60 lg:group-hover:opacity-20 transition-opacity duration-500" />
+
+                  {/* Hover overlay with buttons */}
+                  <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+                    <button
+                      onClick={() => setPreviewProduct(product)}
+                      className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-sm font-semibold text-white hover:bg-white/20 transition-colors"
+                    >
+                      Ver preview
+                    </button>
+                    <button
+                      onClick={() => handleContract(product.slug)}
+                      className="px-4 py-2 rounded-xl bg-brand text-sm font-semibold text-white hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
+                    >
+                      Contratar
+                    </button>
+                  </div>
                 </div>
 
-                {/* ── Floating expanded image on hover (desktop only) ── */}
-                {product.images?.[0] && (
-                  <div className="hidden lg:block absolute inset-x-[-12px] top-[-12px] z-30 rounded-2xl overflow-hidden shadow-2xl shadow-black/90 border border-white/10 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-500 ease-out pointer-events-none origin-top max-h-[70vh] overflow-y-auto">
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full"
-                    />
-                  </div>
-                )}
-
-                {/* ── Body ── */}
+                {/* Body */}
                 <div className="p-5 flex flex-col flex-1">
-                  {/* Destaque label + contextual tags */}
                   <div className="flex flex-wrap items-center gap-1.5 mb-3">
                     {meta.featured && (
                       <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-bold bg-brand/10 border-brand/25 text-brand">
@@ -286,10 +268,10 @@ export default function SitesGrid() {
                     ))}
                   </div>
 
-                  <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-brand transition-colors">
+                  <h3 className="font-semibold text-foreground text-sm mb-1 group-hover:text-brand transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-xs text-neutral-500 mb-4 line-clamp-2 leading-relaxed flex-1">{product.description}</p>
+                  <p className="text-xs text-muted mb-4 line-clamp-2 leading-relaxed flex-1">{product.description}</p>
 
                   {/* Pricing */}
                   <div className="flex items-center gap-2.5 mb-1.5">
@@ -302,18 +284,18 @@ export default function SitesGrid() {
                   </div>
                   <p className="flex items-center gap-1 text-[11px] text-green-400 font-medium mb-4">
                     <Zap size={10} />
-                    1ª compra com 30% off
+                    1a compra com 30% off
                   </p>
 
                   <button
-                    onClick={() => openModal(product.name)}
+                    onClick={() => handleContract(product.slug)}
                     className={`w-full h-9 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover transition-all duration-200 active:scale-[0.97] ${
                       meta.featured
                         ? 'lg:hover:shadow-lg lg:hover:shadow-brand/30 glow-brand-sm'
                         : 'lg:hover:shadow-md lg:hover:shadow-brand/20'
                     }`}
                   >
-                    Contratar →
+                    Contratar
                   </button>
                 </div>
               </div>
@@ -322,153 +304,58 @@ export default function SitesGrid() {
         })}
       </div>
 
-      {/* Single modal — rendered at this level, outside any card */}
-      {selectedProduct !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+      {filtered.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-muted">Nenhum template encontrado nesta categoria.</p>
+        </div>
+      )}
+
+      {/* Preview Modal */}
+      {previewProduct && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={closeModal}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setPreviewProduct(null)}
           />
-
-          {/* Modal */}
-          <div className="relative w-full max-w-md mx-4 sm:mx-auto bg-[#111111] border border-white/8 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/60 overflow-hidden">
-            {/* Ambient glow */}
-            <div
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(ellipse at center, rgba(249,115,22,0.08) 0%, transparent 70%)',
-                filter: 'blur(20px)',
-              }}
-            />
-
-            {/* Close */}
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-auto rounded-2xl bg-surface border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
             <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setPreviewProduct(null)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-black/60 backdrop-blur-sm text-secondary hover:text-foreground hover:bg-elevated transition-colors"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
 
-            <div className="relative z-10">
-              {/* Header */}
-              <div className="text-center mb-6">
-                <div className="mx-auto mb-3 w-10 h-10">
-                  <Image
-                    src="/images/icone-crably.png"
-                    alt="Crably"
-                    width={40}
-                    height={40}
-                    className="rounded-xl shadow-lg shadow-brand/30"
-                  />
+            {previewProduct.images?.[0] && (
+              <img
+                src={previewProduct.images[0]}
+                alt={previewProduct.name}
+                className="w-full rounded-t-2xl"
+              />
+            )}
+
+            <div className="p-6 flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-foreground">{previewProduct.name}</h3>
+                <p className="text-sm text-secondary mt-1">{previewProduct.description}</p>
+                <div className="flex items-center gap-2.5 mt-3">
+                  <span className="text-xl font-bold text-brand">
+                    {fmt(discountedPrice(previewProduct.price))}
+                  </span>
+                  <span className="price-slash text-sm text-neutral-600">
+                    {fmt(previewProduct.price)}
+                  </span>
                 </div>
-                <h2 className="text-xl font-bold text-white mb-1">
-                  {mode === 'register' ? 'Crie sua conta' : 'Bem-vindo de volta'}
-                </h2>
-                <p className="text-sm text-neutral-400">
-                  {mode === 'register'
-                    ? `Para contratar ${selectedProduct}, crie sua conta gratuitamente.`
-                    : 'Entre para continuar com seu pedido.'}
-                </p>
               </div>
-
-              {/* Tabs */}
-              <div className="flex rounded-xl bg-white/5 p-1 mb-6">
-                {(['register', 'login'] as Mode[]).map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => switchMode(m)}
-                    className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-                      mode === m
-                        ? 'bg-brand text-white shadow-lg shadow-brand/20'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    {m === 'register' ? 'Criar conta' : 'Já tenho conta'}
-                  </button>
-                ))}
-              </div>
-
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {mode === 'register' && (
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">Nome</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      placeholder="Seu nome"
-                      className={inputCls}
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">E-mail</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="voce@email.com"
-                    className={inputCls}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">Senha</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    placeholder="••••••••"
-                    className={inputCls}
-                  />
-                </div>
-
-                {error && (
-                  <div className="px-4 py-3 rounded-xl bg-red-500/8 border border-red-500/20 text-red-400 text-sm">
-                    {error}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-11 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-hover transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-brand/20 mt-2"
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v8H4z"
-                        />
-                      </svg>
-                      Carregando...
-                    </span>
-                  ) : mode === 'register' ? (
-                    'Criar conta e contratar'
-                  ) : (
-                    'Entrar'
-                  )}
-                </button>
-              </form>
+              <button
+                onClick={() => handleContract(previewProduct.slug)}
+                className="shrink-0 px-6 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
+              >
+                Contratar
+              </button>
             </div>
           </div>
         </div>

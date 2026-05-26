@@ -24,7 +24,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 type Mode = 'register' | 'login'
 
 const inputCls =
-  'w-full h-11 px-4 rounded-xl bg-[#0B0B0B] border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#F97316]/40 focus:ring-1 focus:ring-[#F97316]/15 transition-all'
+  'w-full h-11 px-4 rounded-xl bg-background border border-border text-foreground placeholder-muted text-sm focus:outline-none focus:border-brand/40 focus:ring-1 focus:ring-brand/15 transition-all'
 
 export default function ContratarButton({ productName }: { productName: string }) {
   const router = useRouter()
@@ -95,12 +95,12 @@ export default function ContratarButton({ productName }: { productName: string }
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-overlay backdrop-blur-sm"
             onClick={closeModal}
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl p-8 shadow-2xl shadow-black/60 overflow-hidden">
+          <div className="relative w-full max-w-md bg-surface border border-border rounded-2xl p-8 shadow-2xl shadow-black/10 dark:shadow-black/60 overflow-hidden">
             {/* Ambient glow */}
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
@@ -114,7 +114,7 @@ export default function ContratarButton({ productName }: { productName: string }
             {/* Close */}
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
             >
               <X size={18} />
             </button>
@@ -131,10 +131,10 @@ export default function ContratarButton({ productName }: { productName: string }
                     className="rounded-xl shadow-lg shadow-brand/30"
                   />
                 </div>
-                <h2 className="text-xl font-bold text-white mb-1">
+                <h2 className="text-xl font-bold text-foreground mb-1">
                   {mode === 'register' ? 'Crie sua conta' : 'Bem-vindo de volta'}
                 </h2>
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-secondary">
                   {mode === 'register'
                     ? `Para contratar ${productName}, crie sua conta gratuitamente.`
                     : 'Entre para continuar com seu pedido.'}
@@ -142,7 +142,7 @@ export default function ContratarButton({ productName }: { productName: string }
               </div>
 
               {/* Tabs */}
-              <div className="flex rounded-xl bg-white/5 p-1 mb-6">
+              <div className="flex rounded-xl bg-elevated p-1 mb-6">
                 {(['register', 'login'] as Mode[]).map((m) => (
                   <button
                     key={m}
@@ -151,7 +151,7 @@ export default function ContratarButton({ productName }: { productName: string }
                     className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
                       mode === m
                         ? 'bg-brand text-white shadow-lg shadow-brand/20'
-                        : 'text-neutral-400 hover:text-white'
+                        : 'text-secondary hover:text-foreground'
                     }`}
                   >
                     {m === 'register' ? 'Criar conta' : 'Já tenho conta'}
@@ -163,7 +163,7 @@ export default function ContratarButton({ productName }: { productName: string }
               <form onSubmit={handleSubmit} className="space-y-4">
                 {mode === 'register' && (
                   <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
+                    <label className="block text-sm font-medium text-secondary mb-2">
                       Nome
                     </label>
                     <input
@@ -178,7 +178,7 @@ export default function ContratarButton({ productName }: { productName: string }
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">
+                  <label className="block text-sm font-medium text-secondary mb-2">
                     E-mail
                   </label>
                   <input
@@ -192,7 +192,7 @@ export default function ContratarButton({ productName }: { productName: string }
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">
+                  <label className="block text-sm font-medium text-secondary mb-2">
                     Senha
                   </label>
                   <input

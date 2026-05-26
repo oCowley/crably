@@ -21,7 +21,13 @@
       "Bash(npm uninstall:*)",
       "Bash(grep -r \"localStorage\\\\|sessionStorage\" --include=*.tsx --include=*.ts src/ app/ lib/ contexts/ components/)",
       "Bash(curl -sI https://pay.abacatepay.com)",
-      "Bash(curl -sI https://abacatepay.com/pay)"
+      "Bash(curl -sI https://abacatepay.com/pay)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(cd:*)"
     ]
   }
 }

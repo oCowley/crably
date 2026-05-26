@@ -1,0 +1,810 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - link "Pular para o conteudo" [ref=e3] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Crably crably" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Crably" [ref=e7]
+          - generic [ref=e8]: crably
+        - navigation [ref=e9]:
+          - generic [ref=e10]: Software Development
+        - generic [ref=e11]:
+          - button "Ativar modo escuro" [active] [ref=e1156] [cursor=pointer]:
+            - img [ref=e1157]
+          - link "Começar agora" [ref=e15] [cursor=pointer]:
+            - /url: /login?mode=register
+            - button "Começar agora" [ref=e16]
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - img
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - heading "Seu site no ar em 14 dias." [level=1] [ref=e21]:
+              - generic [ref=e22]:
+                - generic [ref=e23]: Seu
+                - generic [ref=e24]: site
+                - generic [ref=e25]: "no"
+                - generic [ref=e26]: ar
+                - generic [ref=e27]: em
+              - generic [ref=e29]: 14 dias.
+            - paragraph [ref=e30]: Sites profissionais com preco fixo, entrega garantida em 14 dias e sem enrolacao. Sua primeira compra tem 30% de desconto.
+            - generic [ref=e31]:
+              - link "Ver sites" [ref=e32] [cursor=pointer]:
+                - /url: /products
+                - button "Ver sites" [ref=e33]
+              - link "Como funciona" [ref=e34] [cursor=pointer]:
+                - /url: "#como-funciona"
+                - button "Como funciona" [ref=e35]
+            - generic [ref=e36]:
+              - generic [ref=e37]:
+                - paragraph [ref=e38]: 30+
+                - paragraph [ref=e39]: Projetos entregues
+              - generic [ref=e40]:
+                - paragraph [ref=e41]: 14 dias
+                - paragraph [ref=e42]: Prazo padrao
+              - generic [ref=e43]:
+                - paragraph [ref=e44]: 30%
+                - paragraph [ref=e45]: Off na 1a compra
+          - generic [ref=e920]:
+            - button "Blog / Portal Blog / Portal R$ 1.260,00" [ref=e921] [cursor=pointer]:
+              - img "Blog / Portal" [ref=e923]
+              - generic [ref=e925]:
+                - paragraph [ref=e926]: Blog / Portal
+                - paragraph [ref=e927]: R$ 1.260,00
+            - button "E-commerce E-commerce R$ 3.150,00" [ref=e928] [cursor=pointer]:
+              - img "E-commerce" [ref=e930]
+              - generic [ref=e932]:
+                - paragraph [ref=e933]: E-commerce
+                - paragraph [ref=e934]: R$ 3.150,00
+            - button "Landing Page Landing Page R$ 840,00" [ref=e935] [cursor=pointer]:
+              - img "Landing Page" [ref=e937]
+              - generic [ref=e939]:
+                - paragraph [ref=e940]: Landing Page
+                - paragraph [ref=e941]: R$ 840,00
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e67]
+            - text: "Pacote express: 7 dias"
+            - generic [ref=e69]: ·
+          - generic [ref=e70]:
+            - img [ref=e71]
+            - text: Preco fixo garantido
+            - generic [ref=e74]: ·
+          - generic [ref=e75]:
+            - img [ref=e76]
+            - text: Design profissional
+            - generic [ref=e82]: ·
+          - generic [ref=e83]:
+            - img [ref=e84]
+            - text: 100% responsivo
+            - generic [ref=e86]: ·
+          - generic [ref=e87]:
+            - img [ref=e88]
+            - text: 30% off na 1a compra
+            - generic [ref=e90]: ·
+          - generic [ref=e91]:
+            - img [ref=e92]
+            - text: Entrega em ate 14 dias
+            - generic [ref=e97]: ·
+          - generic [ref=e98]:
+            - img [ref=e99]
+            - text: Escopo fixo e claro
+            - generic [ref=e102]: ·
+          - generic [ref=e103]:
+            - img [ref=e104]
+            - text: Sites de alta conversao
+            - generic [ref=e107]: ·
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - img [ref=e110]
+            - text: "Pacote express: 7 dias"
+            - generic [ref=e112]: ·
+          - generic [ref=e113]:
+            - img [ref=e114]
+            - text: Preco fixo garantido
+            - generic [ref=e117]: ·
+          - generic [ref=e118]:
+            - img [ref=e119]
+            - text: Design profissional
+            - generic [ref=e125]: ·
+          - generic [ref=e126]:
+            - img [ref=e127]
+            - text: 100% responsivo
+            - generic [ref=e129]: ·
+          - generic [ref=e130]:
+            - img [ref=e131]
+            - text: 30% off na 1a compra
+            - generic [ref=e133]: ·
+          - generic [ref=e134]:
+            - img [ref=e135]
+            - text: Entrega em ate 14 dias
+            - generic [ref=e140]: ·
+          - generic [ref=e141]:
+            - img [ref=e142]
+            - text: Escopo fixo e claro
+            - generic [ref=e145]: ·
+          - generic [ref=e146]:
+            - img [ref=e147]
+            - text: Sites de alta conversao
+            - generic [ref=e150]: ·
+      - generic [ref=e152]:
+        - generic [ref=e153]:
+          - paragraph [ref=e154]: Por que a Crably
+          - heading "Tudo que voce precisa, sem complicacao" [level=2] [ref=e155]
+        - generic [ref=e156]:
+          - generic [ref=e159]:
+            - img [ref=e160]
+            - heading "Entregue em 14 dias, garantido" [level=3] [ref=e162]
+            - paragraph [ref=e163]: Do pagamento ao site no ar em ate 14 dias. Precisa antes? Ative o pacote express e receba em 7 dias.
+          - generic [ref=e171]:
+            - img [ref=e172]
+            - heading "Preco fixo, sem surpresas" [level=3] [ref=e174]
+            - paragraph [ref=e175]: Preco definido antes de comecar. Sem cobrancas extras. Primeira compra com 30% de desconto.
+          - generic [ref=e177]:
+            - img [ref=e178]
+            - heading "Acompanhe em tempo real" [level=3] [ref=e184]
+            - paragraph [ref=e185]: Dashboard com status atualizado a cada etapa do projeto.
+          - generic [ref=e187]:
+            - img [ref=e188]
+            - heading "Design que converte" [level=3] [ref=e192]
+            - paragraph [ref=e193]: Sites criados para transformar visitantes em clientes.
+          - generic [ref=e195]:
+            - img [ref=e196]
+            - heading "Sem dor de cabeca" [level=3] [ref=e199]
+            - paragraph [ref=e200]: Contrate, acompanhe e receba tudo em um unico lugar. Garantido.
+      - generic [ref=e202]:
+        - generic [ref=e205]: Oferta ativa
+        - generic [ref=e206]:
+          - img [ref=e207]
+          - generic [ref=e209]: Primeira compra com 30% de desconto
+        - generic [ref=e942]: Oferta encerrada
+        - link "Ver ofertas →" [ref=e230] [cursor=pointer]:
+          - /url: "#sites"
+          - text: Ver ofertas
+          - generic [ref=e231]: →
+      - generic [ref=e233]:
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - paragraph [ref=e237]: Sites
+            - heading "Feitos para converter" [level=2] [ref=e238]
+          - generic [ref=e239]:
+            - img [ref=e240]
+            - generic [ref=e242]: 30% off na 1a compra
+        - generic [ref=e243]:
+          - button "Todos" [ref=e943]
+          - button "Landing Page" [ref=e944]
+          - button "SaaS" [ref=e945]
+          - button "Portfolio" [ref=e946]
+          - button "E-commerce" [ref=e947]
+          - button "Blog" [ref=e948]
+          - button "Institucional" [ref=e949]
+        - generic [ref=e950]:
+          - generic [ref=e952]:
+            - generic [ref=e954]:
+              - img [ref=e955]
+              - text: "-30%"
+            - generic [ref=e957]:
+              - img "Landing Page" [ref=e958]
+              - generic [ref=e960]:
+                - button "Ver preview" [ref=e961]
+                - button "Contratar" [ref=e962]
+            - generic [ref=e963]:
+              - generic [ref=e964]:
+                - generic [ref=e965]:
+                  - img [ref=e966]
+                  - text: Destaque
+                - generic [ref=e969]:
+                  - img [ref=e970]
+                  - text: Para negocios locais
+                - generic [ref=e974]:
+                  - img [ref=e975]
+                  - text: Captura leads 24h
+                - generic [ref=e977]:
+                  - img [ref=e978]
+                  - text: "#1 entre profissionais"
+              - heading "Landing Page" [level=3] [ref=e981]
+              - paragraph [ref=e982]: Página única e poderosa, feita para transformar visitantes em clientes. Até 6 seções personalizadas com o seu conteúdo, identidade visual e chamadas para ação.
+              - generic [ref=e983]:
+                - generic [ref=e984]: R$ 840,00
+                - generic [ref=e985]: R$ 1.200,00
+              - paragraph [ref=e986]:
+                - img [ref=e987]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e989]
+          - generic [ref=e991]:
+            - generic [ref=e993]:
+              - img [ref=e994]
+              - text: "-30%"
+            - generic [ref=e996]:
+              - img "SaaS / App Web" [ref=e997]
+              - generic [ref=e999]:
+                - button "Ver preview" [ref=e1000]
+                - button "Contratar" [ref=e1001]
+            - generic [ref=e1002]:
+              - generic [ref=e1003]:
+                - generic [ref=e1004]:
+                  - img [ref=e1005]
+                  - text: Destaque
+                - generic [ref=e1008]:
+                  - img [ref=e1009]
+                  - text: Para startups
+                - generic [ref=e1014]:
+                  - img [ref=e1015]
+                  - text: Login + painel inclusos
+                - generic [ref=e1017]:
+                  - img [ref=e1018]
+                  - text: Escolha de 12+ startups
+              - heading "SaaS / App Web" [level=3] [ref=e1023]
+              - paragraph [ref=e1024]: Sua ideia virou produto. Aplicação web com autenticação de usuários, dashboard personalizado e a lógica do seu negócio funcionando de ponta a ponta.
+              - generic [ref=e1025]:
+                - generic [ref=e1026]: R$ 4.900,00
+                - generic [ref=e1027]: R$ 7.000,00
+              - paragraph [ref=e1028]:
+                - img [ref=e1029]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e1031]
+          - generic [ref=e1033]:
+            - generic [ref=e1035]:
+              - img [ref=e1036]
+              - text: "-30%"
+            - generic [ref=e1038]:
+              - img "Blog / Portal" [ref=e1039]
+              - generic [ref=e1041]:
+                - button "Ver preview" [ref=e1042]
+                - button "Contratar" [ref=e1043]
+            - generic [ref=e1044]:
+              - generic [ref=e1045]:
+                - generic [ref=e1046]:
+                  - img [ref=e1047]
+                  - text: Para criadores de conteudo
+                - generic [ref=e1050]:
+                  - img [ref=e1051]
+                  - text: SEO otimizado
+              - heading "Blog / Portal" [level=3] [ref=e1053]
+              - paragraph [ref=e1054]: Sua presença digital com conteúdo que atrai e retém. Painel para publicar posts, categorias e páginas organizadas — tudo do jeito que você precisa.
+              - generic [ref=e1055]:
+                - generic [ref=e1056]: R$ 1.260,00
+                - generic [ref=e1057]: R$ 1.800,00
+              - paragraph [ref=e1058]:
+                - img [ref=e1059]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e1061]
+          - generic [ref=e1063]:
+            - generic [ref=e1065]:
+              - img [ref=e1066]
+              - text: "-30%"
+            - generic [ref=e1068]:
+              - img "E-commerce" [ref=e1069]
+              - generic [ref=e1071]:
+                - button "Ver preview" [ref=e1072]
+                - button "Contratar" [ref=e1073]
+            - generic [ref=e1074]:
+              - generic [ref=e1075]:
+                - generic [ref=e1076]:
+                  - img [ref=e1077]
+                  - text: Para lojas online
+                - generic [ref=e1081]:
+                  - img [ref=e1082]
+                  - text: Checkout integrado
+              - heading "E-commerce" [level=3] [ref=e1085]
+              - paragraph [ref=e1086]: Loja virtual completa com catálogo de produtos, carrinho e checkout seguro. Pronta para vender desde o primeiro dia.
+              - generic [ref=e1087]:
+                - generic [ref=e1088]: R$ 3.150,00
+                - generic [ref=e1089]: R$ 4.500,00
+              - paragraph [ref=e1090]:
+                - img [ref=e1091]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e1093]
+          - generic [ref=e1095]:
+            - generic [ref=e1097]:
+              - img [ref=e1098]
+              - text: "-30%"
+            - generic [ref=e1100]:
+              - img "Loja de Infoprodutos" [ref=e1101]
+              - generic [ref=e1103]:
+                - button "Ver preview" [ref=e1104]
+                - button "Contratar" [ref=e1105]
+            - generic [ref=e1106]:
+              - generic [ref=e1107]:
+                - generic [ref=e1108]:
+                  - img [ref=e1109]
+                  - text: Para infoprodutores
+                - generic [ref=e1111]:
+                  - img [ref=e1112]
+                  - text: Venda no automatico
+              - heading "Loja de Infoprodutos" [level=3] [ref=e1114]
+              - paragraph [ref=e1115]: Venda cursos, e-books ou mentorias com uma estrutura completa — checkout integrado, área do aluno e entrega automática do produto. Entrega em 10 dias úteis.
+              - generic [ref=e1116]:
+                - generic [ref=e1117]: R$ 1.540,00
+                - generic [ref=e1118]: R$ 2.200,00
+              - paragraph [ref=e1119]:
+                - img [ref=e1120]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e1122]
+          - generic [ref=e1124]:
+            - generic [ref=e1126]:
+              - img [ref=e1127]
+              - text: "-30%"
+            - generic [ref=e1129]:
+              - img "Site Institucional" [ref=e1130]
+              - generic [ref=e1132]:
+                - button "Ver preview" [ref=e1133]
+                - button "Contratar" [ref=e1134]
+            - generic [ref=e1135]:
+              - generic [ref=e1136]:
+                - generic [ref=e1137]:
+                  - img [ref=e1138]
+                  - text: Para empresas
+                - generic [ref=e1142]:
+                  - img [ref=e1143]
+                  - text: Credibilidade online
+              - heading "Site Institucional" [level=3] [ref=e1146]
+              - paragraph [ref=e1147]: O endereço digital da sua empresa. Até 5 páginas com a sua história, serviços, equipe e contato — tudo com design profissional e pronto para impressionar.
+              - generic [ref=e1148]:
+                - generic [ref=e1149]: R$ 1.960,00
+                - generic [ref=e1150]: R$ 2.800,00
+              - paragraph [ref=e1151]:
+                - img [ref=e1152]
+                - text: 1a compra com 30% off
+              - button "Contratar" [ref=e1154]
+      - generic [ref=e263]:
+        - generic [ref=e264]:
+          - paragraph [ref=e265]: O processo
+          - heading "Do zero ao ar em 4 passos" [level=2] [ref=e266]
+        - generic [ref=e270]:
+          - generic [ref=e272]:
+            - img [ref=e274]
+            - generic [ref=e277]:
+              - heading "Escolha o site" [level=3] [ref=e278]
+              - paragraph [ref=e279]: Navegue pelo catalogo e encontre o estilo certo para o seu negocio.
+          - generic [ref=e281]:
+            - img [ref=e283]
+            - generic [ref=e285]:
+              - heading "Finalize o pagamento" [level=3] [ref=e286]
+              - paragraph [ref=e287]: Checkout seguro via Abacate Pay. Primeira compra com 30% de desconto automatico. Quer prioridade? Adicione o pacote express.
+          - generic [ref=e289]:
+            - img [ref=e291]
+            - generic [ref=e293]:
+              - heading "Acompanhe o projeto" [level=3] [ref=e294]
+              - paragraph [ref=e295]: Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.
+          - generic [ref=e297]:
+            - img [ref=e299]
+            - generic [ref=e303]:
+              - heading "Receba seu site" [level=3] [ref=e304]
+              - paragraph [ref=e305]: Site entregue em ate 14 dias. Com pacote express, em 7 dias. Pronto para publicar.
+      - generic [ref=e310]:
+        - img [ref=e311]
+        - heading "Satisfacao garantida ou seu dinheiro de volta" [level=2] [ref=e314]
+        - paragraph [ref=e315]: Se em 7 dias voce nao estiver satisfeito, devolvemos 100% do valor. Sem perguntas.
+        - generic [ref=e316]:
+          - generic [ref=e317]:
+            - img [ref=e318]
+            - generic [ref=e321]: Pagamento seguro
+          - generic [ref=e322]:
+            - img [ref=e323]
+            - generic [ref=e327]: Entrega garantida
+          - generic [ref=e328]:
+            - img [ref=e329]
+            - generic [ref=e331]: Suporte dedicado
+      - generic [ref=e333]:
+        - generic [ref=e334]:
+          - paragraph [ref=e335]: Comparacao
+          - heading "Por que escolher a Crably?" [level=2] [ref=e336]
+        - table [ref=e339]:
+          - rowgroup [ref=e340]:
+            - row "Crably Melhor custo-beneficio Freelancer Agencia" [ref=e341]:
+              - columnheader [ref=e342]
+              - columnheader "Crably Melhor custo-beneficio" [ref=e343]:
+                - generic [ref=e344]:
+                  - generic [ref=e345]: Crably
+                  - generic [ref=e346]: Melhor custo-beneficio
+              - columnheader "Freelancer" [ref=e347]
+              - columnheader "Agencia" [ref=e348]
+          - rowgroup [ref=e349]:
+            - row "Preco Fixo e acessivel Variavel Alto" [ref=e350]:
+              - cell "Preco" [ref=e351]
+              - cell "Fixo e acessivel" [ref=e352]:
+                - generic [ref=e353]:
+                  - img [ref=e354]
+                  - generic [ref=e356]: Fixo e acessivel
+              - cell "Variavel" [ref=e357]:
+                - generic [ref=e358]:
+                  - img [ref=e359]
+                  - generic [ref=e362]: Variavel
+              - cell "Alto" [ref=e363]:
+                - generic [ref=e364]:
+                  - img [ref=e365]
+                  - generic [ref=e368]: Alto
+            - row "Prazo 14 dias garantidos Imprevisivel 30-90 dias" [ref=e369]:
+              - cell "Prazo" [ref=e370]
+              - cell "14 dias garantidos" [ref=e371]:
+                - generic [ref=e372]:
+                  - img [ref=e373]
+                  - generic [ref=e375]: 14 dias garantidos
+              - cell "Imprevisivel" [ref=e376]:
+                - generic [ref=e377]:
+                  - img [ref=e378]
+                  - generic [ref=e381]: Imprevisivel
+              - cell "30-90 dias" [ref=e382]:
+                - generic [ref=e383]:
+                  - img [ref=e384]
+                  - generic [ref=e387]: 30-90 dias
+            - row "Qualidade Design premium Inconsistente Alta" [ref=e388]:
+              - cell "Qualidade" [ref=e389]
+              - cell "Design premium" [ref=e390]:
+                - generic [ref=e391]:
+                  - img [ref=e392]
+                  - generic [ref=e394]: Design premium
+              - cell "Inconsistente" [ref=e395]:
+                - generic [ref=e396]:
+                  - img [ref=e397]
+                  - generic [ref=e400]: Inconsistente
+              - cell "Alta" [ref=e401]:
+                - generic [ref=e402]:
+                  - img [ref=e403]
+                  - generic [ref=e406]: Alta
+            - row "Revisoes Dentro do escopo Infinitas idas e vindas Limitadas e caras" [ref=e407]:
+              - cell "Revisoes" [ref=e408]
+              - cell "Dentro do escopo" [ref=e409]:
+                - generic [ref=e410]:
+                  - img [ref=e411]
+                  - generic [ref=e413]: Dentro do escopo
+              - cell "Infinitas idas e vindas" [ref=e414]:
+                - generic [ref=e415]:
+                  - img [ref=e416]
+                  - generic [ref=e419]: Infinitas idas e vindas
+              - cell "Limitadas e caras" [ref=e420]:
+                - generic [ref=e421]:
+                  - img [ref=e422]
+                  - generic [ref=e425]: Limitadas e caras
+            - row "Suporte Incluso Depende Cobrado a parte" [ref=e426]:
+              - cell "Suporte" [ref=e427]
+              - cell "Incluso" [ref=e428]:
+                - generic [ref=e429]:
+                  - img [ref=e430]
+                  - generic [ref=e432]: Incluso
+              - cell "Depende" [ref=e433]:
+                - generic [ref=e434]:
+                  - img [ref=e435]
+                  - generic [ref=e438]: Depende
+              - cell "Cobrado a parte" [ref=e439]:
+                - generic [ref=e440]:
+                  - img [ref=e441]
+                  - generic [ref=e444]: Cobrado a parte
+            - row "Transparencia Dashboard em tempo real Mensagens no WhatsApp Reunioes semanais" [ref=e445]:
+              - cell "Transparencia" [ref=e446]
+              - cell "Dashboard em tempo real" [ref=e447]:
+                - generic [ref=e448]:
+                  - img [ref=e449]
+                  - generic [ref=e451]: Dashboard em tempo real
+              - cell "Mensagens no WhatsApp" [ref=e452]:
+                - generic [ref=e453]:
+                  - img [ref=e454]
+                  - generic [ref=e457]: Mensagens no WhatsApp
+              - cell "Reunioes semanais" [ref=e458]:
+                - generic [ref=e459]:
+                  - img [ref=e460]
+                  - generic [ref=e463]: Reunioes semanais
+      - generic [ref=e465]:
+        - generic [ref=e466]:
+          - paragraph [ref=e467]: Avaliacoes
+          - heading "O que nossos clientes dizem" [level=2] [ref=e468]
+        - generic [ref=e469]:
+          - generic [ref=e471]:
+            - generic [ref=e472]:
+              - generic [ref=e473]:
+                - img [ref=e474]
+                - img [ref=e477]
+              - generic [ref=e479]:
+                - img [ref=e480]
+                - img [ref=e483]
+              - generic [ref=e485]:
+                - img [ref=e486]
+                - img [ref=e489]
+              - generic [ref=e491]:
+                - img [ref=e492]
+                - img [ref=e495]
+              - generic [ref=e497]:
+                - img [ref=e498]
+                - img [ref=e501]
+            - paragraph [ref=e503]: “Cara, em menos de uma semana o site ja estava no ar. Minha equipe ficou olhando e perguntando quem tinha feito. Nao esperava que fosse tao rapido e tao bem feito assim.”
+            - paragraph [ref=e504]: Landing Page para agencia
+            - generic [ref=e505]:
+              - img "Rafael Mendes" [ref=e506]
+              - generic [ref=e507]:
+                - paragraph [ref=e508]: Rafael Mendes
+                - paragraph [ref=e509]: Fundador, AgenciaPulse
+          - generic [ref=e511]:
+            - generic [ref=e512]:
+              - generic [ref=e513]:
+                - img [ref=e514]
+                - img [ref=e517]
+              - generic [ref=e519]:
+                - img [ref=e520]
+                - img [ref=e523]
+              - generic [ref=e525]:
+                - img [ref=e526]
+                - img [ref=e529]
+              - generic [ref=e531]:
+                - img [ref=e532]
+                - img [ref=e535]
+              - generic [ref=e537]:
+                - img [ref=e538]
+                - img [ref=e541]
+            - paragraph [ref=e543]: “Precisava de um site para divulgar minhas aulas particulares e fiquei impressionada com o resultado. Processo simples, entrega no prazo e meus alunos conseguem me encontrar facilmente.”
+            - paragraph [ref=e544]: Site institucional para aulas
+            - generic [ref=e545]:
+              - img "Ana Paula Santos" [ref=e546]
+              - generic [ref=e547]:
+                - paragraph [ref=e548]: Ana Paula Santos
+                - paragraph [ref=e549]: Professora, Ensino Medio
+          - generic [ref=e551]:
+            - generic [ref=e552]:
+              - generic [ref=e553]:
+                - img [ref=e554]
+                - img [ref=e557]
+              - generic [ref=e559]:
+                - img [ref=e560]
+                - img [ref=e563]
+              - generic [ref=e565]:
+                - img [ref=e566]
+                - img [ref=e569]
+              - generic [ref=e571]:
+                - img [ref=e572]
+                - img [ref=e575]
+              - generic [ref=e577]:
+                - img [ref=e578]
+                - img [ref=e581]
+            - paragraph [ref=e583]: “O que mais me surpreendeu foi conseguir acompanhar tudo pelo dashboard. Cada etapa aparecendo la, sem precisar ficar mandando mensagem perguntando como tava.”
+            - paragraph [ref=e584]: SaaS Landing Page
+            - generic [ref=e585]:
+              - img "Bruno Alves" [ref=e586]
+              - generic [ref=e587]:
+                - paragraph [ref=e588]: Bruno Alves
+                - paragraph [ref=e589]: Co-founder, SaaSly
+          - generic [ref=e591]:
+            - generic [ref=e592]:
+              - generic [ref=e593]:
+                - img [ref=e594]
+                - img [ref=e597]
+              - generic [ref=e599]:
+                - img [ref=e600]
+                - img [ref=e603]
+              - generic [ref=e605]:
+                - img [ref=e606]
+                - img [ref=e609]
+              - generic [ref=e611]:
+                - img [ref=e612]
+                - img [ref=e615]
+              - generic [ref=e617]:
+                - img [ref=e618]
+                - img [ref=e621]
+            - paragraph [ref=e623]: “Sempre achei que ter um site ia ser uma dor de cabeca enorme. Nao foi. Paguei, acompanhei pelo painel e quando percebi o site ja estava pronto. Simples assim.”
+            - paragraph [ref=e624]: Landing Page para clinica
+            - generic [ref=e625]:
+              - img "Juliana Costa" [ref=e626]
+              - generic [ref=e627]:
+                - paragraph [ref=e628]: Juliana Costa
+                - paragraph [ref=e629]: Diretora, Clinica Espaco Bem
+          - generic [ref=e631]:
+            - generic [ref=e632]:
+              - generic [ref=e633]:
+                - img [ref=e634]
+                - img [ref=e637]
+              - generic [ref=e639]:
+                - img [ref=e640]
+                - img [ref=e643]
+              - generic [ref=e645]:
+                - img [ref=e646]
+                - img [ref=e649]
+              - generic [ref=e651]:
+                - img [ref=e652]
+                - img [ref=e655]
+              - generic [ref=e657]:
+                - img [ref=e658]
+                - img [ref=e661]
+            - paragraph [ref=e663]: “Sem surpresa de preco no final, sem aquela enrolacao de "mais uma revisaozinha aqui". Pagou, combinou, entregou. Exatamente o que eu precisava.”
+            - paragraph [ref=e664]: Portfolio para tech
+            - generic [ref=e665]:
+              - img "Thiago Rocha" [ref=e666]
+              - generic [ref=e667]:
+                - paragraph [ref=e668]: Thiago Rocha
+                - paragraph [ref=e669]: Marketing, TechFlow
+          - generic [ref=e671]:
+            - generic [ref=e672]:
+              - generic [ref=e673]:
+                - img [ref=e674]
+                - img [ref=e677]
+              - generic [ref=e679]:
+                - img [ref=e680]
+                - img [ref=e683]
+              - generic [ref=e685]:
+                - img [ref=e686]
+                - img [ref=e689]
+              - generic [ref=e691]:
+                - img [ref=e692]
+                - img [ref=e695]
+              - generic [ref=e697]:
+                - img [ref=e698]
+                - img [ref=e701]
+            - paragraph [ref=e703]: “Confesso que fiquei receosa no comeco, nunca tinha contratado nada assim pela internet. Mas fui acompanhando tudo e quando o site ficou pronto eu falei "nossa, e isso". Adorei.”
+            - paragraph [ref=e704]: E-commerce para moda
+            - generic [ref=e705]:
+              - img "Mariana Lima" [ref=e706]
+              - generic [ref=e707]:
+                - paragraph [ref=e708]: Mariana Lima
+                - paragraph [ref=e709]: Empreendedora
+      - generic [ref=e711]:
+        - generic [ref=e712]:
+          - paragraph [ref=e713]: Sobre nos
+          - heading "Nascemos para simplificar a web." [level=2] [ref=e714]
+          - paragraph [ref=e715]: A Crably surgiu da frustracao com um mercado cheio de promessas e poucas entregas. Freelancers que somem, agencias que cobram caro demais e projetos que nunca terminam.
+          - paragraph [ref=e716]: "Nossa missao e simples: entregar sites profissionais com preco justo, prazo real de 14 dias e processo 100% transparente. Do pagamento ao site no ar — sem surpresas."
+          - generic [ref=e717]:
+            - generic [ref=e718]:
+              - generic [ref=e719]: 30+
+              - generic [ref=e720]: Projetos entregues
+            - generic [ref=e721]:
+              - generic [ref=e722]: 100%
+              - generic [ref=e723]: Entregas no prazo
+            - generic [ref=e724]:
+              - generic [ref=e725]: 14 dias
+              - generic [ref=e726]: Prazo padrao
+        - generic [ref=e728]:
+          - generic [ref=e729]:
+            - img [ref=e730]
+            - heading "Velocidade" [level=4] [ref=e735]
+            - paragraph [ref=e736]: Sites entregues em ate 14 dias. Com pacote express, em 7 dias — sem abrir mao da qualidade.
+          - generic [ref=e737]:
+            - img [ref=e738]
+            - heading "Cuidado" [level=4] [ref=e740]
+            - paragraph [ref=e741]: Cada projeto e tratado como se fosse o nosso proprio negocio.
+          - generic [ref=e742]:
+            - img [ref=e743]
+            - heading "Alcance" [level=4] [ref=e746]
+            - paragraph [ref=e747]: Atendemos empreendedores em todo o Brasil, 100% remoto.
+          - generic [ref=e748]:
+            - img [ref=e749]
+            - heading "Garantia" [level=4] [ref=e752]
+            - paragraph [ref=e753]: Entrega garantida ou devolvemos seu dinheiro. Sem letras miudas.
+      - generic [ref=e755]:
+        - generic [ref=e757]:
+          - img "Equipe Crably" [ref=e758]
+          - generic [ref=e761]: Time disponivel agora
+        - generic [ref=e762]:
+          - paragraph [ref=e763]: Nossa equipe
+          - heading "Pode contar com a gente." [level=2] [ref=e764]
+          - paragraph [ref=e765]: Somos um time enxuto, agil e apaixonado por resultados reais. Cada projeto e tratado com seriedade, codigo limpo e entrega no prazo — sem desculpas.
+          - generic [ref=e766]:
+            - generic [ref=e767]:
+              - img [ref=e769]
+              - generic [ref=e771]:
+                - paragraph [ref=e772]: Rapido por padrao
+                - paragraph [ref=e773]: Processos otimizados para entregar em 14 dias sem abrir mao da qualidade.
+            - generic [ref=e774]:
+              - img [ref=e776]
+              - generic [ref=e779]:
+                - paragraph [ref=e780]: Confiavel de verdade
+                - paragraph [ref=e781]: Compromisso com o prazo, preco fixo e comunicacao transparente do inicio ao fim.
+            - generic [ref=e782]:
+              - img [ref=e784]
+              - generic [ref=e789]:
+                - paragraph [ref=e790]: Agil e sem burocracia
+                - paragraph [ref=e791]: Da contratacao ao site no ar com o minimo de atrito possivel para voce.
+          - generic [ref=e792]:
+            - generic [ref=e793]:
+              - paragraph [ref=e794]: 30+
+              - paragraph [ref=e795]: Projetos entregues
+            - generic [ref=e796]:
+              - paragraph [ref=e797]: 14 dias
+              - paragraph [ref=e798]: Prazo garantido
+            - generic [ref=e799]:
+              - paragraph [ref=e800]: 30%
+              - paragraph [ref=e801]: Off na 1a compra
+      - generic [ref=e803]:
+        - generic [ref=e804]:
+          - paragraph [ref=e805]: FAQ
+          - heading "Perguntas frequentes" [level=2] [ref=e806]
+        - generic [ref=e807]:
+          - generic [ref=e809]:
+            - button "Quanto tempo leva para meu site ficar pronto?" [ref=e810]:
+              - generic [ref=e811]: Quanto tempo leva para meu site ficar pronto?
+              - img [ref=e812]
+            - paragraph [ref=e814]: O prazo padrao e de 14 dias. Com o pacote express, entregamos em 7 dias uteis.
+          - generic [ref=e816]:
+            - button "Posso personalizar o template?" [ref=e817]:
+              - generic [ref=e818]: Posso personalizar o template?
+              - img [ref=e819]
+            - paragraph [ref=e821]: "Sim! Personalizacoes dentro do escopo definido estao incluidas: cores, textos, imagens e logo. O escopo e claro desde o inicio."
+          - generic [ref=e823]:
+            - button "Como funciona o pagamento?" [ref=e824]:
+              - generic [ref=e825]: Como funciona o pagamento?
+              - img [ref=e826]
+            - paragraph [ref=e828]: O pagamento e feito via Abacate Pay, com checkout seguro. Voce paga e ja pode acompanhar o projeto pelo dashboard.
+          - generic [ref=e830]:
+            - button "E se eu nao gostar do resultado?" [ref=e831]:
+              - generic [ref=e832]: E se eu nao gostar do resultado?
+              - img [ref=e833]
+            - paragraph [ref=e835]: Oferecemos garantia de 7 dias. Se nao estiver satisfeito, devolvemos 100% do valor. Sem perguntas.
+          - generic [ref=e837]:
+            - button "Voces oferecem suporte apos a entrega?" [ref=e838]:
+              - generic [ref=e839]: Voces oferecem suporte apos a entrega?
+              - img [ref=e840]
+            - paragraph [ref=e842]: Sim, suporte esta incluso apos a entrega para ajustes e duvidas sobre o site.
+          - generic [ref=e844]:
+            - button "Qual a diferenca para um site feito do zero?" [ref=e845]:
+              - generic [ref=e846]: Qual a diferenca para um site feito do zero?
+              - img [ref=e847]
+            - paragraph [ref=e849]: Nossos templates tem escopo fixo, prazo garantido e preco justo. Voce sabe exatamente o que vai receber, quando e por quanto.
+      - generic [ref=e855]:
+        - generic [ref=e856]:
+          - img [ref=e857]
+          - generic [ref=e859]: 30% off — Oferta ativa
+        - heading "Seu site esta a um clique de distancia." [level=2] [ref=e860]:
+          - text: Seu site esta a um clique
+          - text: de distancia.
+        - paragraph [ref=e861]: Sem freelancers. Sem surpresas no preco. Sua primeira compra tem 30% de desconto. Site entregue em ate 14 dias.
+        - link "Comecar agora" [ref=e862] [cursor=pointer]:
+          - /url: /login?mode=register
+          - button "Comecar agora" [ref=e863]
+    - contentinfo [ref=e864]:
+      - generic [ref=e865]:
+        - generic [ref=e866]:
+          - generic [ref=e867]:
+            - generic [ref=e868]:
+              - img "Crably" [ref=e869]
+              - generic [ref=e870]: crably
+            - paragraph [ref=e871]: Sites premium prontos para lançar, a preço fixo e prazo real.
+            - generic [ref=e872]:
+              - link [ref=e873] [cursor=pointer]:
+                - /url: https://instagram.com/crably
+                - img [ref=e874]
+              - link [ref=e877] [cursor=pointer]:
+                - /url: https://linkedin.com/company/crably
+                - img [ref=e878]
+          - generic [ref=e882]:
+            - generic [ref=e883]:
+              - paragraph [ref=e884]: Navegação
+              - link "Sites" [ref=e885] [cursor=pointer]:
+                - /url: /#sites
+              - link "Como funciona" [ref=e886] [cursor=pointer]:
+                - /url: /#como-funciona
+              - link "Por que a Crably" [ref=e887] [cursor=pointer]:
+                - /url: /#vantagens
+              - link "Avaliações" [ref=e888] [cursor=pointer]:
+                - /url: /#avaliacoes
+              - link "Sobre nós" [ref=e889] [cursor=pointer]:
+                - /url: /#sobre
+              - link "Nossa equipe" [ref=e890] [cursor=pointer]:
+                - /url: /#equipe
+            - generic [ref=e891]:
+              - paragraph [ref=e892]: Acesso
+              - link "Entrar" [ref=e893] [cursor=pointer]:
+                - /url: /login
+              - link "Criar conta" [ref=e894] [cursor=pointer]:
+                - /url: /login?mode=register
+              - link "Minha área" [ref=e895] [cursor=pointer]:
+                - /url: /dashboard
+            - generic [ref=e896]:
+              - paragraph [ref=e897]: Contato
+              - link "contato@crably.com.br" [ref=e898] [cursor=pointer]:
+                - /url: mailto:contato@crably.com.br
+                - img [ref=e899]
+                - text: contato@crably.com.br
+              - link "+55 (11) 9 9999-9999" [ref=e902] [cursor=pointer]:
+                - /url: https://wa.me/5511999999999
+                - img [ref=e903]
+                - text: +55 (11) 9 9999-9999
+        - generic [ref=e905]:
+          - paragraph [ref=e906]: © 2026 Crably. Todos os direitos reservados.
+          - generic [ref=e907]:
+            - link "Política de Privacidade" [ref=e908] [cursor=pointer]:
+              - /url: /privacidade
+            - link "Termos de Uso" [ref=e909] [cursor=pointer]:
+              - /url: /termos
+  - button "Open Next.js Dev Tools" [ref=e915] [cursor=pointer]:
+    - img [ref=e916]
+  - alert [ref=e1155]

@@ -14,9 +14,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         'bg-brand text-white hover:bg-brand-hover active:scale-[0.97] shadow-lg shadow-brand/20 hover:shadow-brand/30',
       secondary:
-        'bg-white text-neutral-900 border border-neutral-200 hover:bg-neutral-50 active:scale-[0.97] dark:bg-white/5 dark:text-white dark:border-white/10 dark:hover:bg-white/10',
+        'bg-surface text-foreground border border-border hover:bg-elevated active:scale-[0.97]',
       ghost:
-        'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-white/5',
+        'text-muted hover:text-foreground hover:bg-elevated',
     }
 
     const sizes = {
