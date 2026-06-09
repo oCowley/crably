@@ -29,7 +29,7 @@ import Footer from '@/components/layout/Footer'
 import Button from '@/components/ui/Button'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import SitesGrid from '@/components/sections/SitesGrid'
-import TemplateShowcase from '@/components/ui/TemplateShowcase'
+import DashboardMockup from '@/components/ui/DashboardMockup'
 import CountdownTimer from '@/components/ui/CountdownTimer'
 import FAQ from '@/components/sections/FAQ'
 
@@ -268,8 +268,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* RIGHT: Template Showcase */}
-            <TemplateShowcase />
+            {/* RIGHT: Dashboard mockup */}
+            <DashboardMockup />
           </div>
 
         </section>

@@ -434,19 +434,3 @@ html.theme-transition *::after {
   border-radius: 0 0 12px 12px;
 }
 
-/* ─── Template showcase skeleton ────────────────────────────── */
-.template-showcase-stack {
-  position: relative;
-  width: 460px;
-  height: 380px;
-  perspective: 1200px;
-}
-.template-card-skeleton {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  overflow: hidden;
-}
