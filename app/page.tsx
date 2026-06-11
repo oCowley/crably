@@ -2,13 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   Zap,
-  Sparkles,
-  Palette,
-  Smartphone,
-  CreditCard,
   Rocket,
-  CheckCircle,
-  Gem,
   DollarSign,
   Radio,
   Target,
@@ -22,7 +16,8 @@ import {
   ClipboardList,
   CreditCard as CreditCardIcon,
   Monitor,
-  Package,
+  Upload,
+  MessageCircle,
 } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -30,7 +25,6 @@ import Button from '@/components/ui/Button'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import SitesGrid from '@/components/sections/SitesGrid'
 import DashboardMockup from '@/components/ui/DashboardMockup'
-import CountdownTimer from '@/components/ui/CountdownTimer'
 import FAQ from '@/components/sections/FAQ'
 
 /* ──────────────────────────────────────────────────────────────
@@ -54,22 +48,11 @@ function WordReveal({ words, baseDelay = 0 }: { words: string[]; baseDelay?: num
   )
 }
 
-const MARQUEE_ITEMS = [
-  { icon: Zap, label: 'Pacote express: 7 dias' },
-  { icon: Sparkles, label: 'Preco fixo garantido' },
-  { icon: Palette, label: 'Design profissional' },
-  { icon: Smartphone, label: '100% responsivo' },
-  { icon: CreditCard, label: '30% off na 1a compra' },
-  { icon: Rocket, label: 'Entrega em ate 14 dias' },
-  { icon: CheckCircle, label: 'Escopo fixo e claro' },
-  { icon: Gem, label: 'Sites de alta conversao' },
-]
-
 const STEPS = [
-  { n: '01', title: 'Escolha o site', desc: 'Navegue pelo catalogo e encontre o estilo certo para o seu negocio.', icon: ClipboardList },
-  { n: '02', title: 'Finalize o pagamento', desc: 'Checkout seguro via Abacate Pay. Primeira compra com 30% de desconto automatico. Quer prioridade? Adicione o pacote express.', icon: CreditCardIcon },
-  { n: '03', title: 'Acompanhe o projeto', desc: 'Acesse seu dashboard e veja cada etapa do desenvolvimento em tempo real.', icon: Monitor },
-  { n: '04', title: 'Receba seu site', desc: 'Site entregue em ate 14 dias. Com pacote express, em 7 dias. Pronto para publicar.', icon: Package },
+  { n: '01', title: 'Escolha o modelo ideal', desc: 'Veja os modelos disponíveis e escolha o tipo de site que faz mais sentido para sua empresa. Se tiver dúvida, use nosso chat para te ajudar.', icon: ClipboardList },
+  { n: '02', title: 'Finalize a contratação', desc: 'Veja o valor antes de contratar, aplique o desconto da primeira compra e finalize tudo com pagamento seguro.', icon: CreditCardIcon },
+  { n: '03', title: 'Envie as informações do projeto', desc: 'Depois da contratação, você envia os dados da empresa, textos, referências e materiais necessários para começarmos.', icon: Upload },
+  { n: '04', title: 'Acompanhe e receba seu site', desc: 'Acompanhe o andamento do projeto e receba seu site em até 14 dias úteis após o envio das informações necessárias.', icon: Monitor },
 ]
 
 const REVIEWS = [
@@ -206,14 +189,14 @@ export default function HomePage() {
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
                 <span className="block text-foreground overflow-hidden">
-                  <WordReveal words={['Seu', 'site', 'no', 'ar', 'em']} baseDelay={200} />
+                  <WordReveal words={['Seu', 'site', 'no', 'ar', 'em', 'até']} baseDelay={200} />
                 </span>
                 <span className="block overflow-hidden mt-2">
                   <span
                     className="animate-word-reveal inline-block gradient-text"
                     style={{ animationDelay: '650ms' }}
                   >
-                    14 dias.
+                    2 semanas.
                   </span>
                 </span>
               </h1>
@@ -223,7 +206,7 @@ export default function HomePage() {
                 className="text-base lg:text-lg xl:text-xl text-secondary max-w-lg leading-relaxed mb-10 animate-fade-up"
                 style={{ animationDelay: '650ms' }}
               >
-                Sites profissionais com preco fixo, entrega garantida em 14 dias e sem enrolacao. Sua primeira compra tem 30% de desconto.
+               Sites profissionais para empresas B2B, com preço fixo, escolha simples e entrega em até 14 dias úteis. Escolha um modelo ou use nosso chat para descobrir qual site combina com seu negócio.
               </p>
 
               {/* CTAs */}
@@ -236,7 +219,7 @@ export default function HomePage() {
                     size="lg"
                     className="w-full sm:w-auto glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
                   >
-                    Ver sites
+                    Ver modelos de site
                   </Button>
                 </Link>
                 <Link href="#como-funciona">
@@ -245,7 +228,7 @@ export default function HomePage() {
                     variant="ghost"
                     className="w-full sm:w-auto text-secondary border border-border hover:border-border-strong text-base"
                   >
-                    Como funciona
+                    Me ajude a escolher
                   </Button>
                 </Link>
               </div>
@@ -256,9 +239,9 @@ export default function HomePage() {
                 style={{ animationDelay: '900ms' }}
               >
                 {[
-                  { v: '30+', l: 'Projetos entregues' },
-                  { v: '14 dias', l: 'Prazo padrao' },
-                  { v: '30%', l: 'Off na 1a compra' },
+                  { v: 'Preço fixo', l: 'Sem orçamento escondido' },
+                  { v: 'Até 14 dias úteis', l: 'Após envio das informações' },
+                  { v: '30% OFF', l: 'Na primeira compra' },
                 ].map((s, i) => (
                   <div key={i} className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}>
                     <p className="text-2xl font-bold text-foreground">{s.v}</p>
@@ -275,31 +258,6 @@ export default function HomePage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            MARQUEE STRIP
-        ════════════════════════════════════════════════════════== */}
-        <div className="border-y border-border bg-inset py-4 overflow-hidden" aria-hidden="true">
-          <div className="flex">
-            {[0, 1].map((copy) => (
-              <div
-                key={copy}
-                className="animate-marquee flex shrink-0 items-center"
-              >
-                {MARQUEE_ITEMS.map((item, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-2 text-sm font-semibold px-6 text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.7)]"
-                  >
-                    <item.icon size={14} />
-                    {item.label}
-                    <span className="mx-2 text-orange-400/30">·</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ══════════════════════════════════════════════════════════
             BENTO GRID
         ════════════════════════════════════════════════════════== */}
         <section id="vantagens" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
@@ -307,8 +265,8 @@ export default function HomePage() {
             <ScrollReveal className="text-center mb-16">
               <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Crably</p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto">
-                Tudo que voce precisa,{' '}
-                <span className="gradient-text-subtle">sem complicacao</span>
+                Tudo para tirar seu site do papel,{' '}
+                <span className="gradient-text-subtle">sem complicação</span>
               </h2>
             </ScrollReveal>
 
@@ -323,9 +281,9 @@ export default function HomePage() {
                   />
                   <div className="relative z-10">
                     <Zap size={36} className="mb-4 text-brand" />
-                    <h3 className="text-xl font-bold text-foreground mb-2">Entregue em 14 dias, garantido</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-2">Seu site no ar em até 14 dias úteis</h3>
                     <p className="text-secondary leading-relaxed">
-                      Do pagamento ao site no ar em ate 14 dias. Precisa antes? Ative o pacote express e receba em 7 dias.
+                      Após o envio das informações necessárias, criamos e entregamos seu site em até 14 dias úteis. Precisa antes? Ative o pacote Express e receba em até 7 dias úteis.
                     </p>
                   </div>
                   <div className="absolute bottom-6 right-6 flex gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
@@ -349,9 +307,9 @@ export default function HomePage() {
                     style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.05) 0%, transparent 70%)' }}
                   />
                   <DollarSign size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Preco fixo, sem surpresas</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Preço fixo, sem orçamento escondido</h3>
                   <p className="text-secondary text-sm leading-relaxed">
-                    Preco definido antes de comecar. Sem cobrancas extras. Primeira compra com 30% de desconto.
+                    Você vê o valor antes de contratar. Sem reunião só para descobrir preço e sem cobrança surpresa no final.
                   </p>
                 </div>
               </ScrollReveal>
@@ -360,9 +318,9 @@ export default function HomePage() {
               <ScrollReveal delay={1}>
                 <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                   <Radio size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Acompanhe em tempo real</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Acompanhe cada etapa</h3>
                   <p className="text-secondary text-sm leading-relaxed">
-                    Dashboard com status atualizado a cada etapa do projeto.
+                    Veja o status do projeto e saiba exatamente em que fase seu site está.
                   </p>
                 </div>
               </ScrollReveal>
@@ -371,9 +329,9 @@ export default function HomePage() {
               <ScrollReveal delay={2}>
                 <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                   <Target size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Design que converte</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Design que gera confiança</h3>
                   <p className="text-secondary text-sm leading-relaxed">
-                    Sites criados para transformar visitantes em clientes.
+                    Sites pensados para apresentar sua empresa com clareza, profissionalismo e foco em contato comercial.
                   </p>
                 </div>
               </ScrollReveal>
@@ -382,9 +340,9 @@ export default function HomePage() {
               <ScrollReveal delay={3} className="md:col-span-1">
                 <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
                   <ShieldCheck size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Sem dor de cabeca</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Processo simples do início ao fim</h3>
                   <p className="text-secondary text-sm leading-relaxed">
-                    Contrate, acompanhe e receba tudo em um unico lugar. Garantido.
+                    Escolha o modelo, envie as informações, acompanhe o projeto e receba seu site pronto. Tudo em um só lugar.
                   </p>
                 </div>
               </ScrollReveal>
@@ -410,15 +368,14 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <Flame size={18} className="text-brand shrink-0" />
               <span className="text-base sm:text-lg font-bold text-foreground">
-                Primeira compra com <span className="text-brand">30% de desconto</span>
+                <span className="text-brand">30% de desconto</span> na primeira compra
               </span>
             </div>
-            <CountdownTimer targetDate="2025-12-31T23:59:59" />
             <Link
               href="#sites"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-sm font-semibold text-brand hover:bg-brand/20 transition-colors"
             >
-              Ver ofertas
+              Ver modelos
               <span className="text-xs">→</span>
             </Link>
           </div>
@@ -430,12 +387,18 @@ export default function HomePage() {
         <section id="sites" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
           <div className="max-w-6xl mx-auto">
             <ScrollReveal className="mb-16">
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sites</p>
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div className="max-w-2xl">
+                  <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Modelos de site</p>
                   <h2 className="text-4xl md:text-5xl font-bold text-foreground">
-                    Feitos para converter
+                    Escolha o site ideal para sua empresa
                   </h2>
+                  <p className="mt-5 text-base sm:text-lg text-secondary leading-relaxed">
+                    Selecione um modelo pronto para empresas B2B, veja o preço antes de contratar e receba seu site em até 14 dias úteis após o envio das informações.
+                  </p>
+                  <p className="mt-2 text-sm text-muted">
+                    Não sabe qual escolher? Use nosso chat para encontrar a melhor opção.
+                  </p>
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 shrink-0">
                   <Flame size={14} className="text-brand" />
@@ -451,11 +414,11 @@ export default function HomePage() {
         {/* ══════════════════════════════════════════════════════════
             HOW IT WORKS
         ════════════════════════════════════════════════════════== */}
-        <section id="como-funciona" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
+        <section id="como-funciona" className="pt-10 pb-16 sm:pt-14 sm:pb-24 lg:pt-20 lg:pb-32 px-4 sm:px-6 border-t border-border">
           <div className="max-w-5xl mx-auto">
-            <ScrollReveal className="text-center mb-20">
+            <ScrollReveal className="text-center mb-12">
               <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">O processo</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">Do zero ao ar em 4 passos</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">Seu site pronto em 4 etapas simples</h2>
             </ScrollReveal>
 
             <div className="relative">
@@ -472,10 +435,10 @@ export default function HomePage() {
                         <step.icon size={24} className="text-brand" />
                       </div>
                       <div className="flex-1 py-3">
-                        <h3 className="font-semibold text-foreground text-xl mb-2 group-hover:text-brand transition-colors">
+                        <h3 className="font-semibold text-foreground text-xl sm:text-2xl mb-2 group-hover:text-brand transition-colors">
                           {step.title}
                         </h3>
-                        <p className="text-secondary leading-relaxed">{step.desc}</p>
+                        <p className="text-secondary leading-relaxed text-base sm:text-lg">{step.desc}</p>
                       </div>
                     </div>
                   </ScrollReveal>
@@ -499,16 +462,16 @@ export default function HomePage() {
                 <div className="relative z-10">
                   <ShieldCheck size={48} className="mx-auto mb-6 text-brand" />
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-                    Satisfacao garantida ou seu dinheiro de volta
+                    Contrate com segurança
                   </h2>
                   <p className="text-secondary leading-relaxed max-w-lg mx-auto mb-8">
-                    Se em 7 dias voce nao estiver satisfeito, devolvemos 100% do valor. Sem perguntas.
+                    Preço claro, pagamento seguro e acompanhamento durante todo o projeto. Você sabe exatamente o que contratou, em que etapa está e quando vai receber.
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-3">
                     {[
                       { icon: ShieldCheck, label: 'Pagamento seguro' },
-                      { icon: Package, label: 'Entrega garantida' },
-                      { icon: Heart, label: 'Suporte dedicado' },
+                      { icon: DollarSign, label: 'Preço fixo' },
+                      { icon: MessageCircle, label: 'Suporte por WhatsApp' },
                     ].map((badge, i) => (
                       <div key={i} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-elevated border border-border">
                         <badge.icon size={14} className="text-brand" />

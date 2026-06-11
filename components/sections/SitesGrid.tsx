@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, Flame, Zap, TrendingUp, Award, Star, Sparkles, Target, Users, BarChart3, ShoppingCart, Globe, Brush, Layout, Rocket, Eye, FileText, Building2, BookOpen, DollarSign } from 'lucide-react'
+import { X, Check, MessageCircle, Flame, Zap, TrendingUp, Award, Star, Sparkles, Target, Users, BarChart3, ShoppingCart, Globe, Brush, Layout, Rocket, Eye, FileText, Building2, BookOpen, DollarSign } from 'lucide-react'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import ScrollReveal from '@/components/ui/ScrollReveal'
@@ -74,7 +74,7 @@ const TAG_MAP: { keywords: string[]; featured: boolean; category: string; tags: 
   {
     keywords: ['blog', 'portal', 'conteudo', 'conteudo'],
     featured: false,
-    category: 'Blog',
+    category: 'Blog / Portal',
     tags: [
       { label: 'Para criadores de conteudo', icon: FileText, color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
       { label: 'SEO otimizado', icon: BarChart3, color: 'text-teal-400', bg: 'bg-teal-400/10 border-teal-400/20' },
@@ -87,6 +87,15 @@ const TAG_MAP: { keywords: string[]; featured: boolean; category: string; tags: 
     tags: [
       { label: 'Para empresas', icon: Building2, color: 'text-indigo-400', bg: 'bg-indigo-400/10 border-indigo-400/20' },
       { label: 'Credibilidade online', icon: Globe, color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
+    ],
+  },
+  {
+    keywords: ['pagina de vendas', 'vendas', 'venda', 'vsl', 'sales'],
+    featured: false,
+    category: 'Página de Vendas',
+    tags: [
+      { label: 'Foco em conversao', icon: Target, color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
+      { label: 'Ideal para ofertas', icon: DollarSign, color: 'text-lime-400', bg: 'bg-lime-400/10 border-lime-400/20' },
     ],
   },
 ]
@@ -105,7 +114,27 @@ function getProductMeta(name: string) {
   }
 }
 
-const FILTER_CATEGORIES = ['Todos', 'Landing Page', 'SaaS', 'Portfolio', 'E-commerce', 'Blog', 'Institucional']
+const FILTER_CATEGORIES = ['Todos', 'Institucional', 'Landing Page', 'Página de Vendas', 'E-commerce', 'Blog / Portal']
+
+const HELP_FILTER = 'Não sei qual escolher'
+
+// TODO: trocar pelo número real (placeholder herdado do Footer)
+const WHATSAPP_NUMBER = '5511999999999'
+const WHATSAPP_HELP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  'Olá! Não sei qual modelo de site escolher, podem me ajudar?',
+)}`
+
+// Lista genérica de entregáveis por categoria (não há dados por produto ainda)
+const CATEGORY_FEATURES: Record<string, string[]> = {
+  'Landing Page': ['Página única profissional', 'Formulário ou botão de WhatsApp', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'Institucional': ['Páginas institucionais (sobre, serviços, contato)', 'Formulário de contato', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'Página de Vendas': ['Página focada em conversão', 'Seções de oferta e prova social', 'Botão de compra ou WhatsApp', 'Entrega em até 14 dias úteis'],
+  'E-commerce': ['Catálogo de produtos', 'Checkout integrado', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'Blog / Portal': ['Estrutura de posts e categorias', 'Otimização básica de SEO', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'SaaS': ['Landing page do produto', 'Seções de recursos e planos', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'Portfolio': ['Galeria de projetos', 'Página de contato', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+  'Outros': ['Site profissional sob medida', 'Design responsivo', 'Entrega em até 14 dias úteis'],
+}
 
 export default function SitesGrid() {
   const router = useRouter()
@@ -187,12 +216,22 @@ export default function SitesGrid() {
             {cat}
           </button>
         ))}
+        <a
+          href={WHATSAPP_HELP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border border-brand/30 bg-brand/10 text-brand hover:bg-brand/20 transition-all duration-200"
+        >
+          <MessageCircle size={14} className="shrink-0" />
+          {HELP_FILTER}
+        </a>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {filtered.map((product, i) => {
           const meta = getProductMeta(product.name)
+          const features = CATEGORY_FEATURES[meta.category] ?? CATEGORY_FEATURES.Outros
 
           return (
             <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3} className="flex">
@@ -246,7 +285,7 @@ export default function SitesGrid() {
                       onClick={() => handleContract(product.slug)}
                       className="px-4 py-2 rounded-xl bg-brand text-sm font-semibold text-white hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
                     >
-                      Contratar
+                      Escolher este modelo
                     </button>
                   </div>
                 </div>
@@ -260,31 +299,43 @@ export default function SitesGrid() {
                         Destaque
                       </div>
                     )}
-                    {meta.tags.map((tag, ti) => (
-                      <div key={ti} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-semibold ${tag.bg} ${tag.color}`}>
-                        <tag.icon size={10} />
-                        {tag.label}
-                      </div>
-                    ))}
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-semibold bg-elevated border-border text-secondary">
+                      {meta.category}
+                    </span>
                   </div>
 
-                  <h3 className="font-semibold text-foreground text-sm mb-1 group-hover:text-brand transition-colors">
+                  <h3 className="font-semibold text-foreground text-base mb-1.5 group-hover:text-brand transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-xs text-muted mb-4 line-clamp-2 leading-relaxed flex-1">{product.description}</p>
+                  <p className="text-sm text-muted mb-4 line-clamp-2 leading-relaxed">{product.description}</p>
+
+                  {/* Inclui */}
+                  <div className="mb-5 flex-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary mb-2">Inclui</p>
+                    <ul className="space-y-1.5">
+                      {features.map((feat, fi) => (
+                        <li key={fi} className="flex items-start gap-1.5 text-xs text-muted leading-snug">
+                          <Check size={13} className="text-brand shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
                   {/* Pricing */}
-                  <div className="flex items-center gap-2.5 mb-1.5">
-                    <span className="text-xl font-bold text-[#F97316]">
+                  <p className="text-[11px] text-muted mb-0.5">A partir de</p>
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <span className="text-2xl font-bold text-[#F97316]">
                       {fmt(discountedPrice(product.price))}
                     </span>
-                    <span className="price-slash text-xs text-neutral-600 font-medium">
+                    <span className="price-slash text-sm text-neutral-600 font-medium">
                       {fmt(product.price)}
                     </span>
                   </div>
+                  <p className="text-[11px] text-muted mb-1.5">ou 3x sem juros</p>
                   <p className="flex items-center gap-1 text-[11px] text-green-400 font-medium mb-4">
                     <Zap size={10} />
-                    1a compra com 30% off
+                    30% OFF na primeira compra
                   </p>
 
                   <button
@@ -295,7 +346,7 @@ export default function SitesGrid() {
                         : 'lg:hover:shadow-md lg:hover:shadow-brand/20'
                     }`}
                   >
-                    Contratar
+                    Escolher este modelo
                   </button>
                 </div>
               </div>
@@ -354,7 +405,7 @@ export default function SitesGrid() {
                 onClick={() => handleContract(previewProduct.slug)}
                 className="shrink-0 px-6 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
               >
-                Contratar
+                Escolher este modelo
               </button>
             </div>
           </div>

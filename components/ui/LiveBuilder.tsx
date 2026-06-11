@@ -32,8 +32,8 @@ const LINES: CodeLine[] = [
   { tokens: [tk('    ', P), tk('<section', T), tk(' className', A), tk('=', P), tk('"hero"', S), tk('>', T)], delayAfter: 130 },
   { tokens: [tk('      ', P), tk('<Badge', C), tk('>', T), tk('● Desenvolvimento web · 14 dias', P), tk('</Badge>', T)], delayAfter: 130 },
   { tokens: [tk('      ', P), tk('<h1', T), tk('>', T)], delayAfter: 130 },
-  { tokens: [tk('        ', P), tk('Seu site no ar em', P)], delayAfter: 130 },
-  { tokens: [tk('        ', P), tk('<span', T), tk(' className', A), tk('=', P), tk('"orange"', S), tk('>', T), tk('14 dias.', P), tk('</span>', T)], delayAfter: 130 },
+  { tokens: [tk('        ', P), tk('Seu site no ar em até', P)], delayAfter: 130 },
+  { tokens: [tk('        ', P), tk('<span', T), tk(' className', A), tk('=', P), tk('"orange"', S), tk('>', T), tk('2 semanas.', P), tk('</span>', T)], delayAfter: 130 },
   { tokens: [tk('      ', P), tk('</h1>', T)], delayAfter: 130 },
   { tokens: [tk('      ', P), tk('<p', T), tk('>', T), tk('Entrega garantida, preço fixo.', P), tk('</p>', T)], delayAfter: 280 },
   { tokens: [tk('      ', P), tk('<div', T), tk(' className', A), tk('=', P), tk('"btns"', S), tk('>', T)], delayAfter: 130 },
@@ -331,8 +331,8 @@ export default function LiveBuilder() {
                       lineHeight: 1.2,
                     }}
                   >
-                    Seu site no ar em{' '}
-                    <span style={{ color: '#F97316' }}>14 dias.</span>
+                    Seu site no ar em até{' '}
+                    <span style={{ color: '#F97316' }}>2 semanas.</span>
                   </span>
                 </div>
 
