@@ -49,7 +49,7 @@ function WordReveal({ words, baseDelay = 0 }: { words: string[]; baseDelay?: num
 }
 
 const STEPS = [
-  { n: '01', title: 'Escolha o modelo ideal', desc: 'Veja os modelos disponíveis e escolha o tipo de site que faz mais sentido para sua empresa. Se tiver dúvida, use nosso chat para te ajudar.', icon: ClipboardList },
+  { n: '01', title: 'Escolha o modelo ideal', desc: 'Veja os modelos disponíveis e escolha o tipo de site que faz mais sentido para sua empresa. Se tiver dúvida, use nosso chat para encontrar a melhor opção.', icon: ClipboardList },
   { n: '02', title: 'Finalize a contratação', desc: 'Veja o valor antes de contratar, aplique o desconto da primeira compra e finalize tudo com pagamento seguro.', icon: CreditCardIcon },
   { n: '03', title: 'Envie as informações do projeto', desc: 'Depois da contratação, você envia os dados da empresa, textos, referências e materiais necessários para começarmos.', icon: Upload },
   { n: '04', title: 'Acompanhe e receba seu site', desc: 'Acompanhe o andamento do projeto e receba seu site em até 14 dias úteis após o envio das informações necessárias.', icon: Monitor },
@@ -107,12 +107,13 @@ const REVIEWS = [
 ]
 
 const COMPARISON_ROWS = [
-  { label: 'Preco', crably: 'Fixo e acessivel', freelancer: 'Variavel', agencia: 'Alto' },
-  { label: 'Prazo', crably: '14 dias garantidos', freelancer: 'Imprevisivel', agencia: '30-90 dias' },
-  { label: 'Qualidade', crably: 'Design premium', freelancer: 'Inconsistente', agencia: 'Alta' },
-  { label: 'Revisoes', crably: 'Dentro do escopo', freelancer: 'Infinitas idas e vindas', agencia: 'Limitadas e caras' },
-  { label: 'Suporte', crably: 'Incluso', freelancer: 'Depende', agencia: 'Cobrado a parte' },
-  { label: 'Transparencia', crably: 'Dashboard em tempo real', freelancer: 'Mensagens no WhatsApp', agencia: 'Reunioes semanais' },
+  { label: 'Preço', crably: 'Preço definido antes de contratar', freelancer: 'Pode variar conforme o projeto', agencia: 'Orçamento sob demanda' },
+  { label: 'Prazo', crably: 'Até 14 dias úteis após envio das informações', freelancer: 'Depende da agenda', agencia: 'Geralmente mais longo' },
+  { label: 'Processo', crably: 'Escolha o modelo, envie as infos e acompanhe', freelancer: 'Processo combinado caso a caso', agencia: 'Mais reuniões e etapas' },
+  { label: 'Design', crably: 'Profissional e pensado para empresas B2B', freelancer: 'Pode variar conforme o profissional', agencia: 'Alta qualidade, com custo maior' },
+  { label: 'Revisões', crably: 'Ajustes dentro do modelo contratado', freelancer: 'Depende do combinado', agencia: 'Limitadas ou cobradas à parte' },
+  { label: 'Suporte', crably: 'Dúvidas pelo WhatsApp durante o projeto', freelancer: 'Depende da disponibilidade', agencia: 'Atendimento por canais definidos' },
+  { label: 'Transparência', crably: 'Preço, prazo e etapas claras', freelancer: 'Pode ser mais informal', agencia: 'Processo mais robusto, porém mais lento' },
 ]
 
 /* ──────────────────────────────────────────────────────────────
@@ -186,6 +187,16 @@ export default function HomePage() {
             {/* LEFT: Copy */}
             <div className="z-10">
 
+              {/* Launch badge */}
+              <div
+                className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full border border-brand/30 bg-brand/10 mb-6 animate-fade-up"
+                style={{ animationDelay: '100ms' }}
+              >
+                <Flame size={14} className="text-brand shrink-0" />
+                <span className="text-xs font-semibold text-brand uppercase tracking-wide">Condição especial de lançamento</span>
+                <span className="text-xs font-medium text-secondary">· Primeira compra com 30% OFF</span>
+              </div>
+
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
                 <span className="block text-foreground overflow-hidden">
@@ -206,7 +217,7 @@ export default function HomePage() {
                 className="text-base lg:text-lg xl:text-xl text-secondary max-w-lg leading-relaxed mb-10 animate-fade-up"
                 style={{ animationDelay: '650ms' }}
               >
-               Sites profissionais para empresas B2B, com preço fixo, escolha simples e entrega em até 14 dias úteis. Escolha um modelo ou use nosso chat para descobrir qual site combina com seu negócio.
+               Sites profissionais para empresas B2B, com preço fixo, escolha simples e entrega em até 14 dias úteis após o envio das informações.
               </p>
 
               {/* CTAs */}
@@ -363,12 +374,12 @@ export default function HomePage() {
           <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center relative z-10">
             <div className="flex items-center gap-2">
               <span className="urgency-dot w-2.5 h-2.5 rounded-full bg-green-400 shrink-0" />
-              <span className="text-sm font-bold text-green-400 uppercase tracking-wider">Oferta ativa</span>
+              <span className="text-sm font-bold text-green-400 uppercase tracking-wider">Condição de lançamento</span>
             </div>
             <div className="flex items-center gap-2">
               <Flame size={18} className="text-brand shrink-0" />
               <span className="text-base sm:text-lg font-bold text-foreground">
-                <span className="text-brand">30% de desconto</span> na primeira compra
+                Primeira compra com <span className="text-brand">30% OFF</span>
               </span>
             </div>
             <Link
@@ -402,7 +413,7 @@ export default function HomePage() {
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 shrink-0">
                   <Flame size={14} className="text-brand" />
-                  <span className="text-sm font-semibold text-brand">30% off na 1a compra</span>
+                  <span className="text-sm font-semibold text-brand">Primeira compra com 30% OFF</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -438,12 +449,23 @@ export default function HomePage() {
                         <h3 className="font-semibold text-foreground text-xl sm:text-2xl mb-2 group-hover:text-brand transition-colors">
                           {step.title}
                         </h3>
-                        <p className="text-secondary leading-relaxed text-base sm:text-lg">{step.desc}</p>
+                        <p className="text-secondary leading-relaxed text-base sm:text-lg max-w-xl">{step.desc}</p>
                       </div>
                     </div>
                   </ScrollReveal>
                 ))}
               </div>
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <Link href="#sites">
+                <Button
+                  size="lg"
+                  className="glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
+                >
+                  Escolher meu modelo de site
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -465,13 +487,13 @@ export default function HomePage() {
                     Contrate com segurança
                   </h2>
                   <p className="text-secondary leading-relaxed max-w-lg mx-auto mb-8">
-                    Preço claro, pagamento seguro e acompanhamento durante todo o projeto. Você sabe exatamente o que contratou, em que etapa está e quando vai receber.
+                    Preço claro, pagamento seguro e acompanhamento durante todo o projeto. Você sabe o que contratou, em que etapa seu site está e quando vai receber.
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-3">
                     {[
                       { icon: ShieldCheck, label: 'Pagamento seguro' },
                       { icon: DollarSign, label: 'Preço fixo' },
-                      { icon: MessageCircle, label: 'Suporte por WhatsApp' },
+                      { icon: MessageCircle, label: 'Dúvidas pelo WhatsApp' },
                     ].map((badge, i) => (
                       <div key={i} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-elevated border border-border">
                         <badge.icon size={14} className="text-brand" />
@@ -489,12 +511,15 @@ export default function HomePage() {
             COMPARACAO
         ════════════════════════════════════════════════════════== */}
         <section id="comparacao" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <ScrollReveal className="text-center mb-16">
               <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Comparacao</p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                 Por que escolher a Crably?
               </h2>
+              <p className="mt-4 text-base sm:text-lg text-secondary max-w-2xl mx-auto leading-relaxed">
+                Criamos sites profissionais com processo simples, preço claro e prazo definido desde o início.
+              </p>
             </ScrollReveal>
 
             {/* Desktop table */}
@@ -517,23 +542,23 @@ export default function HomePage() {
                   <tbody>
                     {COMPARISON_ROWS.map((row, i) => (
                       <tr key={i} className="border-t border-border">
-                        <td className="py-4 px-4 text-sm font-medium text-secondary">{row.label}</td>
+                        <td className="py-4 px-4 text-base font-medium text-secondary">{row.label}</td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <Check size={14} className="text-green-400 shrink-0" />
-                            <span className="text-sm text-foreground font-medium">{row.crably}</span>
+                            <Check size={16} className="text-green-400 shrink-0" />
+                            <span className="text-base text-foreground font-medium">{row.crably}</span>
                           </div>
                         </td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <XIcon size={14} className="text-neutral-600 shrink-0" />
-                            <span className="text-sm text-muted">{row.freelancer}</span>
+                            <XIcon size={16} className="text-neutral-600 shrink-0" />
+                            <span className="text-base text-muted">{row.freelancer}</span>
                           </div>
                         </td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <XIcon size={14} className="text-neutral-600 shrink-0" />
-                            <span className="text-sm text-muted">{row.agencia}</span>
+                            <XIcon size={16} className="text-neutral-600 shrink-0" />
+                            <span className="text-base text-muted">{row.agencia}</span>
                           </div>
                         </td>
                       </tr>
@@ -565,6 +590,17 @@ export default function HomePage() {
                 ))}
               </div>
             </ScrollReveal>
+
+            <div className="mt-14 flex justify-center">
+              <Link href="#sites">
+                <Button
+                  size="lg"
+                  className="glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
+                >
+                  Começar agora com 30% OFF
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -640,16 +676,19 @@ export default function HomePage() {
                 a web.
               </h2>
               <p className="text-secondary leading-relaxed mb-4">
-                A Crably surgiu da frustracao com um mercado cheio de promessas e poucas entregas. Freelancers que somem, agencias que cobram caro demais e projetos que nunca terminam.
+                A Crably nasceu para ajudar empresas B2B a saírem do improviso digital com sites profissionais, preço claro e processo simples.
+              </p>
+              <p className="text-secondary leading-relaxed mb-4">
+                Em vez de projetos longos, reuniões desnecessárias e orçamentos confusos, criamos uma forma mais direta de colocar sua empresa no ar: escolha o modelo, envie as informações e acompanhe cada etapa até a entrega.
               </p>
               <p className="text-secondary leading-relaxed mb-8">
-                Nossa missao e simples: entregar sites profissionais com preco justo, prazo real de 14 dias e processo 100% transparente. Do pagamento ao site no ar — sem surpresas.
+                Nosso foco é entregar sites objetivos, bem construídos e prontos para gerar mais confiança no digital.
               </p>
               <div className="flex flex-wrap gap-6">
                 {[
                   { label: 'Projetos entregues', value: '30+' },
-                  { label: 'Entregas no prazo', value: '100%' },
-                  { label: 'Prazo padrao', value: '14 dias' },
+                  { label: 'Sem orçamento escondido', value: 'Preço fixo' },
+                  { label: 'Após envio das informações', value: 'Até 14 dias úteis' },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col">
                     <span className="text-3xl font-bold text-foreground">{stat.value}</span>
@@ -662,10 +701,10 @@ export default function HomePage() {
             <ScrollReveal delay={2}>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { icon: Rocket, title: 'Velocidade', desc: 'Sites entregues em ate 14 dias. Com pacote express, em 7 dias — sem abrir mao da qualidade.' },
-                  { icon: Heart, title: 'Cuidado', desc: 'Cada projeto e tratado como se fosse o nosso proprio negocio.' },
-                  { icon: Globe, title: 'Alcance', desc: 'Atendemos empreendedores em todo o Brasil, 100% remoto.' },
-                  { icon: ShieldCheck, title: 'Garantia', desc: 'Entrega garantida ou devolvemos seu dinheiro. Sem letras miudas.' },
+                  { icon: Rocket, title: 'Velocidade', desc: 'Seu site entregue em até 14 dias úteis após o envio das informações necessárias.' },
+                  { icon: Heart, title: 'Cuidado', desc: 'Cada projeto é criado com atenção ao posicionamento, clareza e apresentação da sua empresa.' },
+                  { icon: Globe, title: 'Alcance', desc: 'Atendimento 100% remoto para empresas em todo o Brasil.' },
+                  { icon: ShieldCheck, title: 'Transparência', desc: 'Preço claro, etapas definidas e acompanhamento durante o projeto.' },
                 ].map((item, i) => (
                   <div key={i} className="bento-card p-6 flex flex-col gap-3">
                     <item.icon size={24} className="text-brand" />
@@ -711,14 +750,14 @@ export default function HomePage() {
                 <span className="gradient-text">com a gente.</span>
               </h2>
               <p className="text-secondary leading-relaxed mb-10">
-                Somos um time enxuto, agil e apaixonado por resultados reais. Cada projeto e tratado com seriedade, codigo limpo e entrega no prazo — sem desculpas.
+                Somos um time enxuto, direto e focado em entregar sites profissionais sem burocracia. Cada projeto é tratado com clareza, atenção aos detalhes e compromisso com o prazo combinado.
               </p>
 
               <div className="space-y-4 mb-10">
                 {[
-                  { icon: Zap,        title: 'Rapido por padrao',     desc: 'Processos otimizados para entregar em 14 dias sem abrir mao da qualidade.' },
-                  { icon: ShieldCheck, title: 'Confiavel de verdade',  desc: 'Compromisso com o prazo, preco fixo e comunicacao transparente do inicio ao fim.' },
-                  { icon: Rocket,     title: 'Agil e sem burocracia', desc: 'Da contratacao ao site no ar com o minimo de atrito possivel para voce.' },
+                  { icon: Zap,        title: 'Rápido por padrão',     desc: 'Processo organizado para colocar seu site no ar sem atrasos desnecessários.' },
+                  { icon: ShieldCheck, title: 'Confiável de verdade',  desc: 'Comunicação clara, etapas definidas e acompanhamento do início ao fim.' },
+                  { icon: Rocket,     title: 'Ágil e sem burocracia', desc: 'Você escolhe o modelo, envia as informações e acompanha tudo de forma simples.' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-elevated/30 border border-border hover:border-brand/20 transition-colors">
                     <div className="p-2 rounded-xl bg-brand/10 shrink-0">
@@ -735,7 +774,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-8">
                 {[
                   { value: '30+', label: 'Projetos entregues' },
-                  { value: '14 dias', label: 'Prazo garantido' },
+                  { value: 'Até 14 dias úteis', label: 'Após envio das informações' },
                   { value: '30%', label: 'Off na 1a compra' },
                 ].map((stat, i) => (
                   <div key={i}>
@@ -778,25 +817,26 @@ export default function HomePage() {
                 />
 
                 <div className="relative z-10">
-                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand/30 bg-brand/10 mb-6 discount-badge">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand/30 bg-brand/10 mb-6">
                     <Flame size={16} className="text-brand" />
-                    <span className="text-sm font-bold text-brand uppercase tracking-wide">30% off — Oferta ativa</span>
+                    <span className="text-sm font-bold text-brand uppercase tracking-wide">Condição de lançamento</span>
                   </div>
                   <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-                    Seu site esta a{' '}
-                    <span className="gradient-text">um clique</span>
-                    <br />
-                    de distancia.
+                    Seu site profissional{' '}
+                    <span className="gradient-text">começa aqui.</span>
                   </h2>
-                  <p className="text-lg text-secondary mb-10 max-w-lg mx-auto">
-                    Sem freelancers. Sem surpresas no preco. Sua primeira compra tem <span className="text-brand font-semibold">30% de desconto</span>. Site entregue em ate 14 dias.
+                  <p className="text-lg text-secondary mb-4 max-w-lg mx-auto">
+                    Escolha o modelo ideal, veja o preço antes de contratar e receba seu site em até 14 dias úteis após o envio das informações.
+                  </p>
+                  <p className="text-sm text-muted mb-10">
+                    Primeira compra com condição especial de lançamento.
                   </p>
                   <Link href="/login?mode=register">
                     <Button
                       size="lg"
                       className="glow-brand-sm hover:scale-105 transition-transform text-base px-10"
                     >
-                      Comecar agora
+                      Começar agora
                     </Button>
                   </Link>
                 </div>

@@ -46,11 +46,6 @@ export default function Header() {
           <span className={`${spaceGrotesk.className} text-foreground text-2xl lg:text-3xl xl:text-4xl tracking-tight`}>crably</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-
-         <span className="font-bold text-lg tracking-tight gradient-text-subtle">Software Development</span>
-        </nav>
-
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <Link href="/login?mode=register">

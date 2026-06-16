@@ -1,7 +1,9 @@
 import Image from 'next/image'
 
 /* ──────────────────────────────────────────────────────────────
-   Hero visual: static dashboard mockup image (desktop + phone).
+   Hero visual: static dashboard mockup image (theme-aware).
+   Dark/light variants are toggled via the `.dark` class so there
+   is no hydration flash and no client-side JS.
 ────────────────────────────────────────────────────────────── */
 
 export default function DashboardMockup() {
@@ -16,16 +18,28 @@ export default function DashboardMockup() {
         }}
       />
 
-      <div className="relative animate-float" style={{ animationDuration: '10s' }}>
+      <div
+        className="relative animate-float w-full max-w-[600px]"
+        style={{ animationDuration: '10s', filter: 'drop-shadow(0 24px 50px rgba(0,0,0,0.30))' }}
+      >
+        {/* Dark mode */}
         <Image
-          src="/images/mockup-dashboard.png"
+          src="/images/dark-note.png"
           alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
-          width={1414}
-          height={1113}
+          width={1448}
+          height={1086}
           priority
-          sizes="(min-width: 1024px) 560px, 100vw"
-          className="w-full max-w-[560px] h-auto rounded-2xl border border-border"
-          style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}
+          sizes="(min-width: 1024px) 600px, 100vw"
+          className="hidden dark:block w-full h-auto"
+        />
+        {/* Light mode */}
+        <Image
+          src="/images/light-note.png"
+          alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
+          width={1448}
+          height={1086}
+          sizes="(min-width: 1024px) 600px, 100vw"
+          className="block dark:hidden w-full h-auto"
         />
       </div>
     </div>

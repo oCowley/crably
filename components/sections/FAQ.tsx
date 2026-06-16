@@ -6,28 +6,48 @@ import ScrollReveal from '@/components/ui/ScrollReveal'
 
 const ITEMS = [
   {
-    q: 'Quanto tempo leva para meu site ficar pronto?',
-    a: 'O prazo padrao e de 14 dias. Com o pacote express, entregamos em 7 dias uteis.',
+    q: 'Não sei qual modelo escolher. O que faço?',
+    a: 'Você pode usar nosso chat para responder algumas perguntas rápidas e encontrar o modelo mais indicado para sua empresa.',
   },
   {
-    q: 'Posso personalizar o template?',
-    a: 'Sim! Personalizacoes dentro do escopo definido estao incluidas: cores, textos, imagens e logo. O escopo e claro desde o inicio.',
+    q: 'O que está incluso no valor?',
+    a: 'O valor inclui a criação do site dentro do modelo escolhido, personalização de textos, cores, imagens, logo e ajustes dentro do escopo contratado.',
   },
   {
     q: 'Como funciona o pagamento?',
-    a: 'O pagamento e feito via Abacate Pay, com checkout seguro. Voce paga e ja pode acompanhar o projeto pelo dashboard.',
+    a: 'Você escolhe o modelo de site, visualiza o valor antes de contratar e finaliza o pagamento de forma segura. Na primeira compra, o desconto de 30% é aplicado conforme a oferta disponível.',
   },
   {
-    q: 'E se eu nao gostar do resultado?',
-    a: 'Oferecemos garantia de 7 dias. Se nao estiver satisfeito, devolvemos 100% do valor. Sem perguntas.',
+    q: 'O que preciso enviar para começar?',
+    a: 'Após a contratação, você envia as informações da empresa, logo, textos, imagens, referências e dados de contato. Com isso, iniciamos a produção do site.',
   },
   {
-    q: 'Voces oferecem suporte apos a entrega?',
-    a: 'Sim, suporte esta incluso apos a entrega para ajustes e duvidas sobre o site.',
+    q: 'Quando começa a contar o prazo de entrega?',
+    a: 'O prazo começa após a confirmação do pagamento e o envio das informações necessárias para iniciar o projeto.',
   },
   {
-    q: 'Qual a diferenca para um site feito do zero?',
-    a: 'Nossos templates tem escopo fixo, prazo garantido e preco justo. Voce sabe exatamente o que vai receber, quando e por quanto.',
+    q: 'Quanto tempo leva para meu site ficar pronto?',
+    a: 'O prazo padrão é de até 14 dias úteis após o envio de todas as informações necessárias para iniciar o projeto. Com o pacote Express, a entrega pode ser feita em até 7 dias úteis.',
+  },
+  {
+    q: 'Posso personalizar o modelo?',
+    a: 'Sim. Personalizações dentro do escopo contratado estão incluídas, como cores, textos, imagens, logo e ajustes de conteúdo. Mudanças estruturais ou funcionalidades extras podem ser adicionadas como opcionais.',
+  },
+  {
+    q: 'Posso pedir ajustes antes da entrega final?',
+    a: 'Sim. Você pode solicitar ajustes dentro do escopo contratado para deixar o site alinhado com as informações enviadas e com o modelo escolhido.',
+  },
+  {
+    q: 'Vocês oferecem suporte após a entrega?',
+    a: 'Sim. Após a entrega, oferecemos suporte para dúvidas sobre o site e pequenos ajustes relacionados ao projeto entregue. Manutenções recorrentes, novas páginas ou alterações maiores podem ser contratadas à parte.',
+  },
+  {
+    q: 'O site funciona no celular?',
+    a: 'Sim. Todos os sites são responsivos e adaptados para desktop, tablet e celular.',
+  },
+  {
+    q: 'Qual a diferença para um site feito do zero?',
+    a: 'Nossos modelos têm estrutura pronta, escopo claro e preço fixo. Isso permite entregar mais rápido, com menos burocracia e sem orçamento surpresa. Um site feito do zero costuma ter prazo maior, mais etapas e investimento mais alto.',
   },
 ]
 
@@ -42,7 +62,7 @@ export default function FAQ() {
     <section id="faq" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
       <div className="max-w-3xl mx-auto">
         <ScrollReveal className="text-center mb-16">
-          <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">FAQ</p>
+          <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Dúvidas frequentes</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
             Perguntas frequentes
           </h2>
@@ -68,9 +88,10 @@ export default function FAQ() {
                   </button>
                   <div
                     className="overflow-hidden transition-all duration-300 ease-out"
-                    style={{ maxHeight: isOpen ? '200px' : '0px', opacity: isOpen ? 1 : 0 }}
+                    style={{ maxHeight: isOpen ? '500px' : '0px', opacity: isOpen ? 1 : 0 }}
                   >
-                    <p className="px-5 pb-5 text-sm text-secondary leading-relaxed">{item.a}</p>
+                    <div className="mx-5 border-t border-border/60" />
+                    <p className="px-5 pt-4 pb-6 text-sm text-secondary leading-relaxed">{item.a}</p>
                   </div>
                 </div>
               </ScrollReveal>
