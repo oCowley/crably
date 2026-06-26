@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, TrendingUp, Users, Package, DollarSign, Loader2 } from 'lucide-react'
-import { collection, getDocs, orderBy, query, limit, where } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { useAuth } from '@/contexts/AuthContext'
 import { PROJECT_STATUS_LABELS, type ProjectStatus } from '@/types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -31,6 +32,10 @@ function toDate(v: OrderDoc['createdAt']): Date | null {
   return null
 }
 
+function initials(name: string) {
+  return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+}
+
 // ─── Colors ───────────────────────────────────────────────────────────────────
 
 const STATUS_COLORS: Record<ProjectStatus, string> = {
@@ -55,61 +60,112 @@ const STATUS_BAR_COLORS: Record<ProjectStatus, string> = {
   completed: 'bg-green-400',
 }
 
-// ─── Bar chart ────────────────────────────────────────────────────────────────
+// ─── Area chart ───────────────────────────────────────────────────────────────
 
-function BarChart({ data }: { data: { month: string; orders: number }[] }) {
+function AreaChart({ data }: { data: { month: string; orders: number }[] }) {
   if (!data.length) return null
   const max = Math.max(...data.map((d) => d.orders), 1)
-  const W = 360
-  const H = 100
-  const barW = 36
-  const n = data.length
-  const gap = (W - n * barW) / (n + 1)
+  const W = 300
+  const H = 90
+  const PAD = 10
+
+  const pts = data.map((d, i) => ({
+    x: PAD + (i / (data.length - 1)) * (W - PAD * 2),
+    y: H - (d.orders / max) * (H - 12) - 4,
+    val: d.orders,
+    month: d.month,
+  }))
+
+  // Smooth cubic bezier path
+  let linePath = `M ${pts[0].x} ${pts[0].y}`
+  for (let i = 1; i < pts.length; i++) {
+    const cpx = (pts[i].x + pts[i - 1].x) / 2
+    linePath += ` C ${cpx} ${pts[i - 1].y}, ${cpx} ${pts[i].y}, ${pts[i].x} ${pts[i].y}`
+  }
+
+  const areaPath =
+    linePath +
+    ` L ${pts[pts.length - 1].x} ${H} L ${pts[0].x} ${H} Z`
 
   return (
-    <svg viewBox={`0 0 ${W} ${H + 28}`} className="w-full" aria-label="Pedidos por mês">
+    <svg viewBox={`0 0 ${W} ${H + 22}`} className="w-full" aria-label="Pedidos por mês">
       <defs>
-        <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#F97316" />
-          <stop offset="100%" stopColor="#EA580C" stopOpacity="0.5" />
+        <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F97316" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#F97316" stopOpacity="0" />
         </linearGradient>
       </defs>
 
+      {/* Horizontal guide lines */}
       {[0.25, 0.5, 0.75, 1].map((t) => (
         <line
           key={t}
-          x1={0} y1={H - t * H}
-          x2={W} y2={H - t * H}
+          x1={0} y1={H - t * (H - 12) - 4}
+          x2={W} y2={H - t * (H - 12) - 4}
           stroke="rgba(255,255,255,0.04)"
           strokeWidth={1}
         />
       ))}
 
-      {data.map((d, i) => {
-        const barH = Math.max((d.orders / max) * H, d.orders > 0 ? 4 : 0)
-        const x = gap + i * (barW + gap)
-        const y = H - barH
-        return (
-          <g key={d.month}>
-            <rect x={x} y={y} width={barW} height={barH} rx={5} fill="url(#barGrad)" />
-            <text x={x + barW / 2} y={H + 20} textAnchor="middle" fill="#6b7280" fontSize={10} fontFamily="system-ui, sans-serif">
-              {d.month}
+      {/* Area fill */}
+      <path d={areaPath} fill="url(#areaFill)" />
+
+      {/* Line */}
+      <path
+        d={linePath}
+        fill="none"
+        stroke="#F97316"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Points + labels */}
+      {pts.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r="3.5" fill="#0d0d0d" stroke="#F97316" strokeWidth="1.8" />
+          <text x={p.x} y={H + 16} textAnchor="middle" fill="#525252" fontSize={9} fontFamily="system-ui">
+            {p.month}
+          </text>
+          {p.val > 0 && (
+            <text x={p.x} y={p.y - 8} textAnchor="middle" fill="#F97316" fontSize={9} fontFamily="system-ui" fontWeight="600">
+              {p.val}
             </text>
-            {d.orders > 0 && (
-              <text x={x + barW / 2} y={y - 6} textAnchor="middle" fill="#F97316" fontSize={9} fontFamily="system-ui, sans-serif" fontWeight="600">
-                {d.orders}
-              </text>
-            )}
-          </g>
-        )
-      })}
+          )}
+        </g>
+      ))}
     </svg>
+  )
+}
+
+// ─── Stat card ────────────────────────────────────────────────────────────────
+
+function StatCard({
+  label, value, Icon, iconBg, iconColor,
+}: {
+  label: string
+  value: React.ReactNode
+  Icon: React.ElementType
+  iconBg: string
+  iconColor: string
+}) {
+  return (
+    <div className="rounded-2xl bg-[#111111] border border-white/[0.06] p-5 flex flex-col gap-4 hover:border-white/[0.10] transition-colors">
+      <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>
+        <Icon size={18} className={iconColor} />
+      </div>
+      <div>
+        <p className="text-2xl font-bold text-white leading-none">{value}</p>
+        <p className="text-[11px] text-neutral-500 mt-1.5">{label}</p>
+      </div>
+    </div>
   )
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function DashboardPage() {
+export default function AdminDashboardPage() {
+  const { profile } = useAuth()
   const [loading, setLoading] = useState(true)
   const [totalCustomers, setTotalCustomers] = useState(0)
   const [totalRevenue, setTotalRevenue] = useState(0)
@@ -135,7 +191,6 @@ export default function DashboardPage() {
           getDocs(collection(db, 'products')),
         ])
 
-        // lookup maps
         const productMap: Record<string, string> = {}
         productsSnap.forEach((d) => { productMap[d.id] = (d.data() as { name: string }).name })
 
@@ -154,22 +209,16 @@ export default function DashboardPage() {
 
         setTotalOrders(orders.length)
 
-        // revenue — use price field if present, otherwise fall back to product price
         const productPriceMap: Record<string, number> = {}
         productsSnap.forEach((d) => { productPriceMap[d.id] = (d.data() as { price: number }).price })
-        const rev = orders.reduce((sum, o) => {
-          const price = o.price ?? productPriceMap[o.productId] ?? 0
-          return sum + price
-        }, 0)
+        const rev = orders.reduce((sum, o) => sum + (o.price ?? productPriceMap[o.productId] ?? 0), 0)
         setTotalRevenue(rev)
 
-        // active projects
         const active = orders.filter(
           (o) => !['completed', 'delivered', 'pending_payment'].includes(o.projectStatus),
         ).length
         setActiveProjects(active)
 
-        // status distribution
         const statusCount: Partial<Record<ProjectStatus, number>> = {}
         orders.forEach((o) => {
           statusCount[o.projectStatus] = (statusCount[o.projectStatus] ?? 0) + 1
@@ -179,7 +228,6 @@ export default function DashboardPage() {
           .sort((a, b) => b.count - a.count)
         setStatusDist(dist)
 
-        // monthly — last 6 months
         const now = new Date()
         const months: { month: string; orders: number }[] = []
         for (let i = 5; i >= 0; i--) {
@@ -199,26 +247,28 @@ export default function DashboardPage() {
         })
         setMonthly(months)
 
-        // recent orders — latest 5 sorted by createdAt
-        const sorted = [...orders].sort((a, b) => {
-          const da = toDate(a.createdAt)?.getTime() ?? 0
-          const db_ = toDate(b.createdAt)?.getTime() ?? 0
-          return db_ - da
-        }).slice(0, 5)
+        const sorted = [...orders]
+          .sort((a, b) => {
+            const da = toDate(a.createdAt)?.getTime() ?? 0
+            const db_ = toDate(b.createdAt)?.getTime() ?? 0
+            return db_ - da
+          })
+          .slice(0, 5)
 
-        setRecent(sorted.map((o) => ({
-          id: o.id,
-          product: o.productName ?? productMap[o.productId] ?? o.productId,
-          customer: userMap[o.userId] ?? o.userId,
-          status: o.projectStatus,
-          dev: o.assignedDevId ?? null,
-          date: toDate(o.createdAt)?.toLocaleDateString('pt-BR') ?? '—',
-        })))
+        setRecent(
+          sorted.map((o) => ({
+            id: o.id,
+            product: o.productName ?? productMap[o.productId] ?? o.productId,
+            customer: userMap[o.userId] ?? o.userId,
+            status: o.projectStatus,
+            dev: o.assignedDevId ?? null,
+            date: toDate(o.createdAt)?.toLocaleDateString('pt-BR') ?? '—',
+          })),
+        )
       } finally {
         setLoading(false)
       }
     }
-
     load()
   }, [])
 
@@ -230,123 +280,154 @@ export default function DashboardPage() {
     )
   }
 
+  const firstName = profile?.name?.split(' ')[0] ?? null
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+  const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
   const totalOrdersForPct = statusDist.reduce((s, d) => s + d.count, 0) || 1
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Dashboard</h1>
-        <p className="text-neutral-500 text-sm">Visão geral da operação Crably.</p>
+    <div className="space-y-6">
+      {/* Greeting header */}
+      <div className="text-center py-4">
+        <p className="text-[11px] font-medium text-neutral-600 uppercase tracking-widest capitalize">
+          {today} · {greeting}{firstName ? `, ${firstName}` : ''} 👋
+        </p>
+        <h1 className="text-3xl lg:text-4xl font-bold text-white mt-2 tracking-tight">
+          Visão geral da operação
+        </h1>
+        <div className="w-12 h-0.5 bg-brand rounded-full mx-auto mt-3" />
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        {[
-          { label: 'Total de pedidos', value: totalOrders, icon: Package, color: 'text-brand' },
-          { label: 'Projetos ativos', value: activeProjects, icon: TrendingUp, color: 'text-blue-400' },
-          { label: 'Clientes cadastrados', value: totalCustomers, icon: Users, color: 'text-purple-400' },
-          {
-            label: 'Receita total',
-            value: (totalRevenue / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-            icon: DollarSign,
-            color: 'text-green-400',
-          },
-        ].map((s) => (
-          <div key={s.label} className="bento-card p-5 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-neutral-500">{s.label}</span>
-              <div className={`p-1.5 rounded-lg bg-white/5 ${s.color}`}>
-                <s.icon size={14} />
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-white">{s.value}</p>
-          </div>
-        ))}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <StatCard
+          label="Total de pedidos"
+          value={totalOrders}
+          Icon={Package}
+          iconBg="bg-brand/15"
+          iconColor="text-brand"
+        />
+        <StatCard
+          label="Projetos ativos"
+          value={activeProjects}
+          Icon={TrendingUp}
+          iconBg="bg-blue-500/15"
+          iconColor="text-blue-400"
+        />
+        <StatCard
+          label="Clientes cadastrados"
+          value={totalCustomers}
+          Icon={Users}
+          iconBg="bg-purple-500/15"
+          iconColor="text-purple-400"
+        />
+        <StatCard
+          label="Receita total"
+          value={(totalRevenue / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+          Icon={DollarSign}
+          iconBg="bg-green-500/15"
+          iconColor="text-green-400"
+        />
       </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        {/* Bar chart */}
-        <div className="xl:col-span-2 bento-card p-6">
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold text-white">Pedidos por mês</h2>
-            <p className="text-xs text-neutral-500 mt-0.5">Últimos 6 meses</p>
-          </div>
-          {monthly.every((m) => m.orders === 0) ? (
-            <p className="text-xs text-neutral-600 text-center py-8">Nenhum pedido registrado ainda.</p>
-          ) : (
-            <BarChart data={monthly} />
-          )}
-        </div>
+      {/* Main 2-column layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
 
-        {/* Status distribution */}
-        <div className="bento-card p-6">
-          <h2 className="text-sm font-semibold text-white mb-1">Status dos projetos</h2>
-          <p className="text-xs text-neutral-500 mb-6">Distribuição atual</p>
-          {statusDist.length === 0 ? (
-            <p className="text-xs text-neutral-600">Nenhum projeto encontrado.</p>
-          ) : (
-            <div className="space-y-3">
-              {statusDist.map(({ status, count }) => {
-                const pct = Math.round((count / totalOrdersForPct) * 100)
-                return (
-                  <div key={status}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-neutral-400">{PROJECT_STATUS_LABELS[status]}</span>
-                      <span className="text-xs text-neutral-500">{count}</span>
-                    </div>
-                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all ${STATUS_BAR_COLORS[status]}`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
+        {/* Recent orders — left, larger */}
+        <div className="xl:col-span-3 rounded-2xl bg-[#111111] border border-white/[0.06] overflow-hidden flex flex-col">
+          <div className="px-5 py-4 border-b border-white/[0.05] flex items-center justify-between shrink-0">
+            <div>
+              <h2 className="text-sm font-semibold text-white">Pedidos recentes</h2>
+              <p className="text-[11px] text-neutral-600 mt-0.5">Últimas 5 entradas</p>
             </div>
-          )}
-        </div>
-      </div>
+            <a
+              href="/admin/pedidos"
+              className="text-xs text-brand hover:text-brand-hover transition-colors flex items-center gap-1 shrink-0"
+            >
+              Ver todos <ArrowUpRight size={12} />
+            </a>
+          </div>
 
-      {/* Recent orders */}
-      <div className="bento-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">Pedidos recentes</h2>
-          <a
-            href="/admin/pedidos"
-            className="text-xs text-brand hover:text-brand-hover transition-colors flex items-center gap-1"
-          >
-            Ver todos <ArrowUpRight size={12} />
-          </a>
-        </div>
-        {recent.length === 0 ? (
-          <p className="text-xs text-neutral-600 px-6 py-8">Nenhum pedido encontrado.</p>
-        ) : (
-          <div className="divide-y divide-white/5">
-            {recent.map((order) => (
-              <div
-                key={order.id}
-                className="flex items-center gap-4 px-6 py-3.5 hover:bg-white/[0.02] transition-colors"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{order.product}</p>
-                  <p className="text-xs text-neutral-500 mt-0.5 truncate">{order.customer}</p>
-                </div>
-                <span className="text-xs text-neutral-600 hidden sm:block">{order.date}</span>
-                <span className="text-sm text-neutral-400 hidden md:block w-20 text-right truncate">
-                  {order.dev ?? <span className="text-neutral-600 italic">Sem dev</span>}
-                </span>
-                <span
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium border shrink-0 ${STATUS_COLORS[order.status]}`}
+          {recent.length === 0 ? (
+            <p className="text-xs text-neutral-600 px-5 py-8">Nenhum pedido encontrado.</p>
+          ) : (
+            <div className="divide-y divide-white/[0.04]">
+              {recent.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors"
                 >
-                  {PROJECT_STATUS_LABELS[order.status]}
-                </span>
-              </div>
-            ))}
+                  {/* Customer initials avatar */}
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-neutral-400">
+                      {initials(order.customer)}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{order.product}</p>
+                    <p className="text-xs text-neutral-500 truncate mt-0.5">{order.customer}</p>
+                  </div>
+
+                  <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded-full font-medium border ${STATUS_COLORS[order.status]}`}
+                    >
+                      {PROJECT_STATUS_LABELS[order.status]}
+                    </span>
+                    <span className="text-[10px] text-neutral-600">{order.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Charts — right column, stacked */}
+        <div className="xl:col-span-2 flex flex-col gap-4">
+
+          {/* Bar chart */}
+          <div className="rounded-2xl bg-[#111111] border border-white/[0.06] p-5">
+            <h2 className="text-sm font-semibold text-white">Pedidos por mês</h2>
+            <p className="text-[11px] text-neutral-600 mt-0.5 mb-4">Últimos 6 meses</p>
+            {monthly.every((m) => m.orders === 0) ? (
+              <p className="text-xs text-neutral-600 py-6 text-center">Nenhum dado disponível.</p>
+            ) : (
+              <AreaChart data={monthly} />
+            )}
           </div>
-        )}
+
+          {/* Status distribution */}
+          <div className="flex-1 rounded-2xl bg-[#111111] border border-white/[0.06] p-5">
+            <h2 className="text-sm font-semibold text-white">Status dos projetos</h2>
+            <p className="text-[11px] text-neutral-600 mt-0.5 mb-5">Distribuição atual</p>
+            {statusDist.length === 0 ? (
+              <p className="text-xs text-neutral-600">Nenhum projeto encontrado.</p>
+            ) : (
+              <div className="space-y-3.5">
+                {statusDist.map(({ status, count }) => {
+                  const pct = Math.round((count / totalOrdersForPct) * 100)
+                  return (
+                    <div key={status}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs text-neutral-400">{PROJECT_STATUS_LABELS[status]}</span>
+                        <span className="text-xs font-semibold text-neutral-400">{count}</span>
+                      </div>
+                      <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${STATUS_BAR_COLORS[status]}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
+        </div>
       </div>
     </div>
   )
