@@ -8,17 +8,6 @@ import { statSync } from 'node:fs'
 
 const kb = (p) => Math.round(statSync(p).size / 1024) + ' KB'
 
-// Mockups do hero: renderizados a no máx. 600px (1200px @2x)
-for (const name of ['dark-note', 'light-note']) {
-  const src = `public/images/${name}.png`
-  const out = `public/images/${name}.webp`
-  await sharp(src)
-    .resize({ width: 1200, withoutEnlargement: true })
-    .webp({ quality: 82, alphaQuality: 90 })
-    .toFile(out)
-  console.log(`${src} (${kb(src)}) -> ${out} (${kb(out)})`)
-}
-
 // Foto da equipe: renderizada a ~720px (1440px @2x)
 {
   const src = 'public/images/owners.png'

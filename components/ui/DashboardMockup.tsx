@@ -19,20 +19,20 @@ function MockupImages({ sizes, priority }: { sizes: string; priority?: boolean }
       {/* Dark mode (tema padrão). Ambos ficam com loading lazy (default):
           só a variante visível baixa; fetchPriority prioriza o LCP. */}
       <Image
-        src="/images/dark-note.webp"
+        src="/images/dashboard-dark.png"
         alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
-        width={1200}
-        height={900}
+        width={1241}
+        height={820}
         fetchPriority={priority ? 'high' : undefined}
         sizes={sizes}
         className="hidden dark:block w-full h-auto"
       />
       {/* Light mode */}
       <Image
-        src="/images/light-note.webp"
+        src="/images/dashboard-light.png"
         alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
-        width={1200}
-        height={900}
+        width={1281}
+        height={844}
         sizes={sizes}
         className="block dark:hidden w-full h-auto"
       />
