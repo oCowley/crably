@@ -104,7 +104,7 @@ const TAG_MAP: { keywords: string[]; featured: boolean; category: string; tags: 
 ]
 
 const FALLBACK_TAGS: Tag[] = [
-  { label: 'Site profissional', icon: Star, color: 'text-neutral-300', bg: 'bg-neutral-300/10 border-neutral-300/20' },
+  { label: 'Site profissional', icon: Star, color: 'text-secondary', bg: 'bg-elevated border-border' },
 ]
 
 function getProductMeta(name: string) {
