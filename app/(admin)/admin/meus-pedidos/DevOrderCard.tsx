@@ -67,7 +67,7 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
   const deadline  = startDate ? addBusinessDays(startDate, totalDays) : null
   const daysLeft  = deadline ? Math.ceil((deadline.getTime() - Date.now()) / 86400000) : null
 
-  const stageColor = STAGE_COLORS[order.projectStage] ?? 'text-neutral-400 bg-neutral-400/10 border-neutral-400/20'
+  const stageColor = STAGE_COLORS[order.projectStage] ?? 'text-secondary bg-neutral-400/10 border-neutral-400/20'
   const stageLabel = STAGE_LABELS[order.projectStage] ?? order.projectStage
   const advance    = ADVANCE[order.projectStage]
 
@@ -111,10 +111,10 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs text-neutral-500 mb-0.5">{order.productType}</p>
-          <h3 className="text-base font-bold text-white truncate">{order.projectName}</h3>
+          <p className="text-xs text-muted mb-0.5">{order.productType}</p>
+          <h3 className="text-base font-bold text-foreground truncate">{order.projectName}</h3>
           {order.createdAt && (
-            <p className="text-xs text-neutral-600 mt-0.5">
+            <p className="text-xs text-faint mt-0.5">
               {order.createdAt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
             </p>
           )}
@@ -125,7 +125,7 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
           </span>
           {daysLeft !== null && (
             <span className={`flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-              daysLeft <= 3 ? 'text-orange-400 bg-orange-500/10' : 'text-neutral-500 bg-white/5'
+              daysLeft <= 3 ? 'text-orange-400 bg-orange-500/10' : 'text-muted bg-elevated'
             }`}>
               <Clock size={10} />
               {daysLeft > 0
@@ -140,7 +140,7 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
 
       {/* ── Dev Progress Stepper ── */}
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Progresso</p>
+        <p className="text-xs font-semibold text-muted uppercase tracking-wide">Progresso</p>
         {DEV_STEPS.map((step, i) => {
           const done    = i < devProgress
           const current = i === devProgress
@@ -153,22 +153,22 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
               className={`w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all ${
                 done    ? 'border-green-500/20 bg-green-500/5 hover:bg-green-500/10' :
                 current ? 'border-brand/20 bg-brand/5 hover:bg-brand/10' :
-                          'border-white/5 bg-white/[0.02] hover:bg-white/5'
+                          'border-border bg-surface hover:bg-elevated'
               }`}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
                 done    ? 'bg-green-500 text-white' :
                 current ? 'bg-brand text-white' :
-                          'bg-white/5 text-neutral-600'
+                          'bg-elevated text-faint'
               }`}>
                 {loading ? <Loader2 size={10} className="animate-spin" /> :
                  done    ? <CheckCircle2 size={10} /> :
                            i + 1}
               </div>
               <span className={`text-sm font-medium flex-1 ${
-                done    ? 'text-green-400' :
-                current ? 'text-white' :
-                          'text-neutral-600'
+                done    ? 'text-success' :
+                current ? 'text-foreground' :
+                          'text-faint'
               }`}>
                 {step.label}
               </span>
@@ -180,19 +180,19 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
 
       {/* ── Deploy URL ── */}
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">URL de Preview</p>
+        <p className="text-xs font-semibold text-muted uppercase tracking-wide">URL de Preview</p>
         <div className="flex gap-2">
           <input
             type="text"
             value={deployInput}
             onChange={(e) => setDeployInput(e.target.value)}
             placeholder="https://preview.vercel.app"
-            className="flex-1 px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors"
+            className="flex-1 px-3 py-2 text-sm bg-elevated border border-border rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors"
           />
           <button
             onClick={handleSaveDeploy}
             disabled={savingDeploy}
-            className="h-9 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-semibold flex items-center gap-1.5 border border-white/10 transition-colors disabled:opacity-50 shrink-0"
+            className="h-9 px-3 rounded-xl bg-elevated hover:bg-elevated text-foreground text-xs font-semibold flex items-center gap-1.5 border border-border transition-colors disabled:opacity-50 shrink-0"
           >
             {savingDeploy ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
             Salvar
@@ -211,26 +211,26 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
       </div>
 
       {/* ── Briefing (collapsible) ── */}
-      <div className="border border-white/8 rounded-xl overflow-hidden">
+      <div className="border border-border rounded-xl overflow-hidden">
         <button
           onClick={() => setBriefingOpen(o => !o)}
-          className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-secondary hover:text-foreground hover:bg-elevated transition-colors"
         >
           Briefing do cliente
           {briefingOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
         </button>
         {briefingOpen && (
-          <div className="px-3.5 pb-3.5 space-y-3 border-t border-white/5 pt-3">
-            <p className="text-sm text-neutral-300 whitespace-pre-wrap leading-relaxed">{order.briefing}</p>
+          <div className="px-3.5 pb-3.5 space-y-3 border-t border-border pt-3">
+            <p className="text-sm text-secondary whitespace-pre-wrap leading-relaxed">{order.briefing}</p>
             {order.briefingNotes && (
               <div>
-                <p className="text-xs font-semibold text-neutral-500 mb-1">Notas adicionais</p>
-                <p className="text-sm text-neutral-400 whitespace-pre-wrap">{order.briefingNotes}</p>
+                <p className="text-xs font-semibold text-muted mb-1">Notas adicionais</p>
+                <p className="text-sm text-secondary whitespace-pre-wrap">{order.briefingNotes}</p>
               </div>
             )}
             {order.references && order.references.length > 0 && (
               <div>
-                <p className="text-xs font-semibold text-neutral-500 mb-1">Referências</p>
+                <p className="text-xs font-semibold text-muted mb-1">Referências</p>
                 <div className="space-y-1">
                   {order.references.map((ref, i) => (
                     <a
@@ -254,7 +254,7 @@ export default function DevOrderCard({ order, onRefresh }: Props) {
       {/* ── Domain Name (conditional) ── */}
       {showDomain && order.domainName && (
         <div className="border border-teal-500/20 bg-teal-500/5 rounded-xl p-3.5 space-y-1">
-          <p className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wide">Domínio do cliente</p>
+          <p className="text-[10px] font-semibold text-muted uppercase tracking-wide">Domínio do cliente</p>
           <p className="text-sm font-mono text-teal-300">{order.domainName}</p>
         </div>
       )}

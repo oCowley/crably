@@ -41,7 +41,7 @@ function initials(name: string) {
 const STATUS_COLORS: Record<ProjectStatus, string> = {
   pending_payment: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
   paid: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
-  queued: 'text-neutral-400 bg-neutral-400/10 border-neutral-400/20',
+  queued: 'text-secondary bg-neutral-400/10 border-neutral-400/20',
   assigned: 'text-purple-400 bg-purple-400/10 border-purple-400/20',
   in_progress: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
   review: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
@@ -150,13 +150,13 @@ function StatCard({
   iconColor: string
 }) {
   return (
-    <div className="rounded-2xl bg-[#111111] border border-white/[0.06] p-5 flex flex-col gap-4 hover:border-white/[0.10] transition-colors">
+    <div className="rounded-2xl bg-surface border border-border p-5 flex flex-col gap-4 hover:border-border-strong transition-colors">
       <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>
         <Icon size={18} className={iconColor} />
       </div>
       <div>
-        <p className="text-2xl font-bold text-white leading-none">{value}</p>
-        <p className="text-[11px] text-neutral-500 mt-1.5">{label}</p>
+        <p className="text-2xl font-bold text-foreground leading-none">{value}</p>
+        <p className="text-[11px] text-muted mt-1.5">{label}</p>
       </div>
     </div>
   )
@@ -275,7 +275,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 size={20} className="animate-spin text-neutral-600" />
+        <Loader2 size={20} className="animate-spin text-faint" />
       </div>
     )
   }
@@ -290,10 +290,10 @@ export default function AdminDashboardPage() {
     <div className="space-y-6">
       {/* Greeting header */}
       <div className="text-center py-4">
-        <p className="text-[11px] font-medium text-neutral-600 uppercase tracking-widest capitalize">
+        <p className="text-[11px] font-medium text-faint uppercase tracking-widest capitalize">
           {today} · {greeting}{firstName ? `, ${firstName}` : ''} 👋
         </p>
-        <h1 className="text-3xl lg:text-4xl font-bold text-white mt-2 tracking-tight">
+        <h1 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 tracking-tight">
           Visão geral da operação
         </h1>
         <div className="w-12 h-0.5 bg-brand rounded-full mx-auto mt-3" />
@@ -335,11 +335,11 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
 
         {/* Recent orders — left, larger */}
-        <div className="xl:col-span-3 rounded-2xl bg-[#111111] border border-white/[0.06] overflow-hidden flex flex-col">
-          <div className="px-5 py-4 border-b border-white/[0.05] flex items-center justify-between shrink-0">
+        <div className="xl:col-span-3 rounded-2xl bg-surface border border-border overflow-hidden flex flex-col">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between shrink-0">
             <div>
-              <h2 className="text-sm font-semibold text-white">Pedidos recentes</h2>
-              <p className="text-[11px] text-neutral-600 mt-0.5">Últimas 5 entradas</p>
+              <h2 className="text-sm font-semibold text-foreground">Pedidos recentes</h2>
+              <p className="text-[11px] text-faint mt-0.5">Últimas 5 entradas</p>
             </div>
             <a
               href="/admin/pedidos"
@@ -350,24 +350,24 @@ export default function AdminDashboardPage() {
           </div>
 
           {recent.length === 0 ? (
-            <p className="text-xs text-neutral-600 px-5 py-8">Nenhum pedido encontrado.</p>
+            <p className="text-xs text-faint px-5 py-8">Nenhum pedido encontrado.</p>
           ) : (
-            <div className="divide-y divide-white/[0.04]">
+            <div className="divide-y divide-border">
               {recent.map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors"
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-elevated transition-colors"
                 >
                   {/* Customer initials avatar */}
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center shrink-0">
-                    <span className="text-xs font-bold text-neutral-400">
+                  <div className="w-9 h-9 rounded-xl bg-elevated border border-border flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-secondary">
                       {initials(order.customer)}
                     </span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{order.product}</p>
-                    <p className="text-xs text-neutral-500 truncate mt-0.5">{order.customer}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{order.product}</p>
+                    <p className="text-xs text-muted truncate mt-0.5">{order.customer}</p>
                   </div>
 
                   <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
@@ -376,7 +376,7 @@ export default function AdminDashboardPage() {
                     >
                       {PROJECT_STATUS_LABELS[order.status]}
                     </span>
-                    <span className="text-[10px] text-neutral-600">{order.date}</span>
+                    <span className="text-[10px] text-faint">{order.date}</span>
                   </div>
                 </div>
               ))}
@@ -388,22 +388,22 @@ export default function AdminDashboardPage() {
         <div className="xl:col-span-2 flex flex-col gap-4">
 
           {/* Bar chart */}
-          <div className="rounded-2xl bg-[#111111] border border-white/[0.06] p-5">
-            <h2 className="text-sm font-semibold text-white">Pedidos por mês</h2>
-            <p className="text-[11px] text-neutral-600 mt-0.5 mb-4">Últimos 6 meses</p>
+          <div className="rounded-2xl bg-surface border border-border p-5">
+            <h2 className="text-sm font-semibold text-foreground">Pedidos por mês</h2>
+            <p className="text-[11px] text-faint mt-0.5 mb-4">Últimos 6 meses</p>
             {monthly.every((m) => m.orders === 0) ? (
-              <p className="text-xs text-neutral-600 py-6 text-center">Nenhum dado disponível.</p>
+              <p className="text-xs text-faint py-6 text-center">Nenhum dado disponível.</p>
             ) : (
               <AreaChart data={monthly} />
             )}
           </div>
 
           {/* Status distribution */}
-          <div className="flex-1 rounded-2xl bg-[#111111] border border-white/[0.06] p-5">
-            <h2 className="text-sm font-semibold text-white">Status dos projetos</h2>
-            <p className="text-[11px] text-neutral-600 mt-0.5 mb-5">Distribuição atual</p>
+          <div className="flex-1 rounded-2xl bg-surface border border-border p-5">
+            <h2 className="text-sm font-semibold text-foreground">Status dos projetos</h2>
+            <p className="text-[11px] text-faint mt-0.5 mb-5">Distribuição atual</p>
             {statusDist.length === 0 ? (
-              <p className="text-xs text-neutral-600">Nenhum projeto encontrado.</p>
+              <p className="text-xs text-faint">Nenhum projeto encontrado.</p>
             ) : (
               <div className="space-y-3.5">
                 {statusDist.map(({ status, count }) => {
@@ -411,10 +411,10 @@ export default function AdminDashboardPage() {
                   return (
                     <div key={status}>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs text-neutral-400">{PROJECT_STATUS_LABELS[status]}</span>
-                        <span className="text-xs font-semibold text-neutral-400">{count}</span>
+                        <span className="text-xs text-secondary">{PROJECT_STATUS_LABELS[status]}</span>
+                        <span className="text-xs font-semibold text-secondary">{count}</span>
                       </div>
-                      <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-elevated rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${STATUS_BAR_COLORS[status]}`}
                           style={{ width: `${pct}%` }}

@@ -45,7 +45,7 @@ const STATUS_LABELS: Record<TicketStatus, string> = {
 const PRIORITY_STYLES: Record<TicketPriority, string> = {
   alta:  'text-red-400',
   media: 'text-yellow-400',
-  baixa: 'text-neutral-500',
+  baixa: 'text-muted',
 }
 
 const PRIORITY_LABELS: Record<TicketPriority, string> = {
@@ -73,7 +73,7 @@ function formatDate(date: Date) {
   return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
-const inputCls  = 'w-full px-3.5 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors'
+const inputCls  = 'w-full px-3.5 py-2.5 text-sm bg-elevated border border-border rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors'
 const selectCls = `${inputCls} appearance-none cursor-pointer`
 
 /* ─── New ticket modal ───────────────────────────────────────── */
@@ -102,12 +102,12 @@ function NewTicketModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
-          <h2 className="text-base font-bold text-white">Novo ticket</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+          <h2 className="text-base font-bold text-foreground">Novo ticket</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -116,22 +116,22 @@ function NewTicketModal({
           <div className="px-6 py-5 space-y-4">
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Cliente</label>
+              <label className="text-xs font-medium text-secondary">Cliente</label>
               <select
                 required
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 className={selectCls}
               >
-                <option value="" className="bg-[#1a1a1a]">Selecione um cliente</option>
+                <option value="" className="bg-elevated">Selecione um cliente</option>
                 {customers.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-[#1a1a1a]">{c.name} — {c.email}</option>
+                  <option key={c.id} value={c.id} className="bg-elevated">{c.name} — {c.email}</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Assunto</label>
+              <label className="text-xs font-medium text-secondary">Assunto</label>
               <input
                 required
                 type="text"
@@ -143,21 +143,21 @@ function NewTicketModal({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Prioridade</label>
+              <label className="text-xs font-medium text-secondary">Prioridade</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TicketPriority)}
                 className={selectCls}
               >
                 {(Object.entries(PRIORITY_LABELS) as [TicketPriority, string][]).map(([key, label]) => (
-                  <option key={key} value={key} className="bg-[#1a1a1a]">{label}</option>
+                  <option key={key} value={key} className="bg-elevated">{label}</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
-                ID do pedido <span className="text-neutral-600">(opcional)</span>
+              <label className="text-xs font-medium text-secondary">
+                ID do pedido <span className="text-faint">(opcional)</span>
               </label>
               <input
                 type="text"
@@ -170,8 +170,8 @@ function NewTicketModal({
 
           </div>
 
-          <div className="px-6 py-4 border-t border-white/5 flex gap-3 justify-end">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+          <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
               Cancelar
             </button>
             <button
@@ -203,51 +203,51 @@ function TicketDetailModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <span className="text-xs font-mono text-neutral-600">{ticket.id.slice(0, 8)}…</span>
-            <h2 className="text-base font-bold text-white mt-0.5 pr-4">{ticket.subject}</h2>
+            <span className="text-xs font-mono text-faint">{ticket.id.slice(0, 8)}…</span>
+            <h2 className="text-base font-bold text-foreground mt-0.5 pr-4">{ticket.subject}</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors shrink-0">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors shrink-0">
             <X size={16} />
           </button>
         </div>
 
         <div className="px-6 py-5 space-y-4">
           {/* Customer */}
-          <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
-            <p className="text-xs text-neutral-500 mb-1">Cliente</p>
-            <p className="text-sm font-semibold text-white">{ticket.customer}</p>
-            <p className="text-xs text-neutral-400 mt-0.5">{ticket.email}</p>
+          <div className="p-4 rounded-xl bg-surface border border-border">
+            <p className="text-xs text-muted mb-1">Cliente</p>
+            <p className="text-sm font-semibold text-foreground">{ticket.customer}</p>
+            <p className="text-xs text-secondary mt-0.5">{ticket.email}</p>
           </div>
 
           {/* Meta */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-xs text-neutral-500 mb-1">Prioridade</p>
+            <div className="p-3.5 rounded-xl bg-surface border border-border">
+              <p className="text-xs text-muted mb-1">Prioridade</p>
               <p className={`text-sm font-semibold ${PRIORITY_STYLES[ticket.priority]}`}>
                 {PRIORITY_LABELS[ticket.priority]}
               </p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-xs text-neutral-500 mb-1">Aberto em</p>
-              <p className="text-sm font-medium text-white">{formatDate(ticket.date)}</p>
+            <div className="p-3.5 rounded-xl bg-surface border border-border">
+              <p className="text-xs text-muted mb-1">Aberto em</p>
+              <p className="text-sm font-medium text-foreground">{formatDate(ticket.date)}</p>
             </div>
           </div>
 
           {ticket.orderId && (
-            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-xs text-neutral-500 mb-1">Pedido vinculado</p>
-              <p className="text-sm font-mono text-neutral-300">{ticket.orderId}</p>
+            <div className="p-3.5 rounded-xl bg-surface border border-border">
+              <p className="text-xs text-muted mb-1">Pedido vinculado</p>
+              <p className="text-sm font-mono text-secondary">{ticket.orderId}</p>
             </div>
           )}
 
           {/* Status actions */}
           <div className="space-y-1.5">
-            <p className="text-xs font-medium text-neutral-400">Atualizar status</p>
+            <p className="text-xs font-medium text-secondary">Atualizar status</p>
             <div className="flex gap-2 flex-wrap">
               {(Object.entries(STATUS_LABELS) as [TicketStatus, string][]).map(([key, label]) => (
                 <button
@@ -257,7 +257,7 @@ function TicketDetailModal({
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                     ticket.status === key
                       ? STATUS_STYLES[key]
-                      : 'text-neutral-500 border-white/10 hover:text-white hover:border-white/20 bg-white/5'
+                      : 'text-muted border-border hover:text-foreground hover:border-border-strong bg-elevated'
                   }`}
                 >
                   {label}
@@ -267,8 +267,8 @@ function TicketDetailModal({
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-white/5 flex justify-end">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+        <div className="px-6 py-4 border-t border-border flex justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
             Fechar
           </button>
         </div>
@@ -383,8 +383,8 @@ export default function TicketsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Tickets</h1>
-            <p className="text-neutral-500 text-sm">Central de suporte e comunicação com clientes.</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Tickets</h1>
+            <p className="text-muted text-sm">Central de suporte e comunicação com clientes.</p>
           </div>
           <button
             onClick={() => setCreating(true)}
@@ -404,7 +404,7 @@ export default function TicketsPage() {
           ].map((s) => (
             <div key={s.label} className="bento-card p-5">
               <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-xs text-neutral-500 mt-1">{s.label}</p>
+              <p className="text-xs text-muted mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -412,7 +412,7 @@ export default function TicketsPage() {
         {/* Tickets list */}
         <div className="bento-card overflow-hidden">
           {/* Tabs */}
-          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-1 overflow-x-auto">
+          <div className="px-6 py-4 border-b border-border flex items-center gap-1 overflow-x-auto">
             {TABS.map((tab) => (
               <button
                 key={tab.key}
@@ -420,7 +420,7 @@ export default function TicketsPage() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.key
                     ? 'bg-brand/10 text-brand'
-                    : 'text-neutral-500 hover:text-neutral-300 hover:bg-white/5'
+                    : 'text-muted hover:text-secondary hover:bg-elevated'
                 }`}
               >
                 {tab.label}
@@ -434,23 +434,23 @@ export default function TicketsPage() {
           </div>
 
           {loading ? (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="px-6 py-4 h-20 animate-pulse bg-white/[0.02]" />
+                <div key={i} className="px-6 py-4 h-20 animate-pulse bg-elevated" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <MessageSquare size={32} className="text-neutral-700 mb-3" />
-              <p className="text-sm text-neutral-500">Nenhum ticket encontrado.</p>
+              <MessageSquare size={32} className="text-faint mb-3" />
+              <p className="text-sm text-muted">Nenhum ticket encontrado.</p>
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {filtered.map((ticket) => (
                 <div
                   key={ticket.id}
                   onClick={() => setViewing(ticket)}
-                  className="flex items-start gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors cursor-pointer"
+                  className="flex items-start gap-4 px-6 py-4 hover:bg-elevated transition-colors cursor-pointer"
                 >
                   <div className="pt-0.5 shrink-0">
                     <div className={`w-2 h-2 rounded-full mt-1 ${
@@ -461,15 +461,15 @@ export default function TicketsPage() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="text-xs font-mono text-neutral-600">{ticket.id.slice(0, 8)}…</span>
+                      <span className="text-xs font-mono text-faint">{ticket.id.slice(0, 8)}…</span>
                       {ticket.orderId && (
-                        <span className="text-xs text-neutral-600 bg-white/5 px-2 py-0.5 rounded-full">
+                        <span className="text-xs text-faint bg-elevated px-2 py-0.5 rounded-full">
                           {ticket.orderId.slice(0, 8)}…
                         </span>
                       )}
                     </div>
-                    <p className="font-medium text-white text-sm">{ticket.subject}</p>
-                    <p className="text-xs text-neutral-500 mt-0.5">{ticket.customer} · {ticket.email}</p>
+                    <p className="font-medium text-foreground text-sm">{ticket.subject}</p>
+                    <p className="text-xs text-muted mt-0.5">{ticket.customer} · {ticket.email}</p>
                   </div>
 
                   <div className="flex flex-col items-end gap-2 shrink-0">
@@ -480,11 +480,11 @@ export default function TicketsPage() {
                       <span className={PRIORITY_STYLES[ticket.priority]}>
                         {PRIORITY_LABELS[ticket.priority]}
                       </span>
-                      <span className="flex items-center gap-1 text-neutral-600">
+                      <span className="flex items-center gap-1 text-faint">
                         <MessageSquare size={11} />
                         {ticket.messageCount}
                       </span>
-                      <span className="text-neutral-600 hidden sm:inline">{formatDate(ticket.date)}</span>
+                      <span className="text-faint hidden sm:inline">{formatDate(ticket.date)}</span>
                     </div>
                   </div>
                 </div>

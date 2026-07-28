@@ -90,24 +90,24 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
       collapsed ? 'lg:justify-center lg:px-0' : '',
       active
         ? 'bg-brand/10 text-brand border-brand/20 font-semibold'
-        : 'text-neutral-500 hover:text-white hover:bg-white/[0.04] border-transparent',
+        : 'text-muted hover:text-foreground hover:bg-surface border-transparent',
     ].join(' ')
   }
 
   return (
     <>
       {/* Mobile header */}
-      <header className="lg:hidden fixed top-0 inset-x-0 z-30 h-14 bg-[#111111] border-b border-white/[0.05] flex items-center gap-3 px-4">
+      <header className="lg:hidden fixed top-0 inset-x-0 z-30 h-14 bg-surface border-b border-border flex items-center gap-3 px-4">
         <button
           onClick={() => setMobileOpen(true)}
-          className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-elevated transition-colors"
           aria-label="Abrir menu"
         >
           <Menu size={20} />
         </button>
         <div className="flex items-center gap-2">
           <Image src="/images/icone-crably.png" alt="Crably" width={24} height={24} className="rounded-md" />
-          <span className="font-bold text-white text-sm tracking-tight">crably</span>
+          <span className="font-bold text-foreground text-sm tracking-tight">crably</span>
         </div>
         <div className="ml-auto">
           <ThemeToggle />
@@ -117,7 +117,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
       {/* Mobile backdrop */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="lg:hidden fixed inset-0 z-40 bg-overlay backdrop-blur-sm"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -126,7 +126,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
       <aside
         className={[
           'fixed inset-y-0 left-0 z-50 flex flex-col',
-          'bg-[#0d0d0d] border-r border-white/[0.05]',
+          'bg-inset border-r border-border',
           'transition-all duration-300 ease-in-out',
           'w-72',
           collapsed ? 'lg:w-[4.5rem]' : 'lg:w-72',
@@ -136,7 +136,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
         {/* Logo + collapse toggle */}
         <div
           className={[
-            'h-[72px] flex items-center border-b border-white/[0.05] px-4 shrink-0 gap-3',
+            'h-[72px] flex items-center border-b border-border px-4 shrink-0 gap-3',
             collapsed ? 'lg:justify-center lg:px-0' : '',
           ].join(' ')}
         >
@@ -145,16 +145,16 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
           </div>
 
           <div className={`flex-1 min-w-0 transition-all duration-200 ${collapsed ? 'lg:hidden' : ''}`}>
-            <p className="font-bold text-white tracking-tight text-[15px] leading-none">crably</p>
-            <p className="text-[10px] text-neutral-600 mt-0.5 leading-none">Admin</p>
+            <p className="font-bold text-foreground tracking-tight text-[15px] leading-none">crably</p>
+            <p className="text-[10px] text-faint mt-0.5 leading-none">Admin</p>
           </div>
 
           <button
             onClick={onToggle}
             className={[
               'hidden lg:flex items-center justify-center',
-              'w-7 h-7 rounded-lg text-neutral-600',
-              'hover:text-white hover:bg-white/8 transition-all duration-200 shrink-0',
+              'w-7 h-7 rounded-lg text-faint',
+              'hover:text-foreground hover:bg-elevated transition-all duration-200 shrink-0',
             ].join(' ')}
             aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
           >
@@ -163,7 +163,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
 
           <button
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg text-neutral-600 hover:text-white transition-colors"
+            className="lg:hidden p-1.5 rounded-lg text-faint hover:text-foreground transition-colors"
             aria-label="Fechar menu"
           >
             <X size={16} />
@@ -181,7 +181,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
             <div key={section.label}>
               <p
                 className={[
-                  'px-3 mb-1.5 text-[10px] font-semibold text-neutral-700 tracking-widest',
+                  'px-3 mb-1.5 text-[10px] font-semibold text-faint tracking-widest',
                   collapsed ? 'lg:hidden' : '',
                 ].join(' ')}
               >
@@ -209,7 +209,7 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
         {/* Bottom section */}
         <div
           className={[
-            'py-3 border-t border-white/[0.05] flex flex-col gap-1 shrink-0',
+            'py-3 border-t border-border flex flex-col gap-1 shrink-0',
             collapsed ? 'lg:px-2' : 'px-3',
           ].join(' ')}
         >
@@ -226,15 +226,15 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
 
           {/* User card */}
           {!collapsed && (
-            <div className="hidden lg:flex items-center gap-3 mx-0 mt-1 px-3 py-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+            <div className="hidden lg:flex items-center gap-3 mx-0 mt-1 px-3 py-2.5 rounded-xl bg-surface border border-border">
               <div className="w-8 h-8 rounded-xl bg-brand/15 border border-brand/25 flex items-center justify-center shrink-0">
                 <span className="text-xs font-bold text-brand">{initials}</span>
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-white truncate leading-none">
+                <p className="text-sm font-semibold text-foreground truncate leading-none">
                   {profile?.name?.split(' ')[0] ?? '—'}
                 </p>
-                <p className="text-[10px] text-neutral-600 mt-0.5 truncate">
+                <p className="text-[10px] text-faint mt-0.5 truncate">
                   {profile?.role === 'developer' ? 'Desenvolvedor' : 'Administrador'}
                 </p>
               </div>
@@ -249,8 +249,8 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
             onClick={handleLogout}
             title={collapsed ? 'Sair' : undefined}
             className={[
-              'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-neutral-600',
-              'hover:text-red-400 hover:bg-red-400/5 border border-transparent',
+              'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-faint',
+              'hover:text-danger hover:bg-red-400/5 border border-transparent',
               'transition-all duration-200',
               collapsed ? 'lg:justify-center lg:px-0' : '',
             ].join(' ')}

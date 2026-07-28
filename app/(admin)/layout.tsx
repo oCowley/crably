@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AuthGuard allowedRoles={['admin', 'developer']}>
       <PresenceTracker />
-      <div className="min-h-screen bg-[#0B0B0B]">
+      <div className="min-h-screen bg-background">
         <AdminSidebar collapsed={collapsed} onToggle={toggle} />
 
         <main

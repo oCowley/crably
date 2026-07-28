@@ -77,7 +77,7 @@ export default function MeusPedidosPage() {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center items-center py-24">
-        <Loader2 size={24} className="animate-spin text-neutral-600" />
+        <Loader2 size={24} className="animate-spin text-faint" />
       </div>
     )
   }
@@ -85,8 +85,8 @@ export default function MeusPedidosPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white mb-1">Meus Pedidos</h1>
-        <p className="text-neutral-500 text-sm">
+        <h1 className="text-2xl font-bold text-foreground mb-1">Meus Pedidos</h1>
+        <p className="text-muted text-sm">
           {orders.length === 0
             ? 'Nenhum pedido atribuído a você ainda.'
             : `${orders.length} pedido${orders.length !== 1 ? 's' : ''} atribuído${orders.length !== 1 ? 's' : ''} a você.`}
@@ -94,7 +94,7 @@ export default function MeusPedidosPage() {
       </div>
 
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-3 text-neutral-600">
+        <div className="flex flex-col items-center justify-center py-24 gap-3 text-faint">
           <Briefcase size={36} strokeWidth={1.5} />
           <p className="text-sm">Nenhum pedido atribuído a você ainda.</p>
         </div>

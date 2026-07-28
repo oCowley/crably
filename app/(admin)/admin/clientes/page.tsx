@@ -106,8 +106,8 @@ export default function ClientesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Clientes</h1>
-          <p className="text-neutral-500 text-sm">Histórico e informações dos clientes cadastrados.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Clientes</h1>
+          <p className="text-muted text-sm">Histórico e informações dos clientes cadastrados.</p>
         </div>
       </div>
 
@@ -129,38 +129,38 @@ export default function ClientesPage() {
           },
         ].map((s) => (
           <div key={s.label} className="bento-card p-5">
-            <p className="text-2xl font-bold text-white">{s.value}</p>
-            <p className="text-xs text-neutral-500 mt-1">{s.label}</p>
+            <p className="text-2xl font-bold text-foreground">{s.value}</p>
+            <p className="text-xs text-muted mt-1">{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* Table */}
       <div className="bento-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center gap-3">
-          <h2 className="text-sm font-semibold text-white flex-1">Todos os clientes</h2>
+        <div className="px-6 py-4 border-b border-border flex flex-col sm:flex-row sm:items-center gap-3">
+          <h2 className="text-sm font-semibold text-foreground flex-1">Todos os clientes</h2>
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
               type="search"
               placeholder="Buscar cliente..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-4 py-2 text-xs bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/40 w-full sm:w-48"
+              className="pl-8 pr-4 py-2 text-xs bg-elevated border border-border rounded-lg text-foreground placeholder:text-faint focus:outline-none focus:border-brand/40 w-full sm:w-48"
             />
           </div>
         </div>
 
         {loading ? (
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-border">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="px-6 py-4 h-14 animate-pulse bg-white/[0.02]" />
+              <div key={i} className="px-6 py-4 h-14 animate-pulse bg-elevated" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Users size={32} className="text-neutral-700 mb-3" />
-            <p className="text-sm text-neutral-500">
+            <Users size={32} className="text-faint mb-3" />
+            <p className="text-sm text-muted">
               {search ? 'Nenhum cliente encontrado.' : 'Nenhum cliente cadastrado ainda.'}
             </p>
           </div>
@@ -170,31 +170,31 @@ export default function ClientesPage() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/5">
+                  <tr className="border-b border-border">
                     {['Cliente', 'Email', 'Cadastro', 'Pedidos', 'Total gasto', 'Último pedido'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-neutral-500">{h}</th>
+                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-muted">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-border">
                   {filtered.map((c) => (
-                    <tr key={c.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={c.id} className="hover:bg-elevated transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <Avatar name={c.name} />
-                          <span className="font-medium text-white text-sm">{c.name}</span>
+                          <span className="font-medium text-foreground text-sm">{c.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-neutral-400">{c.email}</td>
-                      <td className="px-6 py-4 text-xs text-neutral-500">{formatDate(c.createdAt)}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-300 text-center">{c.orders}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-300">
+                      <td className="px-6 py-4 text-sm text-secondary">{c.email}</td>
+                      <td className="px-6 py-4 text-xs text-muted">{formatDate(c.createdAt)}</td>
+                      <td className="px-6 py-4 text-sm text-secondary text-center">{c.orders}</td>
+                      <td className="px-6 py-4 text-sm text-secondary">
                         {c.totalSpent > 0
                           ? `R$ ${c.totalSpent.toLocaleString('pt-BR')}`
-                          : <span className="text-neutral-600">—</span>}
+                          : <span className="text-faint">—</span>}
                       </td>
-                      <td className="px-6 py-4 text-xs text-neutral-500">
-                        {c.lastOrder ? formatDate(c.lastOrder) : <span className="text-neutral-700">Sem pedidos</span>}
+                      <td className="px-6 py-4 text-xs text-muted">
+                        {c.lastOrder ? formatDate(c.lastOrder) : <span className="text-faint">Sem pedidos</span>}
                       </td>
                     </tr>
                   ))}
@@ -203,14 +203,14 @@ export default function ClientesPage() {
             </div>
 
             {/* Mobile */}
-            <div className="md:hidden divide-y divide-white/5">
+            <div className="md:hidden divide-y divide-border">
               {filtered.map((c) => (
                 <div key={c.id} className="px-5 py-4 flex items-center gap-3">
                   <Avatar name={c.name} />
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white text-sm truncate">{c.name}</p>
-                    <p className="text-xs text-neutral-500 truncate">{c.email}</p>
-                    <p className="text-xs text-neutral-600 mt-0.5">
+                    <p className="font-medium text-foreground text-sm truncate">{c.name}</p>
+                    <p className="text-xs text-muted truncate">{c.email}</p>
+                    <p className="text-xs text-faint mt-0.5">
                       {c.orders} {c.orders === 1 ? 'pedido' : 'pedidos'} ·{' '}
                       {c.totalSpent > 0 ? `R$ ${c.totalSpent.toLocaleString('pt-BR')}` : 'Sem compras'}
                     </p>

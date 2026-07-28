@@ -43,13 +43,13 @@ function toSlug(v: string) {
 }
 
 const inputCls =
-  'w-full px-3 py-2.5 bg-white/5 border border-white/8 rounded-xl text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/30 transition-colors'
+  'w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/30 transition-colors'
 
 function SectionHeader({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
   return (
-    <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+    <div className="flex items-center gap-2 pb-3 border-b border-border">
       <Icon size={13} className="text-brand shrink-0" />
-      <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+      <span className="text-[11px] font-semibold text-secondary uppercase tracking-widest">
         {label}
       </span>
     </div>
@@ -95,7 +95,7 @@ function ImageSlot({
       />
 
       {preview ? (
-        <div className="relative h-28 rounded-xl overflow-hidden border border-white/8 bg-white/[0.02]">
+        <div className="relative h-28 rounded-xl overflow-hidden border border-border bg-surface">
           <img src={preview} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
             <button
@@ -111,7 +111,7 @@ function ImageSlot({
                 type="button"
                 onClick={onRemove}
                 title="Remover"
-                className="p-2 rounded-lg bg-black/70 text-red-400 hover:bg-black/90 transition-colors"
+                className="p-2 rounded-lg bg-black/70 text-danger hover:bg-black/90 transition-colors"
               >
                 <X size={13} />
               </button>
@@ -127,7 +127,7 @@ function ImageSlot({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="w-full h-28 rounded-xl border border-dashed border-white/15 bg-white/[0.02] hover:bg-white/[0.04] hover:border-brand/30 transition-all flex flex-col items-center justify-center gap-2 text-neutral-600 hover:text-neutral-400"
+          className="w-full h-28 rounded-xl border border-dashed border-border-strong bg-surface hover:bg-elevated hover:border-brand/30 transition-all flex flex-col items-center justify-center gap-2 text-faint hover:text-secondary"
         >
           <Upload size={18} />
           <span className="text-xs">Upload</span>
@@ -253,23 +253,23 @@ function ProductModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-5xl bg-[#0e0e0e] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
+        className="relative w-full max-w-5xl bg-inset border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
         style={{ maxHeight: '90vh' }}
       >
         {/* ── header ── */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <div>
-            <h2 className="text-base font-bold text-white">{isEdit ? 'Editar site' : 'Novo site'}</h2>
-            <p className="text-xs text-neutral-500 mt-0.5">
+            <h2 className="text-base font-bold text-foreground">{isEdit ? 'Editar site' : 'Novo site'}</h2>
+            <p className="text-xs text-muted mt-0.5">
               Preencha os dados e adicione referências para preview do cliente
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
           >
             <X size={16} />
           </button>
@@ -282,41 +282,41 @@ function ProductModal({
           <form
             id="create-form"
             onSubmit={handleSubmit}
-            className="w-[420px] shrink-0 overflow-y-auto p-6 space-y-7 border-r border-white/5"
+            className="w-[420px] shrink-0 overflow-y-auto p-6 space-y-7 border-r border-border"
           >
             {/* basic info */}
             <div className="space-y-4">
               <SectionHeader icon={Globe} label="Informações básicas" />
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-400">Nome</label>
+                <label className="text-xs font-medium text-secondary">Nome</label>
                 <input
                   className={inputCls}
                   placeholder="Ex: Agency Pro"
                   value={name}
                   onChange={(e) => handleNameChange(e.target.value)}
                 />
-                {errors.name && <p className="text-xs text-red-400">{errors.name}</p>}
+                {errors.name && <p className="text-xs text-danger">{errors.name}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-400">Slug</label>
+                <label className="text-xs font-medium text-secondary">Slug</label>
                 <input
                   className={inputCls}
                   placeholder="agency-pro"
                   value={slug}
                   onChange={(e) => { setSlug(e.target.value); setSlugEdited(true) }}
                 />
-                <p className="text-[11px] text-neutral-600">
-                  /products/<span className="text-neutral-400">{slug || '...'}</span>
+                <p className="text-[11px] text-faint">
+                  /products/<span className="text-secondary">{slug || '...'}</span>
                 </p>
-                {errors.slug && <p className="text-xs text-red-400">{errors.slug}</p>}
+                {errors.slug && <p className="text-xs text-danger">{errors.slug}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-400">Preço (R$)</label>
+                <label className="text-xs font-medium text-secondary">Preço (R$)</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-neutral-500 pointer-events-none">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted pointer-events-none">
                     R$
                   </span>
                   <input
@@ -334,25 +334,25 @@ function ProductModal({
                     }}
                   />
                 </div>
-                {errors.price && <p className="text-xs text-red-400">{errors.price}</p>}
+                {errors.price && <p className="text-xs text-danger">{errors.price}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-400">Descrição</label>
+                <label className="text-xs font-medium text-secondary">Descrição</label>
                 <textarea
                   className={`${inputCls} resize-none h-24`}
                   placeholder="Descreva o que está incluído neste site..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
-                {errors.description && <p className="text-xs text-red-400">{errors.description}</p>}
+                {errors.description && <p className="text-xs text-danger">{errors.description}</p>}
               </div>
             </div>
 
             {/* images */}
             <div className="space-y-3">
               <SectionHeader icon={ImageIcon} label="Imagens" />
-              <p className="text-[11px] text-neutral-600 -mt-1">
+              <p className="text-[11px] text-faint -mt-1">
                 Imagens exibidas na página do produto. Fazem upload direto para o Firebase Storage.
               </p>
 
@@ -371,7 +371,7 @@ function ProductModal({
               <button
                 type="button"
                 onClick={addImage}
-                className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-brand transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-brand transition-colors"
               >
                 <Plus size={13} />
                 Adicionar imagem
@@ -381,12 +381,12 @@ function ProductModal({
             {/* references */}
             <div className="space-y-3">
               <SectionHeader icon={Link2} label="Referências de preview" />
-              <p className="text-[11px] text-neutral-600 -mt-1">
+              <p className="text-[11px] text-faint -mt-1">
                 Links que o cliente poderá visualizar como prévia dentro do site.
               </p>
 
               {refs.map((r, i) => (
-                <div key={i} className="space-y-2 p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                <div key={i} className="space-y-2 p-3 bg-surface border border-border rounded-xl">
                   <input
                     className={inputCls}
                     placeholder="Título (ex: Versão desktop)"
@@ -405,7 +405,7 @@ function ProductModal({
                       onClick={() => triggerPreview(r.url)}
                       disabled={!r.url.trim()}
                       title="Visualizar"
-                      className="p-2 rounded-lg text-neutral-500 hover:text-brand hover:bg-brand/10 disabled:opacity-30 transition-colors shrink-0"
+                      className="p-2 rounded-lg text-muted hover:text-brand hover:bg-brand/10 disabled:opacity-30 transition-colors shrink-0"
                     >
                       <Eye size={15} />
                     </button>
@@ -413,7 +413,7 @@ function ProductModal({
                       <button
                         type="button"
                         onClick={() => removeRef(i)}
-                        className="p-2 text-neutral-600 hover:text-red-400 transition-colors shrink-0"
+                        className="p-2 text-faint hover:text-danger transition-colors shrink-0"
                       >
                         <Minus size={14} />
                       </button>
@@ -425,7 +425,7 @@ function ProductModal({
               <button
                 type="button"
                 onClick={addRef}
-                className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-brand transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-brand transition-colors"
               >
                 <Plus size={13} />
                 Adicionar referência
@@ -433,16 +433,16 @@ function ProductModal({
             </div>
 
             {errors.submit && (
-              <p className="text-xs text-red-400 bg-red-400/5 border border-red-400/10 rounded-xl px-3 py-2.5">
+              <p className="text-xs text-danger bg-red-400/5 border border-red-400/10 rounded-xl px-3 py-2.5">
                 {errors.submit}
               </p>
             )}
           </form>
 
           {/* right — preview panel */}
-          <div className="flex-1 flex flex-col bg-[#080808] min-w-0">
-            <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between shrink-0">
-              <span className="text-xs font-medium text-neutral-500">
+          <div className="flex-1 flex flex-col bg-inset min-w-0">
+            <div className="px-4 py-3 border-b border-border flex items-center justify-between shrink-0">
+              <span className="text-xs font-medium text-muted">
                 {previewUrl ? 'Preview' : 'Preview — aguardando URL'}
               </span>
               {previewUrl && !iframeError && (
@@ -450,7 +450,7 @@ function ProductModal({
                   href={previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-neutral-600 hover:text-white transition-colors"
+                  className="inline-flex items-center gap-1 text-xs text-faint hover:text-foreground transition-colors"
                 >
                   <ExternalLink size={11} />
                   Abrir em nova aba
@@ -461,12 +461,12 @@ function ProductModal({
             <div className="flex-1 relative overflow-hidden">
               {!previewUrl && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-10">
-                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
-                    <Eye size={20} className="text-neutral-700" />
+                  <div className="w-12 h-12 rounded-2xl bg-surface border border-border flex items-center justify-center">
+                    <Eye size={20} className="text-faint" />
                   </div>
                   <div>
-                    <p className="text-sm text-neutral-500 font-medium">Nenhuma prévia ativa</p>
-                    <p className="text-xs text-neutral-600 mt-1">
+                    <p className="text-sm text-muted font-medium">Nenhuma prévia ativa</p>
+                    <p className="text-xs text-faint mt-1">
                       Adicione uma referência, insira a URL e clique em{' '}
                       <Eye size={11} className="inline-block align-middle" /> para visualizar aqui.
                     </p>
@@ -480,8 +480,8 @@ function ProductModal({
                     <AlertCircle size={20} className="text-red-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-neutral-400 font-medium">Preview bloqueado</p>
-                    <p className="text-xs text-neutral-600 mt-1">
+                    <p className="text-sm text-secondary font-medium">Preview bloqueado</p>
+                    <p className="text-xs text-faint mt-1">
                       Este site não permite incorporação via iframe.
                     </p>
                   </div>
@@ -519,15 +519,15 @@ function ProductModal({
         </div>
 
         {/* ── footer ── */}
-        <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between shrink-0">
-          <p className="text-xs text-neutral-600">
+        <div className="px-6 py-4 border-t border-border flex items-center justify-between shrink-0">
+          <p className="text-xs text-faint">
             As referências ficam disponíveis para o cliente na página do produto.
           </p>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+              className="px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-elevated rounded-xl transition-colors"
             >
               Cancelar
             </button>
@@ -616,7 +616,7 @@ export default function TemplatesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-neutral-500 text-sm">Carregando sites...</p>
+        <p className="text-muted text-sm">Carregando sites...</p>
       </div>
     )
   }
@@ -640,17 +640,17 @@ export default function TemplatesPage() {
 
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={() => setDeleteTarget(null)} />
-          <div className="relative w-full max-w-sm bg-[#0e0e0e] border border-white/8 rounded-2xl shadow-2xl p-6 space-y-5 animate-fade-up">
+          <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => setDeleteTarget(null)} />
+          <div className="relative w-full max-w-sm bg-inset border border-border-strong rounded-2xl shadow-2xl p-6 space-y-5 animate-fade-up">
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 rounded-xl bg-red-400/10 border border-red-400/10 flex items-center justify-center shrink-0">
                 <Trash2 size={16} className="text-red-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Remover site</h3>
-                <p className="text-xs text-neutral-500 mt-1">
+                <h3 className="text-sm font-bold text-foreground">Remover site</h3>
+                <p className="text-xs text-muted mt-1">
                   Tem certeza que deseja remover{' '}
-                  <span className="text-neutral-300 font-medium">{deleteTarget.name}</span>?
+                  <span className="text-secondary font-medium">{deleteTarget.name}</span>?
                   Esta ação não pode ser desfeita.
                 </p>
               </div>
@@ -658,7 +658,7 @@ export default function TemplatesPage() {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                className="px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-elevated rounded-xl transition-colors"
               >
                 Cancelar
               </button>
@@ -678,8 +678,8 @@ export default function TemplatesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Sites</h1>
-          <p className="text-neutral-500 text-sm">Gerencie os sites disponíveis na loja.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Sites</h1>
+          <p className="text-muted text-sm">Gerencie os sites disponíveis na loja.</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
@@ -693,13 +693,13 @@ export default function TemplatesPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Sites cadastrados', value: products.length, color: 'text-green-400' },
+          { label: 'Sites cadastrados', value: products.length, color: 'text-success' },
           { label: 'Total de vendas', value: totalVendas, color: 'text-brand' },
-          { label: 'Sem vendas', value: semVendas, color: 'text-neutral-400' },
+          { label: 'Sem vendas', value: semVendas, color: 'text-secondary' },
         ].map((s) => (
           <div key={s.label} className="bento-card p-5">
             <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-xs text-neutral-500 mt-1">{s.label}</p>
+            <p className="text-xs text-muted mt-1">{s.label}</p>
           </div>
         ))}
       </div>
@@ -707,15 +707,15 @@ export default function TemplatesPage() {
       {/* Grid */}
       {products.length === 0 ? (
         <div className="bento-card p-12 flex flex-col items-center justify-center text-center">
-          <p className="text-neutral-400 text-sm">Nenhum site cadastrado ainda.</p>
-          <p className="text-neutral-600 text-xs mt-1">Clique em "Novo site" para adicionar.</p>
+          <p className="text-secondary text-sm">Nenhum site cadastrado ainda.</p>
+          <p className="text-faint text-xs mt-1">Clique em "Novo site" para adicionar.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {products.map((product) => (
             <div key={product.id} className="bento-card p-5 flex flex-col gap-4">
               {/* Preview */}
-              <div className="aspect-[4/3] rounded-xl bg-[#0d0d0d] border border-white/5 relative overflow-hidden">
+              <div className="aspect-[4/3] rounded-xl bg-inset border border-border relative overflow-hidden">
                 {product.images?.[0] ? (
                   <>
                     <img
@@ -723,13 +723,13 @@ export default function TemplatesPage() {
                       alt={product.name}
                       className="w-full h-full object-cover object-top"
                     />
-                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111111] to-transparent pointer-events-none" />
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface to-transparent pointer-events-none" />
                   </>
                 ) : (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-neutral-600 text-xs font-medium">Sem imagem</span>
+                      <span className="text-faint text-xs font-medium">Sem imagem</span>
                     </div>
                   </>
                 )}
@@ -737,7 +737,7 @@ export default function TemplatesPage() {
                   href={`/products/${product.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-black/30 hover:bg-black/50 text-neutral-400 hover:text-white transition-colors z-10"
+                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-black/30 hover:bg-black/50 text-secondary hover:text-foreground transition-colors z-10"
                   title="Ver produto"
                 >
                   <ExternalLink size={12} />
@@ -746,22 +746,22 @@ export default function TemplatesPage() {
 
               {/* Info */}
               <div className="min-w-0">
-                <h3 className="font-semibold text-white text-sm truncate">{product.name}</h3>
-                <p className="text-xs text-neutral-500 mt-0.5 line-clamp-2">{product.description}</p>
+                <h3 className="font-semibold text-foreground text-sm truncate">{product.name}</h3>
+                <p className="text-xs text-muted mt-0.5 line-clamp-2">{product.description}</p>
               </div>
 
               {product.references?.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <Link2 size={11} className="text-neutral-600 shrink-0" />
-                  <span className="text-xs text-neutral-600">
+                  <Link2 size={11} className="text-faint shrink-0" />
+                  <span className="text-xs text-faint">
                     {product.references.length}{' '}
                     {product.references.length === 1 ? 'referência' : 'referências'}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-xs text-neutral-500">
-                <span className="font-semibold text-white text-sm">
+              <div className="flex items-center justify-between text-xs text-muted">
+                <span className="font-semibold text-foreground text-sm">
                   {(product.price / 100).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
@@ -773,17 +773,17 @@ export default function TemplatesPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 pt-1 border-t border-white/5">
+              <div className="flex items-center gap-2 pt-1 border-t border-border">
                 <button
                   onClick={() => setEditProduct(product)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-secondary hover:text-foreground hover:bg-elevated rounded-lg transition-colors"
                 >
                   <Pencil size={13} />
                   Editar
                 </button>
                 <button
                   onClick={() => setDeleteTarget(product)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-red-400/70 hover:text-red-400 hover:bg-red-400/5 rounded-lg transition-colors"
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-2 text-xs text-danger/70 hover:text-danger hover:bg-red-400/5 rounded-lg transition-colors"
                 >
                   <Trash2 size={13} />
                   Remover

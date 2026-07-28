@@ -62,7 +62,7 @@ function SlotCard({
       ? { border: 'border-blue-500/20', bg: 'bg-blue-500/[0.06]', icon: 'bg-blue-500/15 text-blue-400', badge: 'text-blue-400 bg-blue-400/10 border-blue-400/20', label: 'Meet confirmado' }
       : needsLink
         ? { border: 'border-orange-500/20', bg: 'bg-orange-500/[0.06]', icon: 'bg-orange-500/15 text-orange-400', badge: 'text-orange-400 bg-orange-400/10 border-orange-400/20', label: 'Aguardando link' }
-        : { border: 'border-white/[0.08]', bg: 'bg-white/[0.02]', icon: 'bg-brand/15 text-brand', badge: 'text-brand bg-brand/10 border-brand/20', label: 'Disponível' }
+        : { border: 'border-border', bg: 'bg-surface', icon: 'bg-brand/15 text-brand', badge: 'text-brand bg-brand/10 border-brand/20', label: 'Disponível' }
 
   return (
     <div className={`rounded-2xl border ${accent.border} ${accent.bg} p-4 space-y-3`}>
@@ -73,8 +73,8 @@ function SlotCard({
             <Clock size={15} />
           </div>
           <div>
-            <p className="text-base font-bold text-white leading-none">{slot.hour}</p>
-            <p className="text-[10px] text-neutral-600 mt-0.5">
+            <p className="text-base font-bold text-foreground leading-none">{slot.hour}</p>
+            <p className="text-[10px] text-faint mt-0.5">
               {slot.orderId ? `Pedido #${slot.orderId.slice(0, 8)}…` : 'Horário livre'}
             </p>
           </div>
@@ -86,7 +86,7 @@ function SlotCard({
           {isFree && (
             <button
               onClick={() => onDelete(slot.id)}
-              className="p-1.5 rounded-lg text-neutral-700 hover:text-red-400 hover:bg-red-400/5 transition-colors"
+              className="p-1.5 rounded-lg text-faint hover:text-danger hover:bg-red-400/5 transition-colors"
               aria-label="Remover horário"
             >
               <Trash2 size={12} />
@@ -103,7 +103,7 @@ function SlotCard({
             placeholder="meet.google.com/xxx-xxxx-xxx"
             value={meetLinks[slot.id] ?? ''}
             onChange={(e) => onMeetLinkChange(slot.id, e.target.value)}
-            className="flex-1 px-3 py-2 text-xs bg-white/[0.06] border border-white/[0.10] rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors"
+            className="flex-1 px-3 py-2 text-xs bg-elevated border border-border rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors"
           />
           <button
             onClick={() => onConfirm(slot)}
@@ -145,8 +145,8 @@ function SlotCard({
       {/* Done state */}
       {isDone && (
         <div className="flex items-center gap-1.5 pt-1">
-          <CheckCircle2 size={12} className="text-green-400" />
-          <span className="text-[11px] text-green-400/70">Meet realizado com sucesso</span>
+          <CheckCircle2 size={12} className="text-success" />
+          <span className="text-[11px] text-success/70">Meet realizado com sucesso</span>
         </div>
       )}
     </div>
@@ -290,18 +290,18 @@ export default function AgendamentosPage() {
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-[11px] font-medium text-neutral-600 uppercase tracking-widest">
+          <p className="text-[11px] font-medium text-faint uppercase tracking-widest">
             Agenda
           </p>
-          <h1 className="text-2xl font-bold text-white mt-1">Agendamentos</h1>
+          <h1 className="text-2xl font-bold text-foreground mt-1">Agendamentos</h1>
         </div>
 
         {/* Month summary badges */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#111111] border border-white/[0.06]">
-            <CalendarDays size={13} className="text-neutral-500" />
-            <span className="text-xs font-semibold text-white">{monthSlots.length}</span>
-            <span className="text-xs text-neutral-600">slots em {MONTHS[month]}</span>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface border border-border">
+            <CalendarDays size={13} className="text-muted" />
+            <span className="text-xs font-semibold text-foreground">{monthSlots.length}</span>
+            <span className="text-xs text-faint">slots em {MONTHS[month]}</span>
           </div>
           {monthBooked > 0 && (
             <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand/10 border border-brand/20">
@@ -310,9 +310,9 @@ export default function AgendamentosPage() {
             </div>
           )}
           {monthFree > 0 && (
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface border border-border">
               <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
-              <span className="text-xs text-neutral-500">{monthFree} livres</span>
+              <span className="text-xs text-muted">{monthFree} livres</span>
             </div>
           )}
         </div>
@@ -322,22 +322,22 @@ export default function AgendamentosPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
 
         {/* ── Calendário ──────────────────────────────────────── */}
-        <div className="rounded-2xl bg-[#111111] border border-white/[0.06] p-6">
+        <div className="rounded-2xl bg-surface border border-border p-6">
 
           {/* Month nav */}
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={prevMonth}
-              className="w-8 h-8 flex items-center justify-center rounded-xl text-neutral-500 hover:text-white hover:bg-white/[0.06] transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-muted hover:text-foreground hover:bg-elevated transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-foreground">
               {MONTHS[month]} {year}
             </h2>
             <button
               onClick={nextMonth}
-              className="w-8 h-8 flex items-center justify-center rounded-xl text-neutral-500 hover:text-white hover:bg-white/[0.06] transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-muted hover:text-foreground hover:bg-elevated transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -346,7 +346,7 @@ export default function AgendamentosPage() {
           {/* Weekday headers */}
           <div className="grid grid-cols-7 mb-2">
             {WEEKDAYS.map((w) => (
-              <div key={w} className="text-center text-[10px] font-semibold text-neutral-700 py-1 uppercase tracking-wide">
+              <div key={w} className="text-center text-[10px] font-semibold text-faint py-1 uppercase tracking-wide">
                 {w}
               </div>
             ))}
@@ -371,10 +371,10 @@ export default function AgendamentosPage() {
                     isSelected
                       ? 'bg-brand text-white shadow-lg shadow-brand/25'
                       : isToday
-                        ? 'ring-1 ring-brand/50 bg-brand/10 text-white'
+                        ? 'ring-1 ring-brand/50 bg-brand/10 text-foreground'
                         : isPast
-                          ? 'text-neutral-700 hover:text-neutral-400 hover:bg-white/[0.04]'
-                          : 'text-neutral-400 hover:text-white hover:bg-white/[0.06]',
+                          ? 'text-faint hover:text-secondary hover:bg-elevated'
+                          : 'text-secondary hover:text-foreground hover:bg-elevated',
                   ].join(' ')}
                 >
                   {ymd.slice(8)}
@@ -389,7 +389,7 @@ export default function AgendamentosPage() {
           </div>
 
           {/* Legend */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 pt-4 border-t border-white/[0.05]">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 pt-4 border-t border-border">
             {[
               { color: 'bg-brand',      label: 'Disponível' },
               { color: 'bg-orange-400', label: 'Aguardando link' },
@@ -398,23 +398,23 @@ export default function AgendamentosPage() {
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${color}`} />
-                <span className="text-[10px] text-neutral-600">{label}</span>
+                <span className="text-[10px] text-faint">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── Painel do dia ───────────────────────────────────── */}
-        <div className="rounded-2xl bg-[#111111] border border-white/[0.06] flex flex-col overflow-hidden">
+        <div className="rounded-2xl bg-surface border border-border flex flex-col overflow-hidden">
 
           {selectedDay ? (
             <>
               {/* Day header */}
-              <div className="px-5 py-4 border-b border-white/[0.05] shrink-0">
-                <p className="text-[10px] font-semibold text-neutral-600 uppercase tracking-widest">
+              <div className="px-5 py-4 border-b border-border shrink-0">
+                <p className="text-[10px] font-semibold text-faint uppercase tracking-widest">
                   Horários do dia
                 </p>
-                <p className="text-sm font-bold text-white mt-1 capitalize">
+                <p className="text-sm font-bold text-foreground mt-1 capitalize">
                   {formatDayLabel(selectedDay)}
                 </p>
               </div>
@@ -422,15 +422,15 @@ export default function AgendamentosPage() {
               {/* Add slot form */}
               <form
                 onSubmit={handleCreateSlot}
-                className="px-5 py-3.5 border-b border-white/[0.05] flex gap-2 shrink-0"
+                className="px-5 py-3.5 border-b border-border flex gap-2 shrink-0"
               >
                 <select
                   value={newHour}
                   onChange={(e) => setNewHour(e.target.value)}
-                  className="flex-1 px-3 py-2 text-sm bg-white/[0.05] border border-white/[0.09] rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-brand/50 transition-colors"
+                  className="flex-1 px-3 py-2 text-sm bg-elevated border border-border rounded-xl text-foreground appearance-none cursor-pointer focus:outline-none focus:border-brand/50 transition-colors"
                 >
                   {HOURS.map(h => (
-                    <option key={h} value={h} className="bg-[#1a1a1a]">{h}</option>
+                    <option key={h} value={h} className="bg-elevated">{h}</option>
                   ))}
                 </select>
                 <button
@@ -449,15 +449,15 @@ export default function AgendamentosPage() {
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {loading ? (
                   <div className="flex justify-center py-10">
-                    <Loader2 size={20} className="animate-spin text-neutral-700" />
+                    <Loader2 size={20} className="animate-spin text-faint" />
                   </div>
                 ) : daySlots.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
-                    <div className="w-10 h-10 rounded-2xl bg-white/[0.04] flex items-center justify-center">
-                      <Clock size={18} className="text-neutral-700" />
+                    <div className="w-10 h-10 rounded-2xl bg-elevated flex items-center justify-center">
+                      <Clock size={18} className="text-faint" />
                     </div>
-                    <p className="text-sm text-neutral-600">Nenhum horário neste dia.</p>
-                    <p className="text-xs text-neutral-700">Use o formulário acima para adicionar.</p>
+                    <p className="text-sm text-faint">Nenhum horário neste dia.</p>
+                    <p className="text-xs text-faint">Use o formulário acima para adicionar.</p>
                   </div>
                 ) : (
                   daySlots.map(slot => (
@@ -480,10 +480,10 @@ export default function AgendamentosPage() {
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 p-8 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-white/[0.04] flex items-center justify-center">
-                <CalendarDays size={22} className="text-neutral-700" />
+              <div className="w-12 h-12 rounded-2xl bg-elevated flex items-center justify-center">
+                <CalendarDays size={22} className="text-faint" />
               </div>
-              <p className="text-sm text-neutral-500">Selecione um dia no calendário</p>
+              <p className="text-sm text-muted">Selecione um dia no calendário</p>
             </div>
           )}
         </div>

@@ -39,7 +39,7 @@ type DevUser = { id: string; name: string }
 const STATUS_COLORS: Record<ProjectStatus, string> = {
   pending_payment: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
   paid:            'text-blue-400 bg-blue-400/10 border-blue-400/20',
-  queued:          'text-neutral-400 bg-neutral-400/10 border-neutral-400/20',
+  queued:          'text-secondary bg-neutral-400/10 border-neutral-400/20',
   assigned:        'text-purple-400 bg-purple-400/10 border-purple-400/20',
   in_progress:     'text-blue-400 bg-blue-400/10 border-blue-400/20',
   review:          'text-orange-400 bg-orange-400/10 border-orange-400/20',
@@ -63,7 +63,7 @@ function toDate(value: unknown): Date {
 
 /* ─── Shared input style ─────────────────────────────────────── */
 
-const inputCls = 'w-full px-3.5 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors'
+const inputCls = 'w-full px-3.5 py-2.5 text-sm bg-elevated border border-border rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors'
 const selectCls = `${inputCls} appearance-none cursor-pointer`
 
 /* ─── View modal ─────────────────────────────────────────────── */
@@ -71,34 +71,34 @@ const selectCls = `${inputCls} appearance-none cursor-pointer`
 function ViewModal({ order, onClose }: { order: OrderRow; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-lg bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <span className="text-xs font-mono text-neutral-600">{order.id}</span>
-            <h2 className="text-base font-bold text-white mt-0.5">{order.product}</h2>
+            <span className="text-xs font-mono text-faint">{order.id}</span>
+            <h2 className="text-base font-bold text-foreground mt-0.5">{order.product}</h2>
           </div>
           <div className="flex items-center gap-3">
             <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_COLORS[order.status]}`}>
               {PROJECT_STATUS_LABELS[order.status]}
             </span>
-            <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors">
+            <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors">
               <X size={16} />
             </button>
           </div>
         </div>
 
         <div className="px-6 py-5 space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/5">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-surface border border-border">
             <div className="w-9 h-9 rounded-xl bg-brand/15 border border-brand/20 flex items-center justify-center shrink-0">
               <User size={16} className="text-brand" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs text-neutral-500 mb-1">Cliente</p>
-              <p className="font-semibold text-white text-sm">{order.customer}</p>
-              <p className="text-xs text-neutral-400 mt-0.5">{order.email}</p>
-              {order.businessName && <p className="text-xs text-neutral-600 mt-0.5 italic">{order.businessName}</p>}
+              <p className="text-xs text-muted mb-1">Cliente</p>
+              <p className="font-semibold text-foreground text-sm">{order.customer}</p>
+              <p className="text-xs text-secondary mt-0.5">{order.email}</p>
+              {order.businessName && <p className="text-xs text-faint mt-0.5 italic">{order.businessName}</p>}
             </div>
           </div>
 
@@ -109,12 +109,12 @@ function ViewModal({ order, onClose }: { order: OrderRow; onClose: () => void })
               { icon: Code2,      label: 'Dev responsável', value: order.devName ?? '' },
               { icon: Calendar,   label: 'Data do pedido',  value: formatDate(order.date) },
             ].map(({ icon: Icon, label, value, bold }) => (
-              <div key={label} className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-start gap-3">
-                <Icon size={15} className="text-neutral-500 mt-0.5 shrink-0" />
+              <div key={label} className="p-3.5 rounded-xl bg-surface border border-border flex items-start gap-3">
+                <Icon size={15} className="text-muted mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-xs text-neutral-500">{label}</p>
-                  <p className={`text-sm mt-0.5 ${bold ? 'font-bold text-white' : 'font-medium text-white'}`}>
-                    {value || <span className="text-neutral-600 italic font-normal text-xs">Não atribuído</span>}
+                  <p className="text-xs text-muted">{label}</p>
+                  <p className={`text-sm mt-0.5 ${bold ? 'font-bold text-foreground' : 'font-medium text-foreground'}`}>
+                    {value || <span className="text-faint italic font-normal text-xs">Não atribuído</span>}
                   </p>
                 </div>
               </div>
@@ -122,15 +122,15 @@ function ViewModal({ order, onClose }: { order: OrderRow; onClose: () => void })
           </div>
 
           {order.adminNotes && (
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-xs text-neutral-500 mb-1.5">Observações</p>
-              <p className="text-sm text-neutral-300 leading-relaxed">{order.adminNotes}</p>
+            <div className="p-4 rounded-xl bg-surface border border-border">
+              <p className="text-xs text-muted mb-1.5">Observações</p>
+              <p className="text-sm text-secondary leading-relaxed">{order.adminNotes}</p>
             </div>
           )}
         </div>
 
-        <div className="px-6 py-4 border-t border-white/5 flex justify-end">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+        <div className="px-6 py-4 border-t border-border flex justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
             Fechar
           </button>
         </div>
@@ -165,59 +165,59 @@ function EditModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <span className="text-xs font-mono text-neutral-600">{order.id}</span>
-            <h2 className="text-base font-bold text-white mt-0.5">Editar pedido</h2>
+            <span className="text-xs font-mono text-faint">{order.id}</span>
+            <h2 className="text-base font-bold text-foreground mt-0.5">Editar pedido</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors">
             <X size={16} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="px-6 py-5 space-y-4">
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-3">
-              <User size={15} className="text-neutral-500 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-surface border border-border flex items-center gap-3">
+              <User size={15} className="text-muted shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm font-medium text-white truncate">{order.customer}</p>
-                <p className="text-xs text-neutral-500 truncate">{order.product} · {formatPrice(order.price)}</p>
+                <p className="text-sm font-medium text-foreground truncate">{order.customer}</p>
+                <p className="text-xs text-muted truncate">{order.product} · {formatPrice(order.price)}</p>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Status</label>
+              <label className="text-xs font-medium text-secondary">Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as ProjectStatus)}
                 className={selectCls}
               >
                 {(Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][]).map(([key, label]) => (
-                  <option key={key} value={key} className="bg-[#1a1a1a]">{label}</option>
+                  <option key={key} value={key} className="bg-elevated">{label}</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Dev responsável</label>
+              <label className="text-xs font-medium text-secondary">Dev responsável</label>
               <select
                 value={devId}
                 onChange={(e) => setDevId(e.target.value)}
                 className={selectCls}
               >
-                <option value="" className="bg-[#1a1a1a]">Sem dev atribuído</option>
+                <option value="" className="bg-elevated">Sem dev atribuído</option>
                 {devs.map((d) => (
-                  <option key={d.id} value={d.id} className="bg-[#1a1a1a]">{d.name}</option>
+                  <option key={d.id} value={d.id} className="bg-elevated">{d.name}</option>
                 ))}
               </select>
             </div>
 
             {/* Deploy URL */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">URL de preview (deploy)</label>
+              <label className="text-xs font-medium text-secondary">URL de preview (deploy)</label>
               <input
                 type="url"
                 value={deployUrl}
@@ -229,20 +229,20 @@ function EditModal({
 
             {/* Project stage */}
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Etapa do projeto (cliente)</label>
+              <label className="text-xs font-medium text-secondary">Etapa do projeto (cliente)</label>
               <select
                 value={projectStage}
                 onChange={(e) => setProjectStage(e.target.value as ProjectStage)}
                 className={selectCls}
               >
                 {(Object.entries(PROJECT_STAGE_LABELS) as [ProjectStage, string][]).map(([key, label]) => (
-                  <option key={key} value={key} className="bg-[#1a1a1a]">{label}</option>
+                  <option key={key} value={key} className="bg-elevated">{label}</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">Observações internas</label>
+              <label className="text-xs font-medium text-secondary">Observações internas</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -253,8 +253,8 @@ function EditModal({
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-white/5 flex gap-3 justify-end">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+          <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
               Cancelar
             </button>
             <button
@@ -276,22 +276,22 @@ function EditModal({
 function CancelModal({ order, onConfirm, onClose }: { order: OrderRow; onConfirm: () => void; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-sm bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-sm bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
         <div className="px-6 pt-6 pb-5 flex flex-col items-center text-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-red-400/10 border border-red-400/20 flex items-center justify-center">
             <AlertTriangle size={22} className="text-red-400" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white">Cancelar pedido?</h2>
-            <p className="text-sm text-neutral-400 mt-1.5 leading-relaxed">
-              O pedido <span className="font-mono text-neutral-300">{order.id}</span> de{' '}
-              <span className="text-white font-medium">{order.customer}</span> será removido. Esta ação não pode ser desfeita.
+            <h2 className="text-base font-bold text-foreground">Cancelar pedido?</h2>
+            <p className="text-sm text-secondary mt-1.5 leading-relaxed">
+              O pedido <span className="font-mono text-secondary">{order.id}</span> de{' '}
+              <span className="text-foreground font-medium">{order.customer}</span> será removido. Esta ação não pode ser desfeita.
             </p>
           </div>
         </div>
         <div className="px-6 pb-6 flex gap-3">
-          <button onClick={onClose} className="flex-1 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+          <button onClick={onClose} className="flex-1 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
             Voltar
           </button>
           <button onClick={onConfirm} className="flex-1 py-2 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 rounded-xl transition-colors">
@@ -451,46 +451,46 @@ export default function PedidosPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">Pedidos</h1>
-          <p className="text-neutral-500 text-sm">Gerencie projetos e atribua desenvolvedores.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Pedidos</h1>
+          <p className="text-muted text-sm">Gerencie projetos e atribua desenvolvedores.</p>
         </div>
 
         {/* Summary */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {summary.map((s) => (
             <div key={s.label} className="bento-card p-5">
-              <p className="text-2xl font-bold text-white">{s.value}</p>
-              <p className="text-xs text-neutral-500 mt-1">{s.label}</p>
+              <p className="text-2xl font-bold text-foreground">{s.value}</p>
+              <p className="text-xs text-muted mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* Table */}
         <div className="bento-card overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center gap-3">
-            <h2 className="text-sm font-semibold text-white flex-1">Todos os pedidos</h2>
+          <div className="px-6 py-4 border-b border-border flex flex-col sm:flex-row sm:items-center gap-3">
+            <h2 className="text-sm font-semibold text-foreground flex-1">Todos os pedidos</h2>
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input
                 type="search"
                 placeholder="Buscar pedido..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 pr-4 py-2 text-xs bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/40 w-full sm:w-48"
+                className="pl-8 pr-4 py-2 text-xs bg-elevated border border-border rounded-lg text-foreground placeholder:text-faint focus:outline-none focus:border-brand/40 w-full sm:w-48"
               />
             </div>
           </div>
 
           {loading ? (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="px-6 py-4 h-16 animate-pulse bg-white/[0.02]" />
+                <div key={i} className="px-6 py-4 h-16 animate-pulse bg-elevated" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Package size={32} className="text-neutral-700 mb-3" />
-              <p className="text-sm text-neutral-500">
+              <Package size={32} className="text-faint mb-3" />
+              <p className="text-sm text-muted">
                 {search ? 'Nenhum pedido encontrado.' : 'Nenhum pedido cadastrado ainda.'}
               </p>
             </div>
@@ -500,27 +500,27 @@ export default function PedidosPage() {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-white/5">
+                    <tr className="border-b border-border">
                       {['ID', 'Cliente', 'Produto', 'Dev', 'Status', 'Valor', 'Data', 'Ações'].map((h) => (
-                        <th key={h} className={`px-6 py-3 text-left text-xs font-medium text-neutral-500 ${h === 'Ações' ? 'text-right' : ''}`}>
+                        <th key={h} className={`px-6 py-3 text-left text-xs font-medium text-muted ${h === 'Ações' ? 'text-right' : ''}`}>
                           {h}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-border">
                     {filtered.map((order) => (
-                      <tr key={order.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="px-6 py-4 text-xs text-neutral-500 font-mono">{order.id.slice(0, 8)}…</td>
+                      <tr key={order.id} className="hover:bg-elevated transition-colors">
+                        <td className="px-6 py-4 text-xs text-muted font-mono">{order.id.slice(0, 8)}…</td>
                         <td className="px-6 py-4">
-                          <p className="font-medium text-white text-sm">{order.customer}</p>
-                          <p className="text-xs text-neutral-500">{order.email}</p>
+                          <p className="font-medium text-foreground text-sm">{order.customer}</p>
+                          <p className="text-xs text-muted">{order.email}</p>
                         </td>
-                        <td className="px-6 py-4 text-sm text-neutral-300">{order.product}</td>
+                        <td className="px-6 py-4 text-sm text-secondary">{order.product}</td>
                         <td className="px-6 py-4 text-sm">
                           {order.devName
-                            ? <span className="text-neutral-300">{order.devName}</span>
-                            : <span className="text-neutral-600 italic text-xs">Sem dev</span>
+                            ? <span className="text-secondary">{order.devName}</span>
+                            : <span className="text-faint italic text-xs">Sem dev</span>
                           }
                         </td>
                         <td className="px-6 py-4">
@@ -528,17 +528,17 @@ export default function PedidosPage() {
                             {PROJECT_STATUS_LABELS[order.status]}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-neutral-300">{formatPrice(order.price)}</td>
-                        <td className="px-6 py-4 text-xs text-neutral-500">{formatDate(order.date)}</td>
+                        <td className="px-6 py-4 text-sm text-secondary">{formatPrice(order.price)}</td>
+                        <td className="px-6 py-4 text-xs text-muted">{formatDate(order.date)}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-0.5">
-                            <ActionBtn onClick={() => setViewing(order)} title="Visualizar" className="text-neutral-500 hover:text-white hover:bg-white/8">
+                            <ActionBtn onClick={() => setViewing(order)} title="Visualizar" className="text-muted hover:text-foreground hover:bg-elevated">
                               <Eye size={14} />
                             </ActionBtn>
-                            <ActionBtn onClick={() => setEditing(order)} title="Editar" className="text-neutral-500 hover:text-brand hover:bg-brand/8">
+                            <ActionBtn onClick={() => setEditing(order)} title="Editar" className="text-muted hover:text-brand hover:bg-brand/8">
                               <Pencil size={14} />
                             </ActionBtn>
-                            <ActionBtn onClick={() => setCancelling(order)} title="Cancelar pedido" className="text-neutral-500 hover:text-red-400 hover:bg-red-400/8">
+                            <ActionBtn onClick={() => setCancelling(order)} title="Cancelar pedido" className="text-muted hover:text-danger hover:bg-red-400/8">
                               <Ban size={13} />
                             </ActionBtn>
                           </div>
@@ -550,28 +550,28 @@ export default function PedidosPage() {
               </div>
 
               {/* Mobile cards */}
-              <div className="md:hidden divide-y divide-white/5">
+              <div className="md:hidden divide-y divide-border">
                 {filtered.map((order) => (
                   <div key={order.id} className="px-5 py-4 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-neutral-500 font-mono">{order.id.slice(0, 8)}…</span>
+                      <span className="text-xs text-muted font-mono">{order.id.slice(0, 8)}…</span>
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_COLORS[order.status]}`}>
                         {PROJECT_STATUS_LABELS[order.status]}
                       </span>
                     </div>
-                    <p className="font-medium text-white text-sm">{order.customer}</p>
+                    <p className="font-medium text-foreground text-sm">{order.customer}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-neutral-500">{order.product}</span>
-                      <span className="text-xs text-neutral-400 font-medium">{formatPrice(order.price)}</span>
+                      <span className="text-xs text-muted">{order.product}</span>
+                      <span className="text-xs text-secondary font-medium">{formatPrice(order.price)}</span>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
-                      <button onClick={() => setViewing(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-neutral-400 hover:text-white bg-white/5 rounded-lg transition-colors">
+                      <button onClick={() => setViewing(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-secondary hover:text-foreground bg-elevated rounded-lg transition-colors">
                         <Eye size={12} /> Ver
                       </button>
-                      <button onClick={() => setEditing(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-neutral-400 hover:text-brand bg-white/5 rounded-lg transition-colors">
+                      <button onClick={() => setEditing(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-secondary hover:text-brand bg-elevated rounded-lg transition-colors">
                         <Pencil size={12} /> Editar
                       </button>
-                      <button onClick={() => setCancelling(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-neutral-400 hover:text-red-400 bg-white/5 rounded-lg transition-colors">
+                      <button onClick={() => setCancelling(order)} className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-secondary hover:text-danger bg-elevated rounded-lg transition-colors">
                         <Ban size={12} /> Cancelar
                       </button>
                     </div>
