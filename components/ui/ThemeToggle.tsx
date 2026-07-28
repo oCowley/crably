@@ -18,14 +18,14 @@ export default function ThemeToggle() {
         className={`absolute transition-all duration-500 ${
           isDark
             ? 'opacity-0 rotate-90 scale-0'
-            : 'opacity-100 rotate-0 scale-100 text-amber-500'
+            : 'opacity-100 rotate-0 scale-100 text-warning'
         }`}
       />
       <Moon
         size={16}
         className={`absolute transition-all duration-500 ${
           isDark
-            ? 'opacity-100 rotate-0 scale-100 text-blue-400'
+            ? 'opacity-100 rotate-0 scale-100 text-info'
             : 'opacity-0 -rotate-90 scale-0'
         }`}
       />

@@ -3,12 +3,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Space_Grotesk } from 'next/font/google'
 import Button from '@/components/ui/Button'
 import ThemeToggle from '@/components/ui/ThemeToggle'
-
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: '700' })
-
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -43,7 +39,7 @@ export default function Header() {
             height={64}
             className="rounded-xl w-10 h-10 lg:w-12 lg:h-12 xl:w-16 xl:h-16"
           />
-          <span className={`${spaceGrotesk.className} text-foreground text-2xl lg:text-3xl xl:text-4xl tracking-tight`}>crably</span>
+          <span className="font-display font-bold text-foreground text-2xl lg:text-3xl xl:text-4xl tracking-tight">crably</span>
         </Link>
 
         <div className="flex items-center gap-3">

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Fira_Code } from 'next/font/google'
+import { Geist, Fira_Code, Space_Grotesk } from 'next/font/google'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import './globals.css'
@@ -13,6 +13,12 @@ const firaCode = Fira_Code({
   variable: '--font-fira-code',
   subsets: ['latin'],
   weight: ['400', '500'],
+})
+
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
+  subsets: ['latin'],
+  weight: ['500', '700'],
 })
 
 export const metadata: Metadata = {
@@ -44,7 +50,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${firaCode.variable} h-full`} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${geist.variable} ${firaCode.variable} ${spaceGrotesk.variable} h-full`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');var d=t==='light'?false:t==='system'?window.matchMedia('(prefers-color-scheme:dark)').matches:true;if(d)document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}})()` }} />
       </head>

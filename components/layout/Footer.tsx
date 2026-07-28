@@ -1,9 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail, Phone } from 'lucide-react'
-import { Space_Grotesk } from 'next/font/google'
-
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: '700' })
 
 export default function Footer() {
   return (
@@ -23,7 +20,7 @@ export default function Footer() {
                 height={80}
                 className="object-contain"
               />
-              <span className={`${spaceGrotesk.className} text-foreground text-3xl tracking-tight`}>crably</span>
+              <span className="font-display font-bold text-foreground text-3xl tracking-tight">crably</span>
             </div>
             <p className="text-xs text-faint max-w-[220px] leading-relaxed">
               Sites premium prontos para lançar, a preço fixo e prazo real.
