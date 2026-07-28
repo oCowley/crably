@@ -396,7 +396,7 @@ export default function TicketsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {[
             { label: 'Abertos',       value: loading ? '—' : abertos,     color: 'text-red-400' },
             { label: 'Em andamento',  value: loading ? '—' : emAndamento, color: 'text-yellow-400' },

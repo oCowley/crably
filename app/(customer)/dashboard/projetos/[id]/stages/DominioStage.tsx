@@ -91,9 +91,9 @@ export default function DominioStage({ order }: { order: DashboardOrder; active:
       {/* DNS records table */}
       <div className="space-y-1.5">
         <p className="text-xs font-semibold text-secondary">Registros DNS para adicionar</p>
-        <div className="rounded-xl border border-border overflow-hidden">
+        <div className="rounded-xl border border-border overflow-x-auto">
           {/* Header */}
-          <div className="grid grid-cols-[60px_60px_1fr_60px_36px] gap-2 px-3 py-2 bg-surface border-b border-border">
+          <div className="grid min-w-[440px] grid-cols-[60px_60px_1fr_60px_36px] gap-2 px-3 py-2 bg-surface border-b border-border">
             {['Tipo', 'Nome', 'Valor', 'TTL', ''].map((h) => (
               <span key={h} className="text-[10px] font-semibold text-faint uppercase tracking-wide">{h}</span>
             ))}
@@ -102,7 +102,7 @@ export default function DominioStage({ order }: { order: DashboardOrder; active:
           {DNS_RECORDS.map((rec) => (
             <div
               key={rec.type}
-              className="grid grid-cols-[60px_60px_1fr_60px_36px] gap-2 items-center px-3 py-2.5 border-b border-border last:border-0"
+              className="grid min-w-[440px] grid-cols-[60px_60px_1fr_60px_36px] gap-2 items-center px-3 py-2.5 border-b border-border last:border-0"
             >
               <span className="text-xs font-mono font-bold text-brand">{rec.type}</span>
               <span className="text-xs font-mono text-secondary">{rec.name}</span>

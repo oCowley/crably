@@ -178,7 +178,7 @@ function StatusTimeline({ stage }: { stage: ProjectStage }) {
                 )}
               </div>
               <span
-                className={`text-[9px] font-medium whitespace-nowrap ${
+                className={`hidden sm:block text-[9px] font-medium whitespace-nowrap ${
                   done ? 'text-brand' : active ? cfg.color : 'text-faint'
                 }`}
               >
@@ -189,7 +189,7 @@ function StatusTimeline({ stage }: { stage: ProjectStage }) {
               <div className="flex-1 h-px mx-1 mb-4" style={{
                 background: done
                   ? 'linear-gradient(90deg, var(--brand), var(--brand))'
-                  : 'rgba(255,255,255,0.06)',
+                  : 'var(--border-subtle)',
               }} />
             )}
           </div>

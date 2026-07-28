@@ -276,13 +276,13 @@ function ProductModal({
         </div>
 
         {/* ── body ── */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
 
           {/* left — form */}
           <form
             id="create-form"
             onSubmit={handleSubmit}
-            className="w-[420px] shrink-0 overflow-y-auto p-6 space-y-7 border-r border-border"
+            className="w-full lg:w-[420px] lg:shrink-0 overflow-y-auto p-6 space-y-7 border-r border-border"
           >
             {/* basic info */}
             <div className="space-y-4">
@@ -691,7 +691,7 @@ export default function TemplatesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {[
           { label: 'Sites cadastrados', value: products.length, color: 'text-success' },
           { label: 'Total de vendas', value: totalVendas, color: 'text-brand' },
