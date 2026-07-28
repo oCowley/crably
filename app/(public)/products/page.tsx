@@ -15,10 +15,10 @@ export default function ProductsPage() {
           <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">
             Todos os sites
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             Feitos para converter
           </h1>
-          <p className="text-lg text-neutral-400 max-w-xl mx-auto">
+          <p className="text-lg text-secondary max-w-xl mx-auto">
             Sites premium com preço fixo, entrega garantida e sem surpresas.
           </p>
         </div>

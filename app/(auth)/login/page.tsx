@@ -106,11 +106,11 @@ export default function LoginPage() {
     setShowConfirm(false)
   }
 
-  const inputCls = "w-full h-11 px-4 rounded-xl bg-dark-elevated border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/40 focus:ring-1 focus:ring-brand/15 transition-all"
+  const inputCls = "w-full h-11 px-4 rounded-xl bg-elevated border border-border-strong text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/40 focus:ring-1 focus:ring-brand/15 transition-all"
 
   return (
     <div className="w-full max-w-md">
-      <div className="relative bg-dark-card border border-white/6 rounded-2xl p-8 overflow-hidden">
+      <div className="relative bg-surface border border-border rounded-2xl p-8 overflow-hidden">
         {/* Ambient glow */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
@@ -125,12 +125,12 @@ export default function LoginPage() {
             <div className="mx-auto mb-4 w-10 h-10">
               <Image src="/images/icone-crably.png" alt="Crably" width={40} height={40} className="rounded-xl shadow-lg shadow-brand/30" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
               {mode === 'login' && 'Bem-vindo de volta'}
               {mode === 'register' && 'Crie sua conta'}
               {mode === 'reset' && 'Recuperar senha'}
             </h1>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-secondary">
               {mode === 'login' && 'Entre para acompanhar seus pedidos e projetos.'}
               {mode === 'register' && 'Comece a usar a Crably hoje.'}
               {mode === 'reset' && 'Enviaremos um link para redefinir sua senha.'}
@@ -154,7 +154,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === 'register' && (
                 <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">Nome</label>
+                  <label className="block text-sm font-medium text-secondary mb-2">Nome</label>
                   <input
                     type="text"
                     value={name}
@@ -167,7 +167,7 @@ export default function LoginPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-2">E-mail</label>
+                <label className="block text-sm font-medium text-secondary mb-2">E-mail</label>
                 <input
                   type="email"
                   value={email}
@@ -183,12 +183,12 @@ export default function LoginPage() {
                   {/* Senha */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium text-neutral-300">Senha</label>
+                      <label className="block text-sm font-medium text-secondary">Senha</label>
                       {mode === 'login' && (
                         <button
                           type="button"
                           onClick={() => switchMode('reset')}
-                          className="text-xs text-neutral-500 hover:text-brand transition-colors"
+                          className="text-xs text-muted hover:text-brand transition-colors"
                         >
                           Esqueceu a senha?
                         </button>
@@ -207,7 +207,7 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-secondary transition-colors"
                       >
                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
@@ -221,18 +221,18 @@ export default function LoginPage() {
                             <div
                               key={i}
                               className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                                i <= strength.score ? strength.color : 'bg-white/10'
+                                i <= strength.score ? strength.color : 'bg-elevated'
                               }`}
                             />
                           ))}
                         </div>
-                        <p className="text-xs text-neutral-500">
+                        <p className="text-xs text-muted">
                           Força: <span className={`font-medium ${
-                            strength.score <= 2 ? 'text-red-400' :
+                            strength.score <= 2 ? 'text-danger' :
                             strength.score === 3 ? 'text-yellow-400' :
-                            'text-green-400'
+                            'text-success'
                           }`}>{strength.label}</span>
-                          <span className="ml-2 text-neutral-600">
+                          <span className="ml-2 text-faint">
                             {strength.score < 3 && '· Use maiúsculas, números e símbolos'}
                           </span>
                         </p>
@@ -243,7 +243,7 @@ export default function LoginPage() {
                   {/* Confirmar senha — só no cadastro */}
                   {mode === 'register' && (
                     <div>
-                      <label className="block text-sm font-medium text-neutral-300 mb-2">Confirmar senha</label>
+                      <label className="block text-sm font-medium text-secondary mb-2">Confirmar senha</label>
                       <div className="relative">
                         <input
                           type={showConfirm ? 'text' : 'password'}
@@ -258,13 +258,13 @@ export default function LoginPage() {
                         <button
                           type="button"
                           onClick={() => setShowConfirm(!showConfirm)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-secondary transition-colors"
                         >
                           {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                       </div>
                       {!passwordsMatch && (
-                        <p className="mt-1.5 text-xs text-red-400">As senhas não coincidem.</p>
+                        <p className="mt-1.5 text-xs text-danger">As senhas não coincidem.</p>
                       )}
                     </div>
                   )}
@@ -305,12 +305,12 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => switchMode('login')}
-                    className="text-sm text-neutral-500 hover:text-brand transition-colors"
+                    className="text-sm text-muted hover:text-brand transition-colors"
                   >
                     Voltar para o login
                   </button>
                 ) : (
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-muted">
                     {mode === 'login' ? 'Não tem uma conta? ' : 'Já tem uma conta? '}
                     <button
                       type="button"
@@ -327,9 +327,9 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <p className="text-center text-xs text-neutral-600 mt-6">
+      <p className="text-center text-xs text-faint mt-6">
         Ao continuar, você concorda com nossos{' '}
-        <Link href="#" className="text-neutral-400 hover:text-white transition-colors">
+        <Link href="#" className="text-secondary hover:text-foreground transition-colors">
           Termos de Serviço
         </Link>
       </p>

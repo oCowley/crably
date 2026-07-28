@@ -42,13 +42,13 @@ export default function ProductDetailPage() {
     return (
       <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto animate-pulse space-y-8">
-          <div className="h-4 w-32 rounded bg-white/5" />
+          <div className="h-4 w-32 rounded bg-elevated" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-            <div className="aspect-video rounded-2xl bg-white/5" />
+            <div className="aspect-video rounded-2xl bg-elevated" />
             <div className="space-y-4">
-              <div className="h-8 w-2/3 rounded bg-white/8" />
-              <div className="h-4 w-full rounded bg-white/5" />
-              <div className="h-4 w-5/6 rounded bg-white/5" />
+              <div className="h-8 w-2/3 rounded bg-elevated" />
+              <div className="h-4 w-full rounded bg-elevated" />
+              <div className="h-4 w-5/6 rounded bg-elevated" />
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function ProductDetailPage() {
   if (notFound || !product) {
     return (
       <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6 text-center">
-        <p className="text-neutral-400">Site não encontrado.</p>
+        <p className="text-secondary">Site não encontrado.</p>
         <Link href="/products" className="text-brand text-sm mt-4 inline-block hover:underline">
           Ver todos os sites
         </Link>
@@ -76,18 +76,18 @@ export default function ProductDetailPage() {
     <div className="pt-20 sm:pt-24 pb-16 sm:pb-32 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-neutral-500 mb-12">
-          <Link href="/products" className="hover:text-white transition-colors">
+        <div className="flex items-center gap-2 text-sm text-muted mb-12">
+          <Link href="/products" className="hover:text-foreground transition-colors">
             Sites
           </Link>
           <span>/</span>
-          <span className="text-white">{product.name}</span>
+          <span className="text-foreground">{product.name}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           {/* Left — Visual */}
           <div className="lg:sticky lg:top-28">
-            <div className="aspect-video rounded-2xl bg-dark-card border border-white/5 overflow-hidden relative">
+            <div className="aspect-video rounded-2xl bg-surface border border-border overflow-hidden relative">
               {product.images?.[0] ? (
                 <img
                   src={product.images[0]}
@@ -99,12 +99,12 @@ export default function ProductDetailPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-4">
+                      <div className="w-20 h-20 rounded-3xl bg-elevated flex items-center justify-center mx-auto mb-4">
                         <svg className="w-10 h-10 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                       </div>
-                      <p className="text-sm text-neutral-600">Preview em breve</p>
+                      <p className="text-sm text-faint">Preview em breve</p>
                     </div>
                   </div>
                 </>
@@ -115,7 +115,7 @@ export default function ProductDetailPage() {
             {product.images?.length > 1 && (
               <div className="grid grid-cols-3 gap-2 mt-3">
                 {product.images.slice(1).map((img, i) => (
-                  <div key={i} className="aspect-video rounded-xl overflow-hidden border border-white/5">
+                  <div key={i} className="aspect-video rounded-xl overflow-hidden border border-border">
                     <img src={img} alt="" className="w-full h-full object-cover object-top" />
                   </div>
                 ))}
@@ -125,13 +125,13 @@ export default function ProductDetailPage() {
 
           {/* Right — Details */}
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{product.name}</h1>
-            <p className="text-neutral-400 leading-relaxed mb-8">{product.description}</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">{product.name}</h1>
+            <p className="text-secondary leading-relaxed mb-8">{product.description}</p>
 
             {/* References */}
             {product.references?.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-sm font-semibold text-white uppercase tracking-widest mb-4">
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-widest mb-4">
                   Referências
                 </h2>
                 <ul className="space-y-2">
@@ -155,14 +155,14 @@ export default function ProductDetailPage() {
             )}
 
             {/* Price + CTA */}
-            <div className="p-6 rounded-2xl bg-dark-card border border-white/5">
+            <div className="p-6 rounded-2xl bg-surface border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">Preço fixo</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-white">{price}</p>
+                  <p className="text-sm text-muted mb-1">Preço fixo</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-foreground">{price}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-neutral-500 mb-1">Pagamento único</p>
+                  <p className="text-sm text-muted mb-1">Pagamento único</p>
                   <p className="text-sm text-brand font-medium">Sem taxas ocultas</p>
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default function ProductDetailPage() {
                   Comprar — {price}
                 </Button>
               </Link>
-              <p className="text-xs text-neutral-600 text-center mt-4">
+              <p className="text-xs text-faint text-center mt-4">
                 Checkout seguro via Abacate Pay. Confirmação imediata.
               </p>
             </div>

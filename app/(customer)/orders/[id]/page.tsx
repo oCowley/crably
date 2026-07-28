@@ -92,9 +92,9 @@ export default function OrderDetailPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-24 bg-dark-card rounded-2xl border border-white/5 animate-pulse" />
-        <div className="h-48 bg-dark-card rounded-2xl border border-white/5 animate-pulse" />
-        <div className="h-64 bg-dark-card rounded-2xl border border-white/5 animate-pulse" />
+        <div className="h-24 bg-surface rounded-2xl border border-border animate-pulse" />
+        <div className="h-48 bg-surface rounded-2xl border border-border animate-pulse" />
+        <div className="h-64 bg-surface rounded-2xl border border-border animate-pulse" />
       </div>
     )
   }
@@ -102,8 +102,8 @@ export default function OrderDetailPage() {
   if (notFound || !order) {
     return (
       <div className="text-center py-24">
-        <p className="text-lg font-semibold text-white mb-2">Pedido não encontrado</p>
-        <p className="text-sm text-neutral-400">Este pedido não existe ou não pertence à sua conta.</p>
+        <p className="text-lg font-semibold text-foreground mb-2">Pedido não encontrado</p>
+        <p className="text-sm text-secondary">Este pedido não existe ou não pertence à sua conta.</p>
       </div>
     )
   }
@@ -114,15 +114,15 @@ export default function OrderDetailPage() {
     <div>
       {/* Header */}
       <div className="mb-10">
-        <p className="text-sm text-neutral-500 mb-2">
+        <p className="text-sm text-muted mb-2">
           Order #{order.id} · {formatDate(order.createdAt)}
         </p>
-        <h1 className="text-3xl font-bold text-white">{order.productName}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{order.productName}</h1>
       </div>
 
       {/* Progress bar */}
-      <div className="bg-dark-card rounded-2xl border border-white/5 p-6 mb-8">
-        <h2 className="text-sm font-semibold text-white uppercase tracking-widest mb-6">Progresso do projeto</h2>
+      <div className="bg-surface rounded-2xl border border-border p-6 mb-8">
+        <h2 className="text-sm font-semibold text-foreground uppercase tracking-widest mb-6">Progresso do projeto</h2>
         <div className="flex items-center gap-0 overflow-x-auto pb-2">
           {ALL_STATUSES.map((status, i) => {
             const done = i <= currentIndex
@@ -136,7 +136,7 @@ export default function OrderDetailPage() {
                         ? 'bg-brand text-white ring-4 ring-brand/20'
                         : done
                         ? 'bg-brand/20 text-brand'
-                        : 'bg-white/5 text-neutral-600'
+                        : 'bg-elevated text-faint'
                     }`}
                   >
                     {done && !active ? (
@@ -147,12 +147,12 @@ export default function OrderDetailPage() {
                       i + 1
                     )}
                   </div>
-                  <p className={`text-xs mt-2 whitespace-nowrap ${active ? 'text-brand' : done ? 'text-neutral-400' : 'text-neutral-600'}`}>
+                  <p className={`text-xs mt-2 whitespace-nowrap ${active ? 'text-brand' : done ? 'text-secondary' : 'text-faint'}`}>
                     {PROJECT_STATUS_LABELS[status]}
                   </p>
                 </div>
                 {i < ALL_STATUSES.length - 1 && (
-                  <div className={`h-px w-8 md:w-12 mb-5 mx-1 ${i < currentIndex ? 'bg-brand/30' : 'bg-white/5'}`} />
+                  <div className={`h-px w-8 md:w-12 mb-5 mx-1 ${i < currentIndex ? 'bg-brand/30' : 'bg-elevated'}`} />
                 )}
               </div>
             )
@@ -161,10 +161,10 @@ export default function OrderDetailPage() {
       </div>
 
       {/* Timeline */}
-      <div className="bg-dark-card rounded-2xl border border-white/5 p-6">
-        <h2 className="text-sm font-semibold text-white uppercase tracking-widest mb-6">Atualizações</h2>
+      <div className="bg-surface rounded-2xl border border-border p-6">
+        <h2 className="text-sm font-semibold text-foreground uppercase tracking-widest mb-6">Atualizações</h2>
         {order.updates.length === 0 ? (
-          <p className="text-sm text-neutral-500">Nenhuma atualização ainda.</p>
+          <p className="text-sm text-muted">Nenhuma atualização ainda.</p>
         ) : (
           <div className="space-y-6">
             {[...order.updates].reverse().map((update, i) => (
@@ -172,13 +172,13 @@ export default function OrderDetailPage() {
                 <div className="flex flex-col items-center">
                   <div className="w-2 h-2 rounded-full bg-brand mt-1.5 flex-shrink-0" />
                   {i < order.updates.length - 1 && (
-                    <div className="w-px flex-1 bg-white/5 mt-2" />
+                    <div className="w-px flex-1 bg-elevated mt-2" />
                   )}
                 </div>
                 <div className="pb-6">
-                  <p className="font-medium text-white text-sm">{PROJECT_STATUS_LABELS[update.status]}</p>
-                  <p className="text-sm text-neutral-400 mt-1">{update.note}</p>
-                  <p className="text-xs text-neutral-600 mt-2">{formatDate(update.createdAt)}</p>
+                  <p className="font-medium text-foreground text-sm">{PROJECT_STATUS_LABELS[update.status]}</p>
+                  <p className="text-sm text-secondary mt-1">{update.note}</p>
+                  <p className="text-xs text-faint mt-2">{formatDate(update.createdAt)}</p>
                 </div>
               </div>
             ))}

@@ -27,7 +27,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-[#0B0B0B] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-brand border-t-transparent rounded-full animate-spin" />
       </div>
     )

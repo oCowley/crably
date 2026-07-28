@@ -40,15 +40,15 @@ export default function ProductsGrid() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="bg-dark-card rounded-2xl border border-white/5 overflow-hidden animate-pulse">
-            <div className="h-48 bg-white/5" />
+          <div key={i} className="bg-surface rounded-2xl border border-border overflow-hidden animate-pulse">
+            <div className="h-48 bg-elevated" />
             <div className="p-6 space-y-3">
-              <div className="h-4 w-1/2 rounded bg-white/8" />
-              <div className="h-3 w-full rounded bg-white/5" />
-              <div className="h-3 w-3/4 rounded bg-white/5" />
+              <div className="h-4 w-1/2 rounded bg-elevated" />
+              <div className="h-3 w-full rounded bg-elevated" />
+              <div className="h-3 w-3/4 rounded bg-elevated" />
               <div className="flex items-center justify-between mt-4">
-                <div className="h-7 w-28 rounded bg-white/8" />
-                <div className="h-9 w-24 rounded-xl bg-white/5" />
+                <div className="h-7 w-28 rounded bg-elevated" />
+                <div className="h-9 w-24 rounded-xl bg-elevated" />
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function ProductsGrid() {
   if (products.length === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-neutral-500">Nenhum site disponível no momento.</p>
+        <p className="text-muted">Nenhum site disponível no momento.</p>
       </div>
     )
   }
@@ -70,10 +70,10 @@ export default function ProductsGrid() {
       {products.map((product) => (
         <div
           key={product.id}
-          className="group relative bg-dark-card rounded-2xl border border-white/5 overflow-hidden hover:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40"
+          className="group relative bg-surface rounded-2xl border border-border overflow-hidden hover:border-border-strong transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40"
         >
           {/* Thumbnail */}
-          <div className="h-48 bg-dark-elevated relative overflow-hidden">
+          <div className="h-48 bg-elevated relative overflow-hidden">
             {product.images?.[0] ? (
               <img
                 src={product.images[0]}
@@ -84,7 +84,7 @@ export default function ProductsGrid() {
               <>
                 <div className="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-brand/10 transition-colors">
+                  <div className="w-16 h-16 rounded-2xl bg-elevated flex items-center justify-center group-hover:bg-brand/10 transition-colors">
                     <svg className="w-8 h-8 text-white/20 group-hover:text-brand/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
@@ -96,14 +96,14 @@ export default function ProductsGrid() {
 
           {/* Content */}
           <div className="p-6">
-            <h3 className="font-semibold text-white text-lg mb-2 group-hover:text-brand transition-colors">
+            <h3 className="font-semibold text-foreground text-lg mb-2 group-hover:text-brand transition-colors">
               {product.name}
             </h3>
-            <p className="text-sm text-neutral-400 leading-relaxed mb-6 line-clamp-2">
+            <p className="text-sm text-secondary leading-relaxed mb-6 line-clamp-2">
               {product.description}
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-foreground">
                 {formatPrice(product.price)}
               </span>
               <a
