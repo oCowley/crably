@@ -7,6 +7,8 @@ import { X, Check, MessageCircle, Flame, Zap, TrendingUp, Award, Star, Sparkles,
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import ScrollReveal from '@/components/ui/ScrollReveal'
+import Skeleton from '@/components/ui/Skeleton'
+import { WHATSAPP_NUMBER } from '@/lib/constants'
 
 type Product = {
   id: string
@@ -119,8 +121,6 @@ const FILTER_CATEGORIES = ['Todos', 'Institucional', 'Landing Page', 'Página de
 
 const HELP_FILTER = 'Não sei qual escolher'
 
-// TODO: trocar pelo número real (placeholder herdado do Footer)
-const WHATSAPP_NUMBER = '5511999999999'
 const WHATSAPP_HELP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   'Olá! Não sei qual modelo de site escolher, podem me ajudar?',
 )}`
@@ -175,12 +175,12 @@ export default function SitesGrid() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-2xl border border-border bg-surface overflow-hidden animate-pulse">
-            <div className="aspect-[16/10] bg-elevated" />
+          <div key={i} className="rounded-2xl border border-border bg-surface overflow-hidden">
+            <Skeleton className="aspect-[16/10] rounded-none" />
             <div className="p-5 space-y-3">
-              <div className="h-4 w-1/2 rounded bg-elevated" />
-              <div className="h-3 w-3/4 rounded bg-elevated" />
-              <div className="h-8 w-full rounded-xl bg-elevated mt-4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-3 w-3/4" />
+              <Skeleton className="h-8 w-full mt-4" />
             </div>
           </div>
         ))}
@@ -202,26 +202,28 @@ export default function SitesGrid() {
 
   return (
     <>
-      {/* Filter tabs */}
-      <div className="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
-        {FILTER_CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveFilter(cat)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-              activeFilter === cat
-                ? 'bg-brand text-white shadow-lg shadow-brand/20'
-                : 'bg-elevated text-secondary hover:bg-elevated hover:text-foreground border border-border'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+      {/* Filter tabs — trilho único */}
+      <div className="flex items-center gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+        <div className="inline-flex shrink-0 gap-1 p-1 rounded-full border border-border bg-surface">
+          {FILTER_CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                activeFilter === cat
+                  ? 'bg-brand text-white shadow-glow-sm'
+                  : 'text-secondary hover:text-foreground'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
         <a
           href={WHATSAPP_HELP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border border-brand/30 bg-brand/10 text-brand hover:bg-brand/20 transition-all duration-200"
+          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border-gradient text-brand hover:text-brand-light transition-colors duration-200"
         >
           <MessageCircle size={14} className="shrink-0" />
           {HELP_FILTER}
@@ -237,15 +239,16 @@ export default function SitesGrid() {
           return (
             <ScrollReveal key={product.id} delay={((i % 3) + 1) as 1 | 2 | 3} className="flex">
               <div
-                className={`group relative rounded-2xl bg-surface transition-all duration-300 lg:hover:-translate-y-1.5 lg:hover:z-30 flex flex-col w-full ${
+                className={`group relative rounded-2xl transition-all duration-300 lg:hover:-translate-y-1.5 lg:hover:z-30 flex flex-col w-full ${
                   meta.featured
-                    ? 'border border-brand/20 lg:hover:border-brand/40 lg:hover:shadow-brand/15 featured-card'
-                    : 'border border-border lg:hover:border-border-strong lg:hover:shadow-black/10 dark:lg:hover:shadow-black/40'
+                    ? 'border border-brand/20 lg:hover:border-brand/40 lg:hover:shadow-glow-sm border-gradient border-gradient-animated'
+                    : 'bg-surface border border-border lg:hover:border-border-strong lg:hover:shadow-black/10 dark:lg:hover:shadow-black/40'
                 }`}
+                style={meta.featured ? { background: 'linear-gradient(160deg, rgba(var(--brand-rgb),0.05) 0%, var(--surface) 45%)' } : undefined}
               >
                 {/* Discount badge */}
                 <div className="absolute top-3 right-3 z-20">
-                  <div className="discount-shimmer text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-lg opacity-80">
+                  <div className={`bg-brand text-white font-mono text-[11px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-glow-sm ${meta.featured ? 'discount-badge' : ''}`}>
                     <Flame size={11} className="shrink-0" />
                     -30%
                   </div>
@@ -331,12 +334,12 @@ export default function SitesGrid() {
                     <span className="text-2xl font-bold text-brand">
                       {fmt(discountedPrice(product.price))}
                     </span>
-                    <span className="price-slash text-sm text-neutral-600 font-medium">
+                    <span className="price-slash text-sm text-faint font-medium">
                       {fmt(product.price)}
                     </span>
                   </div>
                   <p className="text-[11px] text-muted mb-1.5">ou 3x sem juros</p>
-                  <p className="flex items-center gap-1 text-[11px] text-green-400 font-medium mb-4">
+                  <p className="flex items-center gap-1 text-[11px] text-success font-medium mb-4">
                     <Zap size={10} />
                     30% OFF na primeira compra
                   </p>
@@ -372,13 +375,13 @@ export default function SitesGrid() {
           aria-modal="true"
         >
           <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-overlay backdrop-blur-md"
             onClick={() => setPreviewProduct(null)}
           />
-          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-auto rounded-2xl bg-surface border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
+          <div className="animate-pop-in relative w-full max-w-4xl max-h-[90vh] overflow-auto rounded-3xl bg-surface border-gradient shadow-2xl shadow-black/10 dark:shadow-black/60">
             <button
               onClick={() => setPreviewProduct(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-black/60 backdrop-blur-sm text-secondary hover:text-foreground hover:bg-elevated transition-colors"
+              className="absolute top-4 right-4 z-10 p-2 rounded-xl glass text-secondary hover:text-foreground transition-colors"
             >
               <X size={20} />
             </button>
@@ -390,11 +393,11 @@ export default function SitesGrid() {
                 width={1280}
                 height={800}
                 sizes="(min-width: 896px) 896px, 100vw"
-                className="w-full h-auto rounded-t-2xl"
+                className="w-full h-auto rounded-t-3xl"
               />
             )}
 
-            <div className="p-6 flex items-center justify-between gap-4">
+            <div className="sticky bottom-0 glass p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-foreground">{previewProduct.name}</h3>
                 <p className="text-sm text-secondary mt-1">{previewProduct.description}</p>
@@ -402,14 +405,14 @@ export default function SitesGrid() {
                   <span className="text-xl font-bold text-brand">
                     {fmt(discountedPrice(previewProduct.price))}
                   </span>
-                  <span className="price-slash text-sm text-neutral-600">
+                  <span className="price-slash text-sm text-faint">
                     {fmt(previewProduct.price)}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => handleContract(previewProduct.slug)}
-                className="shrink-0 px-6 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
+                className="btn-sheen shrink-0 px-6 py-3 rounded-xl bg-brand text-white font-semibold hover:bg-brand-hover transition-colors shadow-glow-sm"
               >
                 Escolher este modelo
               </button>

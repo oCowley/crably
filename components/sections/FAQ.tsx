@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { Plus, MessageCircle } from 'lucide-react'
 import ScrollReveal from '@/components/ui/ScrollReveal'
+import Button from '@/components/ui/Button'
+import { WHATSAPP_URL } from '@/lib/constants'
 
 const ITEMS = [
   {
@@ -59,44 +61,78 @@ export default function FAQ() {
   }, [])
 
   return (
-    <section id="faq" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
-      <div className="max-w-3xl mx-auto">
-        <ScrollReveal className="text-center mb-16">
-          <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Dúvidas frequentes</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
+    <section id="faq" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-10 lg:gap-16 items-start">
+
+        {/* Coluna esquerda — sticky */}
+        <ScrollReveal className="lg:sticky lg:top-28">
+          <p className="eyebrow mb-4">07 — FAQ</p>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-foreground tracking-tight leading-tight mb-4">
             Perguntas frequentes
           </h2>
+          <p className="text-secondary leading-relaxed mb-8">
+            Tudo o que você precisa saber antes de colocar seu site no ar.
+          </p>
+
+          <div className="bento-card card-spotlight p-6">
+            <div className="w-11 h-11 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center mb-4">
+              <MessageCircle size={20} className="text-brand" />
+            </div>
+            <h3 className="font-semibold text-foreground mb-1">Ainda com dúvida?</h3>
+            <p className="text-sm text-muted leading-relaxed mb-5">
+              Fale com a gente no WhatsApp e receba ajuda para escolher o modelo ideal.
+            </p>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <Button variant="secondary" size="sm" className="w-full">
+                Chamar no WhatsApp
+              </Button>
+            </a>
+          </div>
         </ScrollReveal>
 
-        <div className="space-y-3">
-          {ITEMS.map((item, i) => {
-            const isOpen = openIdx === i
-            return (
-              <ScrollReveal key={i} delay={((i % 4) + 1) as 1 | 2 | 3 | 4}>
-                <div className="bento-card overflow-hidden">
+        {/* Coluna direita — accordion contido */}
+        <div className="bento-card overflow-hidden">
+          <ScrollReveal stagger className="divide-y divide-border-subtle">
+            {ITEMS.map((item, i) => {
+              const isOpen = openIdx === i
+              return (
+                <div key={i} className="relative">
+                  {/* Rail brand quando aberto */}
+                  <span
+                    className={`absolute left-0 top-0 bottom-0 w-0.5 bg-brand transition-opacity duration-300 ${
+                      isOpen ? 'opacity-100 shadow-glow-xs' : 'opacity-0'
+                    }`}
+                    aria-hidden="true"
+                  />
                   <button
                     onClick={() => toggle(i)}
-                    className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                    className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-5 text-left group"
                     aria-expanded={isOpen}
                   >
-                    <span className="text-sm font-semibold text-foreground">{item.q}</span>
-                    <ChevronDown
-                      size={18}
-                      className="shrink-0 text-muted transition-transform duration-300"
-                      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    <span
+                      className={`text-sm font-semibold transition-colors duration-200 ${
+                        isOpen ? 'text-brand' : 'text-foreground group-hover:text-brand'
+                      }`}
+                    >
+                      {item.q}
+                    </span>
+                    <Plus
+                      size={16}
+                      className={`shrink-0 transition-all duration-300 ${
+                        isOpen ? 'rotate-45 text-brand' : 'text-muted'
+                      }`}
                     />
                   </button>
                   <div
                     className="overflow-hidden transition-all duration-300 ease-out"
                     style={{ maxHeight: isOpen ? '500px' : '0px', opacity: isOpen ? 1 : 0 }}
                   >
-                    <div className="mx-5 border-t border-border/60" />
-                    <p className="px-5 pt-4 pb-6 text-sm text-secondary leading-relaxed">{item.a}</p>
+                    <p className="px-5 sm:px-6 pb-6 text-sm text-secondary leading-relaxed max-w-xl">{item.a}</p>
                   </div>
                 </div>
-              </ScrollReveal>
-            )
-          })}
+              )
+            })}
+          </ScrollReveal>
         </div>
       </div>
     </section>

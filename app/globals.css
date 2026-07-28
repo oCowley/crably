@@ -193,6 +193,7 @@ body {
   .beam-track-y::after,
   .dot-live,
   .tech-grid-pan,
+  .hero-orb-drift,
   .btn-sheen::after {
     animation: none !important;
   }
@@ -562,6 +563,18 @@ html.theme-transition *::after {
   border-radius: 9999px;
   background: var(--success);
   animation: pulse-ring 2s var(--ease-out) infinite;
+}
+
+/* Parallax sutil do orb do hero — progressive enhancement, zero JS */
+@supports (animation-timeline: view()) {
+  @keyframes orb-drift {
+    from { transform: translateY(4%); }
+    to   { transform: translateY(-8%); }
+  }
+  .hero-orb-drift {
+    animation: orb-drift linear both;
+    animation-timeline: view();
+  }
 }
 
 /* ─── Profundidade ───────────────────────────────────────────── */

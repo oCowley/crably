@@ -10,7 +10,6 @@ import {
   Star,
   Heart,
   Globe,
-  Flame,
   Check,
   X as XIcon,
   ClipboardList,
@@ -18,6 +17,8 @@ import {
   Monitor,
   Upload,
   MessageCircle,
+  ChevronDown,
+  ArrowRight,
 } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -26,6 +27,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal'
 import SitesGrid from '@/components/sections/SitesGrid'
 import DashboardMockup from '@/components/ui/DashboardMockup'
 import FAQ from '@/components/sections/FAQ'
+import { WHATSAPP_URL } from '@/lib/constants'
 
 // Trava explícita: a landing DEVE ser prerenderizada estática (TTFB via CDN).
 // Se alguém introduzir uma API dinâmica aqui, o build falha em vez de degradar.
@@ -45,10 +47,46 @@ function WordReveal({ words, baseDelay = 0 }: { words: string[]; baseDelay?: num
           style={{ animationDelay: `${baseDelay + i * 90}ms` }}
         >
           {word}
-          {i < words.length - 1 ? '\u00a0' : ''}
+          {i < words.length - 1 ? ' ' : ''}
         </span>
       ))}
     </>
+  )
+}
+
+function SpecSheet({ items }: { items: { v: string; l: string }[] }) {
+  return (
+    <div className="flex flex-wrap items-stretch gap-y-4">
+      {items.map((s, i) => (
+        <div key={i} className={`pr-6 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}`}>
+          <p className="font-mono text-[11px] uppercase tracking-widest text-muted mb-1">{s.l}</p>
+          <p className="font-display font-bold text-xl sm:text-2xl text-foreground">{s.v}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function TickerContent({ hidden }: { hidden?: boolean }) {
+  const items = [
+    '30% OFF na primeira compra',
+    'Entrega em até 14 dias úteis',
+    'Preço fixo, sem surpresa',
+    'Acompanhe cada etapa',
+    'Pagamento seguro',
+  ]
+  return (
+    <div className="flex shrink-0 animate-marquee items-center" aria-hidden={hidden || undefined}>
+      {items.map((item, i) => (
+        <span
+          key={i}
+          className="flex items-center font-mono text-xs uppercase tracking-[0.2em] text-secondary whitespace-nowrap"
+        >
+          <span className="px-6">{item}</span>
+          <span className="text-brand">✦</span>
+        </span>
+      ))}
+    </div>
   )
 }
 
@@ -148,67 +186,54 @@ export default function HomePage() {
         {/* ══════════════════════════════════════════════════════════
             HERO
         ════════════════════════════════════════════════════════== */}
-        <section className="relative min-h-screen flex items-center overflow-hidden aurora-bg">
+        <section className="relative lg:min-h-screen flex items-center overflow-hidden aurora-bg">
 
-          {/* Noise overlay */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 'var(--noise-opacity)' }} aria-hidden="true">
-            <filter id="noise">
-              <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#noise)" />
-          </svg>
-
-          {/* Ambient orbs */}
+          {/* Grid técnico com pan lento */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] pointer-events-none animate-glow"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.08) 0%, rgba(var(--brand-rgb),0.03) 40%, transparent 70%)',
-              filter: 'blur(24px)',
-            }}
-          />
-          <div
-            className="absolute -left-32 top-1/3 w-[500px] h-[500px] rounded-full pointer-events-none animate-blob"
-            style={{
-              background: 'radial-gradient(circle, rgba(var(--brand-rgb),0.04) 0%, transparent 70%)',
-              filter: 'blur(40px)',
-            }}
+            className="absolute inset-0 pointer-events-none tech-grid tech-grid-fade tech-grid-pan"
+            style={{ '--grid-focus': '30% 45%' } as React.CSSProperties}
           />
 
-          {/* Grid overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage:
-                'linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
-              backgroundSize: '72px 72px',
-              maskImage: 'radial-gradient(ellipse at 30% 50%, black 30%, transparent 80%)',
-            }}
-          />
+          {/* Orb central com glow + parallax scroll-driven */}
+          <div className="absolute inset-0 pointer-events-none hero-orb-drift">
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] animate-glow"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.10) 0%, rgba(var(--brand-rgb),0.04) 40%, transparent 70%)',
+                filter: 'blur(24px)',
+              }}
+            />
+          </div>
 
-          <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-12 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 items-center min-h-screen">
+          {/* Linha de horizonte com beam */}
+          <div className="absolute inset-x-0 top-[76%] hairline-glow beam-track pointer-events-none" />
+
+          {/* Noise */}
+          <div className="absolute inset-0 pointer-events-none noise-overlay" aria-hidden="true" />
+
+          <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-16 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 items-center lg:min-h-screen">
 
             {/* LEFT: Copy */}
             <div className="z-10">
 
-              {/* Launch badge */}
+              {/* Launch badge — pill técnico */}
               <div
-                className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full border border-brand/30 bg-brand/10 mb-6 animate-fade-up"
+                className="inline-flex flex-wrap items-center gap-2.5 px-4 py-2 rounded-full border border-brand/25 bg-brand/5 mb-6 animate-fade-up"
                 style={{ animationDelay: '100ms' }}
               >
-                <Flame size={14} className="text-brand shrink-0" />
-                <span className="text-xs font-semibold text-brand uppercase tracking-wide">Condição especial de lançamento</span>
-                <span className="text-xs font-medium text-secondary">· Primeira compra com 30% OFF</span>
+                <span className="dot-live shrink-0" />
+                <span className="font-mono text-[11px] font-medium text-brand uppercase tracking-[0.14em]">Lançamento</span>
+                <span className="font-mono text-[11px] text-secondary uppercase tracking-[0.14em]">· 30% off na 1ª compra</span>
               </div>
 
               {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight leading-[0.95] mb-8">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold tracking-[-0.03em] leading-[0.95] mb-8">
                 <span className="block text-foreground overflow-hidden">
                   <WordReveal words={['Seu', 'site', 'no', 'ar', 'em', 'até']} baseDelay={200} />
                 </span>
                 <span className="block overflow-hidden mt-2">
                   <span
-                    className="animate-word-reveal inline-block gradient-text"
+                    className="animate-word-reveal inline-block gradient-text text-glow"
                     style={{ animationDelay: '650ms' }}
                   >
                     2 semanas.
@@ -221,48 +246,39 @@ export default function HomePage() {
                 className="text-base lg:text-lg xl:text-xl text-secondary max-w-lg leading-relaxed mb-10 animate-fade-up"
                 style={{ animationDelay: '650ms' }}
               >
-               Sites profissionais para empresas B2B, com preço fixo, escolha simples e entrega em até 14 dias úteis após o envio das informações.
+                Sites profissionais para empresas B2B, com preço fixo, escolha simples e entrega em até 14 dias úteis após o envio das informações.
               </p>
 
               {/* CTAs */}
               <div
-                className="flex flex-col sm:flex-row gap-4 mb-16 animate-fade-up"
+                className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-up"
                 style={{ animationDelay: '780ms' }}
               >
                 <Link href="/products">
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto cta-glow text-base px-8 hover:scale-105"
-                  >
+                  <Button size="lg" className="w-full sm:w-auto cta-glow text-base px-8">
                     Ver modelos de site
+                    <ArrowRight size={18} className="ml-2" />
                   </Button>
                 </Link>
                 <Link href="#como-funciona">
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="w-full sm:w-auto text-secondary border border-border hover:border-border-strong text-base"
-                  >
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-base">
                     Me ajude a escolher
                   </Button>
                 </Link>
               </div>
 
-              {/* Stats */}
-              <div
-                className="flex flex-wrap items-center gap-6 animate-fade-up"
-                style={{ animationDelay: '900ms' }}
-              >
-                {[
-                  { v: 'Preço fixo', l: 'Sem orçamento escondido' },
-                  { v: 'Até 14 dias úteis', l: 'Após envio das informações' },
-                  { v: '30% OFF', l: 'Na primeira compra' },
-                ].map((s, i) => (
-                  <div key={i} className={i > 0 ? 'sm:border-l sm:border-border sm:pl-6' : ''}>
-                    <p className="text-2xl font-bold text-foreground">{s.v}</p>
-                    <p className="text-xs text-muted mt-0.5">{s.l}</p>
-                  </div>
-                ))}
+              {/* Mockup mobile (mesmos criativos, <lg) */}
+              <DashboardMockup variant="mobile" />
+
+              {/* Stats — spec sheet */}
+              <div className="animate-fade-up" style={{ animationDelay: '900ms' }}>
+                <SpecSheet
+                  items={[
+                    { v: 'Preço fixo', l: 'Sem surpresa' },
+                    { v: '14 dias úteis', l: 'Prazo máximo' },
+                    { v: '30% OFF', l: '1ª compra' },
+                  ]}
+                />
               </div>
             </div>
 
@@ -270,142 +286,116 @@ export default function HomePage() {
             <DashboardMockup />
           </div>
 
+          {/* Scroll cue */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 animate-fade-in delay-1000">
+            <div className="w-px h-10 bg-border beam-track-y" />
+            <ChevronDown size={14} className="text-muted" />
+          </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            BENTO GRID
+            TICKER PROMO
+        ════════════════════════════════════════════════════════== */}
+        <section className="relative bg-inset overflow-hidden" aria-label="Condições de lançamento">
+          <div className="hairline-glow" />
+          <div className="flex items-center h-[52px] group">
+            <div className="flex-1 flex overflow-hidden [&>div]:group-hover:[animation-play-state:paused]">
+              <TickerContent />
+              <TickerContent hidden />
+            </div>
+            <Link
+              href="#sites"
+              className="hidden sm:flex items-center gap-1.5 shrink-0 h-full px-6 font-mono text-xs uppercase tracking-[0.14em] text-brand hover:text-brand-light transition-colors border-l border-border bg-inset"
+            >
+              Ver modelos
+              <ArrowRight size={12} />
+            </Link>
+          </div>
+          <div className="hairline-glow" />
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════
+            01 — VANTAGENS (BENTO)
         ════════════════════════════════════════════════════════== */}
         <section id="vantagens" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <ScrollReveal className="text-center mb-16">
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Por que a Crably</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto">
+            <ScrollReveal variant="blur-up" className="text-center mb-16">
+              <p className="eyebrow mb-4">01 — Por que a Crably</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground max-w-2xl mx-auto">
                 Tudo para tirar seu site do papel,{' '}
                 <span className="gradient-text-subtle">sem complicação</span>
               </h2>
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-fr">
+            <ScrollReveal stagger className="grid grid-cols-1 md:grid-cols-6 gap-4 auto-rows-fr">
 
-              {/* Card 1 — wide */}
-              <ScrollReveal delay={1} className="md:col-span-2">
-                <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] relative overflow-hidden group">
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(var(--brand-rgb),0.06) 0%, transparent 60%)' }}
-                  />
-                  <div className="relative z-10">
-                    <Zap size={36} className="mb-4 text-brand" />
-                    <h3 className="text-xl font-bold text-foreground mb-2">Seu site no ar em até 14 dias úteis</h3>
-                    <p className="text-secondary leading-relaxed">
-                      Após o envio das informações necessárias, criamos e entregamos seu site em até 14 dias úteis. Precisa antes? Ative o pacote Express e receba em até 7 dias úteis.
-                    </p>
-                  </div>
-                  <div className="absolute bottom-6 right-6 flex gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
-                    {['paid', 'queued', 'in_progress', 'delivered'].map((s, i) => (
-                      <div
-                        key={i}
-                        className="w-6 h-6 rounded-full border-2 border-brand"
-                        style={{ animationDelay: `${i * 200}ms` }}
-                      />
+              {/* Card A — wide com mini-pipeline */}
+              <div className="md:col-span-4 bento-card card-spotlight border-gradient p-6 lg:p-8 relative min-h-[220px] flex flex-col">
+                <span className="absolute top-6 right-6 font-mono text-xs text-faint">01</span>
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center mb-5">
+                  <Zap size={22} className="text-brand" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Seu site no ar em até 14 dias úteis</h3>
+                <p className="text-secondary leading-relaxed max-w-xl">
+                  Após o envio das informações necessárias, criamos e entregamos seu site em até 14 dias úteis. Precisa antes? Ative o pacote Express e receba em até 7 dias úteis.
+                </p>
+                {/* Mini-pipeline */}
+                <div className="mt-auto pt-6">
+                  <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-muted mb-2">
+                    {['Pago', 'Fila', 'Produção', 'Entregue'].map((s) => (
+                      <span key={s} className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/60" />
+                        {s}
+                      </span>
                     ))}
-                    <div className="w-px h-6 bg-brand/40 mx-1" />
                   </div>
+                  <div className="h-px bg-border beam-track" />
                 </div>
-              </ScrollReveal>
+              </div>
 
-              {/* Card 2 */}
-              <ScrollReveal delay={2}>
-                <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] group relative overflow-hidden">
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.05) 0%, transparent 70%)' }}
-                  />
-                  <DollarSign size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Preço fixo, sem orçamento escondido</h3>
-                  <p className="text-secondary text-sm leading-relaxed">
-                    Você vê o valor antes de contratar. Sem reunião só para descobrir preço e sem cobrança surpresa no final.
-                  </p>
+              {/* Card B */}
+              <div className="md:col-span-2 bento-card card-spotlight p-6 lg:p-8 relative min-h-[220px]">
+                <span className="absolute top-6 right-6 font-mono text-xs text-faint">02</span>
+                <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center mb-5">
+                  <DollarSign size={22} className="text-brand" />
                 </div>
-              </ScrollReveal>
+                <h3 className="text-xl font-bold text-foreground mb-2">Preço fixo, sem orçamento escondido</h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Você vê o valor antes de contratar. Sem reunião só para descobrir preço e sem cobrança surpresa no final.
+                </p>
+              </div>
 
-              {/* Card 3 */}
-              <ScrollReveal delay={1}>
-                <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
-                  <Radio size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Acompanhe cada etapa</h3>
-                  <p className="text-secondary text-sm leading-relaxed">
-                    Veja o status do projeto e saiba exatamente em que fase seu site está.
-                  </p>
+              {/* Cards C, D, E */}
+              {[
+                { n: '03', icon: Radio, title: 'Acompanhe cada etapa', desc: 'Veja o status do projeto e saiba exatamente em que fase seu site está.' },
+                { n: '04', icon: Target, title: 'Design que gera confiança', desc: 'Sites pensados para apresentar sua empresa com clareza, profissionalismo e foco em contato comercial.' },
+                { n: '05', icon: ShieldCheck, title: 'Processo simples do início ao fim', desc: 'Escolha o modelo, envie as informações, acompanhe o projeto e receba seu site pronto.' },
+              ].map((card) => (
+                <div key={card.n} className="md:col-span-2 bento-card card-spotlight p-6 lg:p-8 relative min-h-[190px]">
+                  <span className="absolute top-6 right-6 font-mono text-xs text-faint">{card.n}</span>
+                  <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center mb-5">
+                    <card.icon size={22} className="text-brand" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">{card.title}</h3>
+                  <p className="text-secondary text-sm leading-relaxed">{card.desc}</p>
                 </div>
-              </ScrollReveal>
-
-              {/* Card 4 */}
-              <ScrollReveal delay={2}>
-                <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
-                  <Target size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Design que gera confiança</h3>
-                  <p className="text-secondary text-sm leading-relaxed">
-                    Sites pensados para apresentar sua empresa com clareza, profissionalismo e foco em contato comercial.
-                  </p>
-                </div>
-              </ScrollReveal>
-
-              {/* Card 5 */}
-              <ScrollReveal delay={3} className="md:col-span-1">
-                <div className="bento-card p-6 lg:p-8 h-full min-h-[180px] group relative overflow-hidden">
-                  <ShieldCheck size={36} className="mb-4 text-brand" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">Processo simples do início ao fim</h3>
-                  <p className="text-secondary text-sm leading-relaxed">
-                    Escolha o modelo, envie as informações, acompanhe o projeto e receba seu site pronto. Tudo em um só lugar.
-                  </p>
-                </div>
-              </ScrollReveal>
-            </div>
+              ))}
+            </ScrollReveal>
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            PROMO BANNER
-        ════════════════════════════════════════════════════════== */}
-        <section className="relative py-6 sm:py-8 px-4 sm:px-6 border-t border-brand/20 border-b border-b-brand/20 overflow-hidden">
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(var(--brand-rgb),0.06) 50%, transparent 100%)',
-            }}
-          />
-          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center relative z-10">
-            <div className="flex items-center gap-2">
-              <span className="urgency-dot w-2.5 h-2.5 rounded-full bg-green-400 shrink-0" />
-              <span className="text-sm font-bold text-green-400 uppercase tracking-wider">Condição de lançamento</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Flame size={18} className="text-brand shrink-0" />
-              <span className="text-base sm:text-lg font-bold text-foreground">
-                Primeira compra com <span className="text-brand">30% OFF</span>
-              </span>
-            </div>
-            <Link
-              href="#sites"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-sm font-semibold text-brand hover:bg-brand/20 transition-colors"
-            >
-              Ver modelos
-              <span className="text-xs">→</span>
-            </Link>
-          </div>
-        </section>
+        <div className="hairline-glow" />
 
         {/* ══════════════════════════════════════════════════════════
-            TEMPLATE GALLERY
+            02 — MODELOS (GALERIA)
         ════════════════════════════════════════════════════════== */}
-        <section id="sites" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
+        <section id="sites" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <ScrollReveal className="mb-16">
+            <ScrollReveal className="mb-14">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="max-w-2xl">
-                  <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Modelos de site</p>
-                  <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+                  <p className="eyebrow mb-4">02 — Modelos de site</p>
+                  <h2 className="font-display text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground">
                     Escolha o site ideal para sua empresa
                   </h2>
                   <p className="mt-5 text-base sm:text-lg text-secondary leading-relaxed">
@@ -415,10 +405,7 @@ export default function HomePage() {
                     Não sabe qual escolher? Use nosso chat para encontrar a melhor opção.
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 shrink-0">
-                  <Flame size={14} className="text-brand" />
-                  <span className="text-sm font-semibold text-brand">Primeira compra com 30% OFF</span>
-                </div>
+                <span className="badge badge-brand badge-tech shrink-0">30% off na 1ª compra</span>
               </div>
             </ScrollReveal>
 
@@ -426,47 +413,47 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="hairline-glow" />
+
         {/* ══════════════════════════════════════════════════════════
-            HOW IT WORKS
+            03 — COMO FUNCIONA
         ════════════════════════════════════════════════════════== */}
-        <section id="como-funciona" className="pt-10 pb-16 sm:pt-14 sm:pb-24 lg:pt-20 lg:pb-32 px-4 sm:px-6 border-t border-border">
+        <section id="como-funciona" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
-            <ScrollReveal className="text-center mb-12">
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">O processo</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">Seu site pronto em 4 etapas simples</h2>
+            <ScrollReveal variant="blur-up" className="text-center mb-14">
+              <p className="eyebrow mb-4">03 — O processo</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground">
+                Seu site pronto em 4 etapas simples
+              </h2>
             </ScrollReveal>
 
             <div className="relative">
-              {/* Connecting line with gradient */}
-              <div className="absolute left-8 top-8 bottom-8 w-px hidden md:block overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-b from-brand via-brand/40 to-transparent" />
-              </div>
+              {/* Trilho vertical com beam descendo */}
+              <div className="absolute left-8 top-8 bottom-8 w-px hidden md:block bg-gradient-to-b from-brand/60 via-brand/25 to-transparent beam-track-y" />
 
-              <div className="space-y-6">
-                {STEPS.map((step, i) => (
-                  <ScrollReveal key={i} delay={(i % 4 + 1) as 1 | 2 | 3 | 4}>
-                    <div className="flex gap-4 sm:gap-8 group">
-                      <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-surface border border-border group-hover:border-brand/20 flex items-center justify-center transition-all duration-300 relative z-10">
-                        <step.icon size={24} className="text-brand" />
-                      </div>
-                      <div className="flex-1 py-3">
-                        <h3 className="font-semibold text-foreground text-xl sm:text-2xl mb-2 group-hover:text-brand transition-colors">
-                          {step.title}
-                        </h3>
-                        <p className="text-secondary leading-relaxed text-base sm:text-lg max-w-xl">{step.desc}</p>
-                      </div>
+              <ScrollReveal stagger className="space-y-6">
+                {STEPS.map((step) => (
+                  <div key={step.n} className="flex gap-4 sm:gap-8 group">
+                    <div className="relative flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-surface border border-border group-hover:border-brand/40 group-hover:shadow-glow-xs flex items-center justify-center transition-all duration-300 z-10">
+                      <step.icon size={24} className="text-brand" />
+                      <span className="absolute -top-2 -right-2 font-mono text-[10px] text-brand bg-background border border-border rounded px-1 leading-relaxed">
+                        {step.n}
+                      </span>
                     </div>
-                  </ScrollReveal>
+                    <div className="flex-1 py-3">
+                      <h3 className="font-semibold text-foreground text-xl sm:text-2xl mb-2 group-hover:text-brand transition-colors">
+                        {step.title}
+                      </h3>
+                      <p className="text-secondary leading-relaxed text-base sm:text-lg max-w-xl">{step.desc}</p>
+                    </div>
+                  </div>
                 ))}
-              </div>
+              </ScrollReveal>
             </div>
 
-            <div className="mt-12 flex justify-center">
+            <div className="mt-14 flex justify-center">
               <Link href="#sites">
-                <Button
-                  size="lg"
-                  className="glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
-                >
+                <Button size="lg" className="text-base px-8">
                   Escolher meu modelo de site
                 </Button>
               </Link>
@@ -474,51 +461,16 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            GARANTIA
-        ════════════════════════════════════════════════════════== */}
-        <section id="garantia" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
-          <div className="max-w-3xl mx-auto">
-            <ScrollReveal>
-              <div className="bento-card p-8 sm:p-12 text-center relative overflow-hidden border-brand/20">
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.06) 0%, transparent 60%)' }}
-                />
-                <div className="relative z-10">
-                  <ShieldCheck size={48} className="mx-auto mb-6 text-brand" />
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-                    Contrate com segurança
-                  </h2>
-                  <p className="text-secondary leading-relaxed max-w-lg mx-auto mb-8">
-                    Preço claro, pagamento seguro e acompanhamento durante todo o projeto. Você sabe o que contratou, em que etapa seu site está e quando vai receber.
-                  </p>
-                  <div className="flex flex-wrap items-center justify-center gap-3">
-                    {[
-                      { icon: ShieldCheck, label: 'Pagamento seguro' },
-                      { icon: DollarSign, label: 'Preço fixo' },
-                      { icon: MessageCircle, label: 'Dúvidas pelo WhatsApp' },
-                    ].map((badge, i) => (
-                      <div key={i} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-elevated border border-border">
-                        <badge.icon size={14} className="text-brand" />
-                        <span className="text-sm font-medium text-secondary">{badge.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
+        <div className="hairline-glow" />
 
         {/* ══════════════════════════════════════════════════════════
-            COMPARACAO
+            04 — COMPARAÇÃO (+ garantia embutida)
         ════════════════════════════════════════════════════════== */}
-        <section id="comparacao" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
+        <section id="comparacao" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
-            <ScrollReveal className="text-center mb-16">
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Comparacao</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
+            <ScrollReveal variant="blur-up" className="text-center mb-16">
+              <p className="eyebrow mb-4">04 — Comparação</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground">
                 Por que escolher a Crably?
               </h2>
               <p className="mt-4 text-base sm:text-lg text-secondary max-w-2xl mx-auto leading-relaxed">
@@ -534,9 +486,9 @@ export default function HomePage() {
                     <tr>
                       <th className="text-left py-4 px-4 text-sm text-muted font-medium" />
                       <th className="py-4 px-4 text-center">
-                        <div className="inline-flex flex-col items-center gap-1">
-                          <span className="text-sm font-bold text-brand">Crably</span>
-                          <span className="text-[10px] font-semibold text-brand bg-brand/10 border border-brand/20 px-2 py-0.5 rounded-full">Melhor custo-beneficio</span>
+                        <div className="inline-flex flex-col items-center gap-1.5">
+                          <span className="font-display text-sm font-bold text-brand">Crably</span>
+                          <span className="badge badge-brand badge-tech">Recomendado</span>
                         </div>
                       </th>
                       <th className="py-4 px-4 text-sm font-semibold text-secondary text-center">Freelancer</th>
@@ -549,19 +501,19 @@ export default function HomePage() {
                         <td className="py-4 px-4 text-base font-medium text-secondary">{row.label}</td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <Check size={16} className="text-green-400 shrink-0" />
+                            <Check size={16} className="text-success shrink-0" />
                             <span className="text-base text-foreground font-medium">{row.crably}</span>
                           </div>
                         </td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <XIcon size={16} className="text-neutral-600 shrink-0" />
+                            <XIcon size={16} className="text-faint shrink-0" />
                             <span className="text-base text-muted">{row.freelancer}</span>
                           </div>
                         </td>
                         <td className="py-4 px-4 text-center">
                           <div className="inline-flex items-center gap-1.5">
-                            <XIcon size={16} className="text-neutral-600 shrink-0" />
+                            <XIcon size={16} className="text-faint shrink-0" />
                             <span className="text-base text-muted">{row.agencia}</span>
                           </div>
                         </td>
@@ -575,19 +527,19 @@ export default function HomePage() {
               <div className="md:hidden space-y-3">
                 {COMPARISON_ROWS.map((row, i) => (
                   <div key={i} className="bento-card p-4">
-                    <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">{row.label}</p>
+                    <p className="font-mono text-[11px] font-medium text-muted uppercase tracking-widest mb-3">{row.label}</p>
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-brand">Crably</span>
-                        <span className="text-sm text-foreground">{row.crably}</span>
+                      <div className="flex items-center justify-between gap-3 border-l-2 border-brand bg-brand/5 rounded-r-lg pl-3 pr-2 py-1.5 -ml-1">
+                        <span className="text-sm font-bold text-brand shrink-0">Crably</span>
+                        <span className="text-sm text-foreground text-right">{row.crably}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted">Freelancer</span>
-                        <span className="text-sm text-muted">{row.freelancer}</span>
+                      <div className="flex items-center justify-between gap-3 pl-2">
+                        <span className="text-sm text-muted shrink-0">Freelancer</span>
+                        <span className="text-sm text-muted text-right">{row.freelancer}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted">Agencia</span>
-                        <span className="text-sm text-muted">{row.agencia}</span>
+                      <div className="flex items-center justify-between gap-3 pl-2">
+                        <span className="text-sm text-muted shrink-0">Agencia</span>
+                        <span className="text-sm text-muted text-right">{row.agencia}</span>
                       </div>
                     </div>
                   </div>
@@ -595,12 +547,29 @@ export default function HomePage() {
               </div>
             </ScrollReveal>
 
-            <div className="mt-14 flex justify-center">
+            {/* Garantia — faixa embutida */}
+            <ScrollReveal delay={2} className="mt-12">
+              <div id="garantia" className="bento-card card-spotlight border-gradient p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div className="w-14 h-14 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center shrink-0">
+                  <ShieldCheck size={26} className="text-brand" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-foreground mb-1">Contrate com segurança</h3>
+                  <p className="text-sm text-secondary leading-relaxed max-w-xl">
+                    Preço claro, pagamento seguro e acompanhamento durante todo o projeto. Você sabe o que contratou, em que etapa seu site está e quando vai receber.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 shrink-0">
+                  {['Pagamento seguro', 'Preço fixo', 'Suporte WhatsApp'].map((label) => (
+                    <span key={label} className="badge badge-outline badge-tech">{label}</span>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <div className="mt-12 flex justify-center">
               <Link href="#sites">
-                <Button
-                  size="lg"
-                  className="glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
-                >
+                <Button size="lg" className="cta-glow text-base px-8">
                   Começar agora com 30% OFF
                 </Button>
               </Link>
@@ -608,245 +577,246 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="hairline-glow" />
+
         {/* ══════════════════════════════════════════════════════════
-            AVALIACOES
+            05 — AVALIAÇÕES
         ════════════════════════════════════════════════════════== */}
-        <section id="avaliacoes" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
+        <section id="avaliacoes" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <ScrollReveal className="text-center mb-16">
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Avaliacoes</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
+            <ScrollReveal variant="blur-up" className="text-center mb-14">
+              <p className="eyebrow mb-4">05 — Avaliações</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground">
                 O que nossos clientes dizem
               </h2>
+              <span className="mt-5 inline-flex items-center gap-2 badge badge-outline badge-tech">
+                <span className="dot-live w-1.5 h-1.5" />
+                ★ 4.9 / 5 — 30+ projetos
+              </span>
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ScrollReveal stagger className="columns-1 md:columns-2 lg:columns-3 gap-5">
               {REVIEWS.map((review, i) => (
-                <ScrollReveal key={i} delay={((i % 3) + 1) as 1 | 2 | 3}>
-                  <div className="bento-card p-5 lg:p-7 h-full flex flex-col gap-4">
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, s) => {
-                        const filled = s < Math.floor(review.stars);
-                        const half = !filled && s < review.stars;
-                        return (
-                          <span key={s} className="relative inline-block w-[14px] h-[14px]">
-                            <Star size={14} className="text-neutral-700 fill-neutral-700" />
-                            {(filled || half) && (
-                              <span
-                                className="absolute inset-0 overflow-hidden"
-                                style={half ? { width: '50%' } : undefined}
-                              >
-                                <Star size={14} className="text-brand fill-brand" />
-                              </span>
-                            )}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    <p className="text-secondary text-sm leading-relaxed flex-1">&ldquo;{review.text}&rdquo;</p>
-                    {review.site && (
-                      <p className="text-xs text-brand/60 font-medium">{review.site}</p>
-                    )}
-                    <div className="flex items-center gap-3 pt-2 border-t border-border">
-                      <Image
-                        src={review.photo}
-                        alt={review.name}
-                        width={36}
-                        height={36}
-                        className="rounded-full shrink-0 object-cover"
-                      />
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{review.name}</p>
-                        <p className="text-xs text-muted">{review.role}</p>
-                      </div>
+                <div key={i} className="bento-card card-spotlight p-6 mb-5 break-inside-avoid flex flex-col gap-3">
+                  <span className="font-display text-5xl leading-none text-brand/20 select-none" aria-hidden="true">&ldquo;</span>
+                  <div className="flex gap-1">
+                    {Array.from({ length: 5 }).map((_, s) => {
+                      const filled = s < Math.floor(review.stars);
+                      const half = !filled && s < review.stars;
+                      return (
+                        <span key={s} className="relative inline-block w-[14px] h-[14px]">
+                          <Star size={14} className="text-faint fill-faint opacity-40" />
+                          {(filled || half) && (
+                            <span
+                              className="absolute inset-0 overflow-hidden"
+                              style={half ? { width: '50%' } : undefined}
+                            >
+                              <Star size={14} className="text-brand fill-brand" />
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <p className="text-secondary text-sm leading-relaxed">&ldquo;{review.text}&rdquo;</p>
+                  {review.site && (
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-brand/60">{review.site}</p>
+                  )}
+                  <div className="flex items-center gap-3 pt-3 border-t border-border-subtle">
+                    <Image
+                      src={review.photo}
+                      alt={review.name}
+                      width={36}
+                      height={36}
+                      className="rounded-full shrink-0 object-cover"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{review.name}</p>
+                      <p className="text-xs text-muted">{review.role}</p>
                     </div>
                   </div>
-                </ScrollReveal>
+                </div>
               ))}
-            </div>
+            </ScrollReveal>
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            SOBRE NOS
-        ════════════════════════════════════════════════════════== */}
-        <section id="sobre" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <ScrollReveal>
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Sobre nos</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight mb-6">
-                Nascemos para{' '}
-                <span className="gradient-text">simplificar</span>{' '}
-                a web.
-              </h2>
-              <p className="text-secondary leading-relaxed mb-4">
-                A Crably nasceu para ajudar empresas B2B a saírem do improviso digital com sites profissionais, preço claro e processo simples.
-              </p>
-              <p className="text-secondary leading-relaxed mb-4">
-                Em vez de projetos longos, reuniões desnecessárias e orçamentos confusos, criamos uma forma mais direta de colocar sua empresa no ar: escolha o modelo, envie as informações e acompanhe cada etapa até a entrega.
-              </p>
-              <p className="text-secondary leading-relaxed mb-8">
-                Nosso foco é entregar sites objetivos, bem construídos e prontos para gerar mais confiança no digital.
-              </p>
-              <div className="flex flex-wrap gap-6">
-                {[
-                  { label: 'Projetos entregues', value: '30+' },
-                  { label: 'Sem orçamento escondido', value: 'Preço fixo' },
-                  { label: 'Após envio das informações', value: 'Até 14 dias úteis' },
-                ].map((stat, i) => (
-                  <div key={i} className="flex flex-col">
-                    <span className="text-3xl font-bold text-foreground">{stat.value}</span>
-                    <span className="text-sm text-muted mt-0.5">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
+        <div className="hairline-glow" />
 
-            <ScrollReveal delay={2}>
-              <div className="grid grid-cols-2 gap-4">
+        {/* ══════════════════════════════════════════════════════════
+            06 — QUEM SOMOS (Sobre + Equipe)
+        ════════════════════════════════════════════════════════== */}
+        <section id="sobre" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto">
+
+            {/* Ato 1 — Sobre */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              <ScrollReveal>
+                <p className="eyebrow mb-4">06 — Quem somos</p>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground leading-tight mb-6">
+                  Nascemos para{' '}
+                  <span className="gradient-text">simplificar</span>{' '}
+                  a web.
+                </h2>
+                <p className="text-secondary leading-relaxed mb-4">
+                  A Crably nasceu para ajudar empresas B2B a saírem do improviso digital com sites profissionais, preço claro e processo simples.
+                </p>
+                <p className="text-secondary leading-relaxed mb-4">
+                  Em vez de projetos longos, reuniões desnecessárias e orçamentos confusos, criamos uma forma mais direta de colocar sua empresa no ar: escolha o modelo, envie as informações e acompanhe cada etapa até a entrega.
+                </p>
+                <p className="text-secondary leading-relaxed">
+                  Nosso foco é entregar sites objetivos, bem construídos e prontos para gerar mais confiança no digital.
+                </p>
+              </ScrollReveal>
+
+              <ScrollReveal stagger className="grid grid-cols-2 gap-4">
                 {[
                   { icon: Rocket, title: 'Velocidade', desc: 'Seu site entregue em até 14 dias úteis após o envio das informações necessárias.' },
                   { icon: Heart, title: 'Cuidado', desc: 'Cada projeto é criado com atenção ao posicionamento, clareza e apresentação da sua empresa.' },
                   { icon: Globe, title: 'Alcance', desc: 'Atendimento 100% remoto para empresas em todo o Brasil.' },
                   { icon: ShieldCheck, title: 'Transparência', desc: 'Preço claro, etapas definidas e acompanhamento durante o projeto.' },
                 ].map((item, i) => (
-                  <div key={i} className="bento-card p-6 flex flex-col gap-3">
-                    <item.icon size={24} className="text-brand" />
+                  <div key={i} className="bento-card card-spotlight p-6 flex flex-col gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center">
+                      <item.icon size={16} className="text-brand" />
+                    </div>
                     <h4 className="font-semibold text-foreground text-sm">{item.title}</h4>
                     <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
+              </ScrollReveal>
+            </div>
 
-        {/* ══════════════════════════════════════════════════════════
-            NOSSA EQUIPE
-        ════════════════════════════════════════════════════════== */}
-        <section id="equipe" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 border-t border-border">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Ato 2 — Equipe */}
+            <div id="equipe" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mt-20 lg:mt-28">
 
-            {/* Foto */}
-            <ScrollReveal>
-              <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
-                <Image
-                  src="/images/owners.webp"
-                  alt="Equipe Crably"
-                  width={720}
-                  height={540}
-                  quality={80}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
-                <div className="absolute bottom-5 left-5 flex items-center gap-2 px-3 py-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10">
-                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
-                  <span className="text-xs font-medium text-white">Time disponivel agora</span>
+              {/* Foto */}
+              <ScrollReveal variant="scale">
+                <div className="relative">
+                  {/* Dot grid decorativo deslocado atrás */}
+                  <div className="absolute -bottom-5 -left-5 w-full h-full dot-grid rounded-3xl -z-10" aria-hidden="true" />
+                  <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
+                    <Image
+                      src="/images/owners.webp"
+                      alt="Equipe Crably"
+                      width={720}
+                      height={540}
+                      quality={80}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-5 left-5 flex items-center gap-2 px-3 py-2 rounded-xl glass">
+                      <span className="dot-live shrink-0" />
+                      <span className="text-xs font-medium text-foreground">Time disponivel agora</span>
+                    </div>
+                  </div>
+                  <div className="absolute -inset-px rounded-3xl corner-frame pointer-events-none" aria-hidden="true" />
                 </div>
-              </div>
-            </ScrollReveal>
+              </ScrollReveal>
 
-            {/* Copy */}
-            <ScrollReveal delay={2}>
-              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-4">Nossa equipe</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight mb-6">
-                Pode contar{' '}
-                <span className="gradient-text">com a gente.</span>
-              </h2>
-              <p className="text-secondary leading-relaxed mb-10">
-                Somos um time enxuto, direto e focado em entregar sites profissionais sem burocracia. Cada projeto é tratado com clareza, atenção aos detalhes e compromisso com o prazo combinado.
-              </p>
+              {/* Copy */}
+              <ScrollReveal delay={1}>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground leading-tight mb-6">
+                  Pode contar{' '}
+                  <span className="gradient-text">com a gente.</span>
+                </h2>
+                <p className="text-secondary leading-relaxed mb-10">
+                  Somos um time enxuto, direto e focado em entregar sites profissionais sem burocracia. Cada projeto é tratado com clareza, atenção aos detalhes e compromisso com o prazo combinado.
+                </p>
 
-              <div className="space-y-4 mb-10">
-                {[
-                  { icon: Zap,        title: 'Rápido por padrão',     desc: 'Processo organizado para colocar seu site no ar sem atrasos desnecessários.' },
-                  { icon: ShieldCheck, title: 'Confiável de verdade',  desc: 'Comunicação clara, etapas definidas e acompanhamento do início ao fim.' },
-                  { icon: Rocket,     title: 'Ágil e sem burocracia', desc: 'Você escolhe o modelo, envia as informações e acompanha tudo de forma simples.' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-elevated/30 border border-border hover:border-brand/20 transition-colors">
-                    <div className="p-2 rounded-xl bg-brand/10 shrink-0">
-                      <item.icon size={16} className="text-brand" />
+                <div className="space-y-4 mb-10">
+                  {[
+                    { icon: Zap,        title: 'Rápido por padrão',     desc: 'Processo organizado para colocar seu site no ar sem atrasos desnecessários.' },
+                    { icon: ShieldCheck, title: 'Confiável de verdade',  desc: 'Comunicação clara, etapas definidas e acompanhamento do início ao fim.' },
+                    { icon: Rocket,     title: 'Ágil e sem burocracia', desc: 'Você escolhe o modelo, envia as informações e acompanha tudo de forma simples.' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-surface border border-border hover:border-brand/25 hover:shadow-glow-xs transition-all duration-300">
+                      <div className="w-9 h-9 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
+                        <item.icon size={16} className="text-brand" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                        <p className="text-xs text-muted mt-0.5 leading-relaxed">{item.desc}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                      <p className="text-xs text-muted mt-0.5 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div className="flex flex-wrap gap-8">
-                {[
-                  { value: '30+', label: 'Projetos entregues' },
-                  { value: 'Até 14 dias úteis', label: 'Após envio das informações' },
-                  { value: '30%', label: 'Off na 1a compra' },
-                ].map((stat, i) => (
-                  <div key={i}>
-                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                    <p className="text-xs text-muted mt-0.5">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
+                <SpecSheet
+                  items={[
+                    { v: '30+', l: 'Projetos entregues' },
+                    { v: '14 dias úteis', l: 'Prazo máximo' },
+                    { v: '30% OFF', l: '1ª compra' },
+                  ]}
+                />
+              </ScrollReveal>
 
+            </div>
           </div>
         </section>
 
+        <div className="hairline-glow" />
+
         {/* ══════════════════════════════════════════════════════════
-            FAQ
+            07 — FAQ
         ════════════════════════════════════════════════════════== */}
         <FAQ />
 
         {/* ══════════════════════════════════════════════════════════
-            CTA FINAL
+            CTA FINAL — full-bleed
         ════════════════════════════════════════════════════════== */}
-        <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <ScrollReveal>
-              <div className="relative p-8 sm:p-14 md:p-24 rounded-3xl bg-surface border border-border text-center overflow-hidden">
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(ellipse at 50% 120%, rgba(var(--brand-rgb),0.1) 0%, transparent 55%)',
-                  }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
+        <section className="relative overflow-hidden py-24 sm:py-32 lg:py-40 px-4 sm:px-6">
+          <div className="hairline-glow absolute top-0 inset-x-0" />
 
-                <div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-brand/5 animate-spin-slow pointer-events-none"
-                />
-                <div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-brand/5 pointer-events-none"
-                  style={{ animation: 'spin-slow 30s linear infinite reverse' }}
-                />
+          {/* Camadas de fundo */}
+          <div
+            className="absolute inset-0 pointer-events-none tech-grid tech-grid-fade"
+            style={{ '--grid-focus': '50% 100%' } as React.CSSProperties}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse at 50% 130%, rgba(var(--brand-rgb),0.18) 0%, transparent 60%)' }}
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] rounded-full border border-brand/10 animate-spin-slow pointer-events-none" />
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] rounded-full border border-brand/10 pointer-events-none"
+            style={{ animation: 'spin-slow 30s linear infinite reverse' }}
+          />
+          <div className="absolute inset-0 pointer-events-none noise-overlay" aria-hidden="true" />
 
-                <div className="relative z-10">
-                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand/30 bg-brand/10 mb-6">
-                    <Flame size={16} className="text-brand" />
-                    <span className="text-sm font-bold text-brand uppercase tracking-wide">Condição de lançamento</span>
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-                    Seu site profissional{' '}
-                    <span className="gradient-text">começa aqui.</span>
-                  </h2>
-                  <p className="text-lg text-secondary mb-4 max-w-lg mx-auto">
-                    Escolha o modelo ideal, veja o preço antes de contratar e receba seu site em até 14 dias úteis após o envio das informações.
-                  </p>
-                  <p className="text-sm text-muted mb-10">
-                    Primeira compra com condição especial de lançamento.
-                  </p>
-                  <Link href="/login?mode=register">
-                    <Button
-                      size="lg"
-                      className="glow-brand-sm hover:scale-105 transition-transform text-base px-10"
-                    >
-                      Começar agora
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
+          <ScrollReveal className="relative z-10 max-w-3xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-brand/25 bg-brand/5 mb-8">
+              <span className="dot-live shrink-0" />
+              <span className="font-mono text-[11px] font-medium text-brand uppercase tracking-[0.14em]">Condição de lançamento</span>
+            </div>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold tracking-[-0.03em] text-foreground mb-6 leading-[1.02]">
+              Seu site profissional{' '}
+              <span className="gradient-text text-glow">começa aqui.</span>
+            </h2>
+            <p className="text-lg text-secondary mb-3 max-w-lg mx-auto">
+              Escolha o modelo ideal, veja o preço antes de contratar e receba seu site em até 14 dias úteis após o envio das informações.
+            </p>
+            <p className="text-sm text-muted mb-10">
+              Primeira compra com condição especial de lançamento.
+            </p>
+            <div className="flex flex-col items-center gap-5">
+              <Link href="/login?mode=register">
+                <Button size="xl" className="cta-glow text-base px-12">
+                  Começar agora
+                  <ArrowRight size={18} className="ml-2" />
+                </Button>
+              </Link>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
+              >
+                <MessageCircle size={15} />
+                Prefere conversar antes? Chame no WhatsApp
+              </a>
+            </div>
+          </ScrollReveal>
         </section>
       </main>
 
