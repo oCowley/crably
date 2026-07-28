@@ -69,11 +69,11 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
 
   if (order.meetSlotId && !isConfirmed) {
     return (
-      <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/8">
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-surface border border-border">
         <Clock size={16} className="text-orange-400 mt-0.5 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-white">Horário selecionado!</p>
-          <p className="text-xs text-neutral-400 mt-1">
+          <p className="text-sm font-semibold text-foreground">Horário selecionado!</p>
+          <p className="text-xs text-secondary mt-1">
             Aguardando nossa equipe confirmar o meet e enviar o link. Você será notificado aqui.
           </p>
         </div>
@@ -87,9 +87,9 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
         <div className="flex items-start gap-3 p-4 rounded-xl bg-brand/10 border border-brand/20">
           <Video size={16} className="text-brand mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-white">Meet confirmado!</p>
+            <p className="text-sm font-semibold text-foreground">Meet confirmado!</p>
             {order.meetDate && (
-              <p className="text-xs text-neutral-400 mt-0.5">{order.meetDate}</p>
+              <p className="text-xs text-secondary mt-0.5">{order.meetDate}</p>
             )}
             <a
               href={order.meetLink.startsWith('http') ? order.meetLink : `https://${order.meetLink}`}
@@ -101,7 +101,7 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
             </a>
           </div>
         </div>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted">
           Após o meet, o desenvolvimento do seu projeto começa automaticamente.
         </p>
       </div>
@@ -122,19 +122,19 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-neutral-300 leading-relaxed">
+      <p className="text-sm text-secondary leading-relaxed">
         Escolha um horário disponível para uma conversa rápida com o desenvolvedor do seu projeto.
         Horário comercial, de segunda a sexta, das 8h às 17h.
       </p>
 
       {loading ? (
         <div className="flex justify-center py-6">
-          <Loader2 size={20} className="animate-spin text-neutral-600" />
+          <Loader2 size={20} className="animate-spin text-faint" />
         </div>
       ) : slots.length === 0 ? (
-        <div className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/8">
+        <div className="flex items-start gap-3 p-4 rounded-xl bg-surface border border-border">
           <AlertCircle size={15} className="text-yellow-400 mt-0.5 shrink-0" />
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-secondary">
             Nenhum horário disponível nos próximos 7 dias úteis. Nossa equipe entrará em contato em breve.
           </p>
         </div>
@@ -147,8 +147,8 @@ export default function AgendamentoStage({ order }: { order: DashboardOrder; act
                 onClick={() => setSelected(slot.id)}
                 className={`p-3 rounded-xl border text-left transition-all ${
                   selected === slot.id
-                    ? 'border-brand bg-brand/10 text-white'
-                    : 'border-white/10 bg-white/[0.02] text-neutral-400 hover:border-white/20 hover:text-white'
+                    ? 'border-brand bg-brand/10 text-foreground'
+                    : 'border-border bg-surface text-secondary hover:border-border-strong hover:text-foreground'
                 }`}
               >
                 <div className="flex items-center gap-1.5 mb-1">

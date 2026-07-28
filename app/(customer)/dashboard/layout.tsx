@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <CartProvider>
-      <div className="min-h-screen bg-[#0B0B0B]">
+      <div className="min-h-screen bg-background">
         <DashboardSidebar
           mobileOpen={mobileOpen}
           onClose={() => setMobileOpen(false)}

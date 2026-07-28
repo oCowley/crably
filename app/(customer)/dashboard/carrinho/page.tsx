@@ -154,16 +154,16 @@ export default function CarrinhoPage() {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white">Carrinho</h1>
+          <h1 className="text-2xl font-bold text-foreground">Carrinho</h1>
         </div>
-        <div className="flex flex-col items-center justify-center py-24 bg-[#111111] rounded-2xl border border-white/5 text-center px-6">
-          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-5">
-            <ShoppingBag size={24} className="text-neutral-600" />
+        <div className="flex flex-col items-center justify-center py-24 bg-surface rounded-2xl border border-border text-center px-6">
+          <div className="w-14 h-14 rounded-2xl bg-elevated flex items-center justify-center mb-5">
+            <ShoppingBag size={24} className="text-faint" />
           </div>
-          <h2 className="text-lg font-semibold text-white mb-2">
+          <h2 className="text-lg font-semibold text-foreground mb-2">
             Seu carrinho está vazio
           </h2>
-          <p className="text-sm text-neutral-400 mb-6">
+          <p className="text-sm text-secondary mb-6">
             Adicione produtos para continuar.
           </p>
           <Link
@@ -180,8 +180,8 @@ export default function CarrinhoPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Carrinho</h1>
-        <p className="text-neutral-400 mt-1 text-sm">
+        <h1 className="text-2xl font-bold text-foreground">Carrinho</h1>
+        <p className="text-secondary mt-1 text-sm">
           {items.length} {items.length === 1 ? 'item' : 'itens'} no carrinho
         </p>
       </div>
@@ -193,24 +193,24 @@ export default function CarrinhoPage() {
           {items.map((item) => (
             <div
               key={item.id}
-              className="p-5 bg-[#111111] rounded-2xl border border-white/5"
+              className="p-5 bg-surface rounded-2xl border border-border"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-semibold text-white">{item.productName}</h3>
-                    <span className="px-2 py-0.5 rounded-md bg-white/5 text-xs text-neutral-400 border border-white/5">
+                    <h3 className="font-semibold text-foreground">{item.productName}</h3>
+                    <span className="px-2 py-0.5 rounded-md bg-elevated text-xs text-secondary border border-border">
                       {item.prazo === '7dias' ? '7 dias express' : '14 dias'}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-neutral-300 mt-1">
+                  <p className="text-sm font-medium text-secondary mt-1">
                     {item.projectName}
                   </p>
-                  <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                  <p className="text-sm text-muted mt-1 line-clamp-2">
                     {item.briefing}
                   </p>
                   {item.reference && (
-                    <p className="text-xs text-neutral-600 mt-1 truncate">
+                    <p className="text-xs text-faint mt-1 truncate">
                       Ref: {item.reference}
                     </p>
                   )}
@@ -222,14 +222,14 @@ export default function CarrinhoPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setEditingItem(item)}
-                      className="p-2 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+                      className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
                       aria-label="Editar"
                     >
                       <Pencil size={15} />
                     </button>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="p-2 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-400/5 transition-colors"
+                      className="p-2 rounded-lg text-muted hover:text-red-400 hover:bg-red-400/5 transition-colors"
                       aria-label="Remover"
                     >
                       <Trash2 size={15} />
@@ -241,9 +241,9 @@ export default function CarrinhoPage() {
           ))}
 
           {/* Dados do comprador */}
-          <div className="p-5 bg-[#111111] rounded-2xl border border-white/5">
+          <div className="p-5 bg-surface rounded-2xl border border-border">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-white">
+              <h2 className="text-sm font-semibold text-foreground">
                 Dados do comprador
               </h2>
               {!buyerDataComplete && !loadingBuyer && (
@@ -261,20 +261,20 @@ export default function CarrinhoPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Nome — bloqueado */}
               <div>
-                <label className="block text-xs text-neutral-500 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs text-muted mb-1.5 uppercase tracking-wide">
                   Nome
                 </label>
                 <input
                   disabled
                   value={profile?.name ?? ''}
                   title="Nome definido no cadastro"
-                  className="w-full h-9 px-3 rounded-lg bg-white/[0.02] border border-white/5 text-neutral-600 text-sm cursor-not-allowed select-none"
+                  className="w-full h-9 px-3 rounded-lg bg-surface border border-border text-faint text-sm cursor-not-allowed select-none"
                 />
               </div>
 
               {/* CPF */}
               <div>
-                <label className="block text-xs text-neutral-500 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs text-muted mb-1.5 uppercase tracking-wide">
                   CPF ou CNPJ <span className="text-brand normal-case">*</span>
                 </label>
                 <input
@@ -282,20 +282,20 @@ export default function CarrinhoPage() {
                   onChange={(e) => setCpf(maskDocument(e.target.value))}
                   placeholder="000.000.000-00"
                   inputMode="numeric"
-                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/50 transition-colors"
+                  className="w-full h-9 px-3 rounded-lg bg-elevated border border-border-strong text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 transition-colors"
                 />
               </div>
 
               {/* Data de nascimento */}
               <div>
-                <label className="block text-xs text-neutral-500 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs text-muted mb-1.5 uppercase tracking-wide">
                   Nascimento <span className="text-brand normal-case">*</span>
                 </label>
                 <input
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-brand/50 transition-colors [color-scheme:dark]"
+                  className="w-full h-9 px-3 rounded-lg bg-elevated border border-border-strong text-foreground text-sm focus:outline-none focus:border-brand/50 transition-colors [color-scheme:dark]"
                 />
               </div>
             </div>
@@ -304,24 +304,24 @@ export default function CarrinhoPage() {
 
         {/* Resumo */}
         <div className="lg:col-span-1">
-          <div className="p-5 bg-[#111111] rounded-2xl border border-white/5 sticky top-20">
-            <h2 className="font-semibold text-white mb-4">Resumo do pedido</h2>
+          <div className="p-5 bg-surface rounded-2xl border border-border sticky top-20">
+            <h2 className="font-semibold text-foreground mb-4">Resumo do pedido</h2>
 
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-neutral-400">Subtotal</span>
-                <span className="text-white">{formatPrice(subtotal)}</span>
+                <span className="text-secondary">Subtotal</span>
+                <span className="text-foreground">{formatPrice(subtotal)}</span>
               </div>
 
               {!checkingDiscount && isFirstPurchase && (
-                <div className="flex items-center justify-between text-green-400">
+                <div className="flex items-center justify-between text-success">
                   <span>Desconto primeira compra (30%)</span>
                   <span>−{formatPrice(discountAmount)}</span>
                 </div>
               )}
 
-              <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                <span className="text-white font-semibold">Total</span>
+              <div className="pt-3 border-t border-border flex items-center justify-between">
+                <span className="text-foreground font-semibold">Total</span>
                 <span className="text-2xl font-bold text-brand">
                   {formatPrice(total)}
                 </span>
@@ -343,7 +343,7 @@ export default function CarrinhoPage() {
                 'w-full h-11 mt-5 rounded-xl text-white text-sm font-semibold transition-all duration-200',
                 buyerDataComplete
                   ? 'bg-brand hover:bg-brand-hover shadow-[0_0_20px_rgba(var(--brand-rgb),0.3)] hover:shadow-[0_0_28px_rgba(var(--brand-rgb),0.45)]'
-                  : 'bg-neutral-800 cursor-not-allowed text-neutral-500',
+                  : 'bg-neutral-800 cursor-not-allowed text-muted',
                 loading ? 'opacity-60 cursor-not-allowed' : '',
               ].join(' ')}
             >
@@ -362,7 +362,7 @@ export default function CarrinhoPage() {
               </p>
             )}
 
-            <p className="text-xs text-neutral-600 text-center mt-3">
+            <p className="text-xs text-faint text-center mt-3">
               Pagamento seguro via Abacate Pay
             </p>
           </div>
@@ -390,16 +390,16 @@ export default function CarrinhoPage() {
       {checkoutUrl && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-overlay backdrop-blur-sm"
             onClick={() => setCheckoutUrl(null)}
           />
-          <div className="relative w-full max-w-lg bg-[#0e0e0e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+          <div className="relative w-full max-w-lg bg-inset border border-border-strong rounded-2xl shadow-2xl overflow-hidden"
                style={{ height: '85vh' }}>
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
-              <p className="text-sm font-semibold text-white">Finalizar pagamento</p>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <p className="text-sm font-semibold text-foreground">Finalizar pagamento</p>
               <button
                 onClick={() => setCheckoutUrl(null)}
-                className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+                className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
               >
                 <X size={16} />
               </button>

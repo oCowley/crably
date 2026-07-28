@@ -31,7 +31,7 @@ export default function DesenvolvimentoStage({ order }: { order: DashboardOrder;
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-neutral-300">
+      <p className="text-sm text-secondary">
         O desenvolvimento do seu projeto está em andamento. Acompanhe as etapas abaixo.
       </p>
 
@@ -45,20 +45,20 @@ export default function DesenvolvimentoStage({ order }: { order: DashboardOrder;
               className={`flex items-center gap-3 p-3 rounded-xl border ${
                 done    ? 'border-green-500/20 bg-green-500/5' :
                 current ? 'border-brand/20 bg-brand/5' :
-                          'border-white/5 bg-white/[0.02]'
+                          'border-border bg-surface'
               }`}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
                 done    ? 'bg-green-500 text-white' :
                 current ? 'bg-brand text-white' :
-                          'bg-white/5 text-neutral-600'
+                          'bg-elevated text-faint'
               }`}>
                 {done ? '✓' : i + 1}
               </div>
               <span className={`text-sm font-medium ${
-                done    ? 'text-green-400' :
-                current ? 'text-white' :
-                          'text-neutral-600'
+                done    ? 'text-success' :
+                current ? 'text-foreground' :
+                          'text-faint'
               }`}>
                 {step.label}
               </span>
@@ -69,10 +69,10 @@ export default function DesenvolvimentoStage({ order }: { order: DashboardOrder;
       </div>
 
       {order.deployUrl && (
-        <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/8">
+        <div className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border">
           <div>
-            <p className="text-xs font-medium text-neutral-500 mb-0.5">Preview em tempo real</p>
-            <p className="text-sm font-semibold text-white truncate max-w-[240px]">{order.deployUrl}</p>
+            <p className="text-xs font-medium text-muted mb-0.5">Preview em tempo real</p>
+            <p className="text-sm font-semibold text-foreground truncate max-w-[240px]">{order.deployUrl}</p>
           </div>
           <a
             href={order.deployUrl}
@@ -86,7 +86,7 @@ export default function DesenvolvimentoStage({ order }: { order: DashboardOrder;
       )}
 
       <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold w-fit ${
-        daysLeft <= 3 ? 'text-orange-400 bg-orange-500/10' : 'text-neutral-500 bg-white/5'
+        daysLeft <= 3 ? 'text-orange-400 bg-orange-500/10' : 'text-muted bg-elevated'
       }`}>
         <Clock size={12} />
         {daysLeft > 0

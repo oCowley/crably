@@ -166,7 +166,7 @@ function StatusTimeline({ stage }: { stage: ProjectStage }) {
               <div
                 className={`
                   w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 text-[10px]
-                  ${done ? 'bg-brand text-white' : active ? `${cfg.bg} ${cfg.border} border ${cfg.color}` : 'bg-white/5 border border-white/10 text-neutral-600'}
+                  ${done ? 'bg-brand text-white' : active ? `${cfg.bg} ${cfg.border} border ${cfg.color}` : 'bg-elevated border border-border-strong text-faint'}
                 `}
               >
                 {done ? (
@@ -179,7 +179,7 @@ function StatusTimeline({ stage }: { stage: ProjectStage }) {
               </div>
               <span
                 className={`text-[9px] font-medium whitespace-nowrap ${
-                  done ? 'text-brand' : active ? cfg.color : 'text-neutral-600'
+                  done ? 'text-brand' : active ? cfg.color : 'text-faint'
                 }`}
               >
                 {PROJECT_STAGE_LABELS[s]}
@@ -288,12 +288,12 @@ export default function ProjetosPage() {
     return (
       <div>
         <div className="mb-8">
-          <div className="h-7 w-40 bg-white/5 rounded-lg animate-pulse" />
-          <div className="h-4 w-56 bg-white/5 rounded-lg animate-pulse mt-2" />
+          <div className="h-7 w-40 bg-elevated rounded-lg animate-pulse" />
+          <div className="h-4 w-56 bg-elevated rounded-lg animate-pulse mt-2" />
         </div>
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-48 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
+            <div key={i} className="h-48 bg-surface rounded-2xl border border-border animate-pulse" />
           ))}
         </div>
       </div>
@@ -307,8 +307,8 @@ export default function ProjetosPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Meus projetos</h1>
-        <p className="text-neutral-500 mt-1 text-sm">
+        <h1 className="text-2xl font-bold text-foreground">Meus projetos</h1>
+        <p className="text-muted mt-1 text-sm">
           Acompanhe o andamento dos seus pedidos em tempo real
         </p>
       </div>
@@ -329,22 +329,22 @@ export default function ProjetosPage() {
       {/* Pendentes */}
       {pendingOrders.length > 0 && (
         <div className="mb-6 space-y-3">
-          <p className="text-xs text-neutral-500 uppercase tracking-widest font-medium">
+          <p className="text-xs text-muted uppercase tracking-widest font-medium">
             Aguardando confirmação de pagamento
           </p>
           {pendingOrders.map((order) => (
             <div
               key={order.id}
-              className="p-4 bg-[#111111] rounded-2xl border border-yellow-500/15 flex items-center gap-4"
+              className="p-4 bg-surface rounded-2xl border border-yellow-500/15 flex items-center gap-4"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-semibold text-white">{order.productName}</span>
+                  <span className="text-sm font-semibold text-foreground">{order.productName}</span>
                   {order.projectName && (
-                    <span className="text-sm text-neutral-500">— {order.projectName}</span>
+                    <span className="text-sm text-muted">— {order.projectName}</span>
                   )}
                 </div>
-                <p className="text-xs text-neutral-600 mt-0.5">
+                <p className="text-xs text-faint mt-0.5">
                   Se você já concluiu o pagamento, clique em verificar.
                 </p>
               </div>
@@ -368,12 +368,12 @@ export default function ProjetosPage() {
 
       {/* Estado vazio */}
       {activeOrders.length === 0 && pendingOrders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 bg-[#111111] rounded-2xl border border-white/5 text-center px-6">
-          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-5">
-            <ShoppingBag size={24} className="text-neutral-600" />
+        <div className="flex flex-col items-center justify-center py-24 bg-surface rounded-2xl border border-border text-center px-6">
+          <div className="w-14 h-14 rounded-2xl bg-elevated flex items-center justify-center mb-5">
+            <ShoppingBag size={24} className="text-faint" />
           </div>
-          <h2 className="text-lg font-semibold text-white mb-2">Você ainda não tem projetos</h2>
-          <p className="text-sm text-neutral-400 mb-6 max-w-xs">Que tal contratar o primeiro?</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Você ainda não tem projetos</h2>
+          <p className="text-sm text-secondary mb-6 max-w-xs">Que tal contratar o primeiro?</p>
           <Link
             href="/dashboard/contratar"
             className="inline-flex items-center justify-center h-10 px-6 rounded-xl bg-brand hover:bg-brand-hover text-white text-sm font-semibold transition-colors"
@@ -393,11 +393,11 @@ export default function ProjetosPage() {
             return (
               <div
                 key={order.id}
-                className={`relative overflow-hidden bg-[#111111] rounded-2xl border transition-all duration-300 hover:border-white/10 ${cfg.border}`}
+                className={`relative overflow-hidden bg-surface rounded-2xl border transition-all duration-300 hover:border-border-strong ${cfg.border}`}
                 style={{ boxShadow: `0 4px 24px ${isDelivered ? 'rgba(34,197,94,0.06)' : 'rgba(0,0,0,0.3)'}` }}
               >
                 {/* Progress bar top */}
-                <div className="h-0.5 w-full bg-white/5">
+                <div className="h-0.5 w-full bg-elevated">
                   <div
                     className="h-full transition-all duration-700 rounded-full"
                     style={{
@@ -415,7 +415,7 @@ export default function ProjetosPage() {
                     <div className="min-w-0 flex-1">
                       {/* Title + badge */}
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-bold text-white text-base">{order.productName}</h3>
+                        <h3 className="font-bold text-foreground text-base">{order.productName}</h3>
                         <span
                           className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${cfg.bg} ${cfg.border} ${cfg.color}`}
                         >
@@ -432,7 +432,7 @@ export default function ProjetosPage() {
 
                       {/* Project name */}
                       {order.projectName && (
-                        <p className="text-sm font-semibold text-neutral-300 mt-1">
+                        <p className="text-sm font-semibold text-secondary mt-1">
                           {order.projectName}
                         </p>
                       )}
@@ -440,12 +440,12 @@ export default function ProjetosPage() {
 
                     {/* Price + action */}
                     <div className="flex flex-col items-end gap-2 shrink-0">
-                      <span className={`text-xl font-bold ${isDelivered ? 'text-green-400' : 'text-brand'}`}>
+                      <span className={`text-xl font-bold ${isDelivered ? 'text-success' : 'text-brand'}`}>
                         {formatPrice(order.price)}
                       </span>
                       <Link
                         href={`/dashboard/projetos/${order.id}`}
-                        className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-xs font-semibold border border-white/10 transition-colors"
+                        className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-elevated hover:bg-elevated text-secondary hover:text-foreground text-xs font-semibold border border-border-strong transition-colors"
                       >
                         Ver projeto <ExternalLink size={12} />
                       </Link>
@@ -464,7 +464,7 @@ export default function ProjetosPage() {
 
                   {/* Briefing */}
                   {order.briefing && (
-                    <p className="text-sm text-neutral-500 mt-3 line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-muted mt-3 line-clamp-2 leading-relaxed">
                       {order.briefing}
                     </p>
                   )}
@@ -472,13 +472,13 @@ export default function ProjetosPage() {
                   {/* Meta info */}
                   <div className="mt-4 flex items-center flex-wrap gap-x-4 gap-y-2">
                     {/* Data do pedido */}
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                    <div className="flex items-center gap-1.5 text-xs text-faint">
                       <Calendar size={11} />
                       <span>Pedido em {formatDate(order.createdAt)}</span>
                     </div>
 
                     {/* Prazo */}
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                    <div className="flex items-center gap-1.5 text-xs text-faint">
                       <Clock size={11} />
                       <span>{order.prazo === '7dias' ? '7 dias express' : '14 dias'}</span>
                     </div>
@@ -491,7 +491,7 @@ export default function ProjetosPage() {
                             ? 'text-red-400 bg-red-500/10'
                             : urgent
                               ? 'text-orange-400 bg-orange-500/10'
-                              : 'text-neutral-500 bg-white/5'
+                              : 'text-muted bg-elevated'
                         }`}
                       >
                         <Clock size={10} />
@@ -504,7 +504,7 @@ export default function ProjetosPage() {
                     )}
 
                     {/* Previsão entrega */}
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                    <div className="flex items-center gap-1.5 text-xs text-faint">
                       <CheckCircle2 size={11} />
                       <span>
                         {isDelivered ? 'Entregue em' : 'Previsão:'} {formatDate(deadline)}
@@ -517,7 +517,7 @@ export default function ProjetosPage() {
                         href={order.reference}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs text-neutral-600 hover:text-neutral-300 transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-faint hover:text-secondary transition-colors"
                       >
                         <Link2 size={11} />
                         <span className="underline underline-offset-2 truncate max-w-[160px]">
@@ -527,7 +527,7 @@ export default function ProjetosPage() {
                     )}
 
                     {/* Briefing icon */}
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600" title={order.briefing}>
+                    <div className="flex items-center gap-1.5 text-xs text-faint" title={order.briefing}>
                       <FileText size={11} />
                       <span>{order.briefing.length} caracteres de briefing</span>
                     </div>

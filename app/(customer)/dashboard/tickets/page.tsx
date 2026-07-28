@@ -82,7 +82,7 @@ function formatRelative(d: Date) {
   return formatDate(d)
 }
 
-const inputCls  = 'w-full px-3.5 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors'
+const inputCls  = 'w-full px-3.5 py-2.5 text-sm bg-elevated border border-border-strong rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors'
 const selectCls = `${inputCls} appearance-none cursor-pointer`
 
 // ─── new ticket modal ─────────────────────────────────────────────────────────
@@ -112,20 +112,20 @@ function NewTicketModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="relative w-full max-w-lg bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
         {/* header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center">
               <LifeBuoy size={16} className="text-brand" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Abrir chamado</h2>
-              <p className="text-xs text-neutral-500 mt-0.5">Nossa equipe responde em até 24h</p>
+              <h2 className="text-base font-bold text-foreground">Abrir chamado</h2>
+              <p className="text-xs text-muted mt-0.5">Nossa equipe responde em até 24h</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -135,7 +135,7 @@ function NewTicketModal({
           <div className="px-6 py-5 space-y-4 max-h-[60vh] overflow-y-auto">
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 Categoria <span className="text-brand">*</span>
               </label>
               <select
@@ -144,13 +144,13 @@ function NewTicketModal({
                 className={selectCls}
               >
                 {(Object.entries(CATEGORY_LABELS) as [TicketCategory, string][]).map(([key, label]) => (
-                  <option key={key} value={key} className="bg-[#1a1a1a]">{label}</option>
+                  <option key={key} value={key} className="bg-elevated">{label}</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 Assunto <span className="text-brand">*</span>
               </label>
               <input
@@ -164,7 +164,7 @@ function NewTicketModal({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 Descrição <span className="text-brand">*</span>
               </label>
               <textarea
@@ -178,17 +178,17 @@ function NewTicketModal({
 
             {orders.length > 0 && (
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-400">
-                  Pedido relacionado <span className="text-neutral-600">(opcional)</span>
+                <label className="text-xs font-medium text-secondary">
+                  Pedido relacionado <span className="text-faint">(opcional)</span>
                 </label>
                 <select
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   className={selectCls}
                 >
-                  <option value="" className="bg-[#1a1a1a]">Nenhum pedido específico</option>
+                  <option value="" className="bg-elevated">Nenhum pedido específico</option>
                   {orders.map((o) => (
-                    <option key={o.id} value={o.id} className="bg-[#1a1a1a]">
+                    <option key={o.id} value={o.id} className="bg-elevated">
                       {o.name}
                     </option>
                   ))}
@@ -196,20 +196,20 @@ function NewTicketModal({
               </div>
             )}
 
-            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/5">
-              <MessageSquare size={13} className="text-neutral-500 mt-0.5 shrink-0" />
-              <p className="text-xs text-neutral-500 leading-relaxed">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-surface border border-border">
+              <MessageSquare size={13} className="text-muted mt-0.5 shrink-0" />
+              <p className="text-xs text-muted leading-relaxed">
                 Após abrir o chamado, nossa equipe irá analisar e entrar em contato pelo email cadastrado.
               </p>
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-white/5 flex gap-3 justify-end">
+          <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
             <button
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors disabled:opacity-40"
+              className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors disabled:opacity-40"
             >
               Cancelar
             </button>
@@ -236,15 +236,15 @@ function TicketDetailModal({ ticket, onClose }: { ticket: Ticket; onClose: () =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#111111] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
+      <div className="relative w-full max-w-md bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden animate-fade-up">
 
         {/* header */}
-        <div className="flex items-start justify-between px-6 py-5 border-b border-white/5">
+        <div className="flex items-start justify-between px-6 py-5 border-b border-border">
           <div className="flex-1 min-w-0 pr-4">
-            <span className="text-[11px] font-mono text-neutral-600">#{ticket.id.slice(0, 8)}</span>
-            <h2 className="text-base font-bold text-white mt-0.5 leading-snug">{ticket.subject}</h2>
+            <span className="text-[11px] font-mono text-faint">#{ticket.id.slice(0, 8)}</span>
+            <h2 className="text-base font-bold text-foreground mt-0.5 leading-snug">{ticket.subject}</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors shrink-0 mt-0.5">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors shrink-0 mt-0.5">
             <X size={16} />
           </button>
         </div>
@@ -266,41 +266,41 @@ function TicketDetailModal({ ticket, onClose }: { ticket: Ticket; onClose: () =>
 
           {/* description */}
           <div className="space-y-1.5">
-            <p className="text-xs font-medium text-neutral-500">Sua mensagem</p>
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-sm text-neutral-300 leading-relaxed whitespace-pre-wrap">{ticket.description}</p>
+            <p className="text-xs font-medium text-muted">Sua mensagem</p>
+            <div className="p-4 rounded-xl bg-surface border border-border">
+              <p className="text-sm text-secondary leading-relaxed whitespace-pre-wrap">{ticket.description}</p>
             </div>
           </div>
 
           {/* meta grid */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-[11px] text-neutral-500 mb-1">Categoria</p>
-              <p className="text-sm font-medium text-white">{CATEGORY_LABELS[ticket.category]}</p>
+            <div className="p-3.5 rounded-xl bg-surface border border-border">
+              <p className="text-[11px] text-muted mb-1">Categoria</p>
+              <p className="text-sm font-medium text-foreground">{CATEGORY_LABELS[ticket.category]}</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <p className="text-[11px] text-neutral-500 mb-1">Aberto em</p>
-              <p className="text-sm font-medium text-white">{formatDate(ticket.date)}</p>
+            <div className="p-3.5 rounded-xl bg-surface border border-border">
+              <p className="text-[11px] text-muted mb-1">Aberto em</p>
+              <p className="text-sm font-medium text-foreground">{formatDate(ticket.date)}</p>
             </div>
           </div>
 
           {ticket.orderId && (
-            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-              <Package size={14} className="text-neutral-500 shrink-0" />
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-surface border border-border">
+              <Package size={14} className="text-muted shrink-0" />
               <div className="min-w-0">
-                <p className="text-[11px] text-neutral-500">Pedido vinculado</p>
-                <p className="text-sm font-medium text-white truncate">{ticket.orderName ?? ticket.orderId.slice(0, 12) + '…'}</p>
+                <p className="text-[11px] text-muted">Pedido vinculado</p>
+                <p className="text-sm font-medium text-foreground truncate">{ticket.orderName ?? ticket.orderId.slice(0, 12) + '…'}</p>
               </div>
             </div>
           )}
 
-          <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-neutral-500 leading-relaxed">
+          <div className="p-3.5 rounded-xl bg-surface border border-border text-xs text-muted leading-relaxed">
             Para atualizações sobre este chamado, verifique seu email cadastrado. Nosso time responde em até 24h úteis.
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-white/5 flex justify-end">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+        <div className="px-6 py-4 border-t border-border flex justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground bg-elevated hover:bg-elevated rounded-xl transition-colors">
             Fechar
           </button>
         </div>
@@ -428,8 +428,8 @@ export default function TicketsPage() {
         {/* header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Suporte</h1>
-            <p className="text-neutral-400 text-sm mt-1">Abra chamados e acompanhe o status do atendimento.</p>
+            <h1 className="text-2xl font-bold text-foreground">Suporte</h1>
+            <p className="text-secondary text-sm mt-1">Abra chamados e acompanhe o status do atendimento.</p>
           </div>
           <button
             onClick={() => setCreating(true)}
@@ -451,7 +451,7 @@ export default function TicketsPage() {
               <s.icon size={18} className={`${s.color} mt-0.5 shrink-0`} />
               <div>
                 <p className={`text-2xl font-bold ${s.color}`}>{loading ? '—' : s.value}</p>
-                <p className="text-xs text-neutral-500 mt-0.5">{s.label}</p>
+                <p className="text-xs text-muted mt-0.5">{s.label}</p>
               </div>
             </div>
           ))}
@@ -461,7 +461,7 @@ export default function TicketsPage() {
         <div className="bento-card overflow-hidden">
 
           {/* tabs */}
-          <div className="px-5 pt-4 pb-0 border-b border-white/5 flex gap-1 overflow-x-auto">
+          <div className="px-5 pt-4 pb-0 border-b border-border flex gap-1 overflow-x-auto">
             {TABS.map((tab) => (
               <button
                 key={tab.key}
@@ -469,14 +469,14 @@ export default function TicketsPage() {
                 className={[
                   'flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium rounded-t-lg border-b-2 -mb-px transition-colors whitespace-nowrap',
                   filter === tab.key
-                    ? 'text-white border-brand bg-brand/5'
-                    : 'text-neutral-500 border-transparent hover:text-neutral-300',
+                    ? 'text-foreground border-brand bg-brand/5'
+                    : 'text-muted border-transparent hover:text-secondary',
                 ].join(' ')}
               >
                 {tab.label}
                 {tab.count !== undefined && tab.count > 0 && (
                   <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                    filter === tab.key ? 'bg-brand/20 text-brand' : 'bg-white/8 text-neutral-500'
+                    filter === tab.key ? 'bg-brand/20 text-brand' : 'bg-elevated text-muted'
                   }`}>
                     {tab.count}
                   </span>
@@ -488,19 +488,19 @@ export default function TicketsPage() {
           {loading ? (
             <div className="space-y-px">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-20 px-5 py-4 animate-pulse bg-white/[0.015]" />
+                <div key={i} className="h-20 px-5 py-4 animate-pulse bg-surface" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-4 text-center px-6">
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
-                <LifeBuoy size={24} className="text-neutral-700" />
+              <div className="w-14 h-14 rounded-2xl bg-surface border border-border flex items-center justify-center">
+                <LifeBuoy size={24} className="text-faint" />
               </div>
               <div>
-                <p className="text-sm font-medium text-neutral-400">
+                <p className="text-sm font-medium text-secondary">
                   {filter === 'todos' ? 'Nenhum chamado aberto' : `Nenhum chamado ${STATUS_LABELS[filter as TicketStatus].toLowerCase()}`}
                 </p>
-                <p className="text-xs text-neutral-600 mt-1">
+                <p className="text-xs text-faint mt-1">
                   {filter === 'todos' && 'Encontrou algum problema? Clique em "Abrir chamado".'}
                 </p>
               </div>
@@ -515,14 +515,14 @@ export default function TicketsPage() {
               )}
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {filtered.map((ticket) => {
                 const StatusIcon = STATUS_ICONS[ticket.status]
                 return (
                   <button
                     key={ticket.id}
                     onClick={() => setViewing(ticket)}
-                    className="w-full flex items-center gap-4 px-5 py-4 hover:bg-white/[0.025] transition-colors text-left"
+                    className="w-full flex items-center gap-4 px-5 py-4 hover:bg-elevated transition-colors text-left"
                   >
                     {/* status dot */}
                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${STATUS_STYLES[ticket.status]}`}>
@@ -532,21 +532,21 @@ export default function TicketsPage() {
                     {/* content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <p className="text-sm font-semibold text-white truncate">{ticket.subject}</p>
+                        <p className="text-sm font-semibold text-foreground truncate">{ticket.subject}</p>
                       </div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs text-neutral-600">{CATEGORY_LABELS[ticket.category]}</span>
+                        <span className="text-xs text-faint">{CATEGORY_LABELS[ticket.category]}</span>
                         {ticket.orderName && (
                           <>
-                            <span className="text-neutral-700">·</span>
-                            <span className="text-xs text-neutral-600 flex items-center gap-1">
+                            <span className="text-faint">·</span>
+                            <span className="text-xs text-faint flex items-center gap-1">
                               <Package size={10} />
                               {ticket.orderName}
                             </span>
                           </>
                         )}
-                        <span className="text-neutral-700">·</span>
-                        <span className="text-xs text-neutral-600">{formatRelative(ticket.date)}</span>
+                        <span className="text-faint">·</span>
+                        <span className="text-xs text-faint">{formatRelative(ticket.date)}</span>
                       </div>
                     </div>
 
@@ -555,7 +555,7 @@ export default function TicketsPage() {
                       <span className={`hidden sm:inline px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_STYLES[ticket.status]}`}>
                         {STATUS_LABELS[ticket.status]}
                       </span>
-                      <ChevronRight size={14} className="text-neutral-600" />
+                      <ChevronRight size={14} className="text-faint" />
                     </div>
                   </button>
                 )

@@ -55,7 +55,7 @@ export default function ProjetoDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-32">
-        <Loader2 size={24} className="animate-spin text-neutral-600" />
+        <Loader2 size={24} className="animate-spin text-faint" />
       </div>
     )
   }
@@ -67,14 +67,14 @@ export default function ProjetoDetailPage() {
       <div className="mb-8 flex items-center gap-3">
         <Link
           href="/dashboard/projetos"
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-500 hover:text-white transition-colors"
+          className="p-2 rounded-xl bg-elevated hover:bg-elevated text-muted hover:text-foreground transition-colors"
         >
           <ArrowLeft size={16} />
         </Link>
         <div>
-          <h1 className="text-xl font-bold text-white">{order.productName}</h1>
+          <h1 className="text-xl font-bold text-foreground">{order.productName}</h1>
           {order.projectName && (
-            <p className="text-sm text-neutral-500 mt-0.5">{order.projectName}</p>
+            <p className="text-sm text-muted mt-0.5">{order.projectName}</p>
           )}
         </div>
       </div>

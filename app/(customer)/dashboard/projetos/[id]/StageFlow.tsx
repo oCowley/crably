@@ -86,7 +86,7 @@ export default function StageFlow({ order }: { order: DashboardOrder }) {
               ? 'border-brand/30 bg-brand/5'
               : done
                 ? 'border-green-500/20 bg-green-500/5'
-                : 'border-white/5 bg-white/[0.02]'
+                : 'border-border bg-surface'
           }`}>
             {/* Stage header */}
             <div className="flex items-center gap-3 px-5 py-4">
@@ -95,12 +95,12 @@ export default function StageFlow({ order }: { order: DashboardOrder }) {
                   ? 'bg-green-500 text-white'
                   : active
                     ? 'bg-brand text-white'
-                    : 'bg-white/5 text-neutral-600 border border-white/10'
+                    : 'bg-elevated text-faint border border-border-strong'
               }`}>
                 {done ? <CheckCircle2 size={13} /> : locked ? <Circle size={10} /> : i + 1}
               </div>
               <span className={`text-sm font-semibold ${
-                done ? 'text-green-400' : active ? 'text-white' : 'text-neutral-600'
+                done ? 'text-success' : active ? 'text-foreground' : 'text-faint'
               }`}>
                 {item.label}
               </span>
@@ -108,7 +108,7 @@ export default function StageFlow({ order }: { order: DashboardOrder }) {
                 <span className="ml-auto text-xs text-green-500/70 font-medium">Concluído</span>
               )}
               {locked && (
-                <span className="ml-auto text-xs text-neutral-700 font-medium">Aguardando etapas anteriores</span>
+                <span className="ml-auto text-xs text-faint font-medium">Aguardando etapas anteriores</span>
               )}
             </div>
 

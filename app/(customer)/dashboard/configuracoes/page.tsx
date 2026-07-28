@@ -18,7 +18,7 @@ interface FormData {
 
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">
+    <label className="block text-xs font-medium text-muted mb-1.5 uppercase tracking-wide">
       {children}
       {required && <span className="ml-1 text-brand normal-case tracking-normal">*</span>}
     </label>
@@ -26,10 +26,10 @@ function Label({ children, required }: { children: React.ReactNode; required?: b
 }
 
 const inputBase =
-  'w-full h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/50 transition-colors'
+  'w-full h-9 px-3 rounded-lg bg-elevated border border-border-strong text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 transition-colors'
 
 const inputDisabled =
-  'w-full h-9 px-3 rounded-lg bg-white/[0.02] border border-white/5 text-neutral-600 text-sm cursor-not-allowed select-none'
+  'w-full h-9 px-3 rounded-lg bg-surface border border-border text-faint text-sm cursor-not-allowed select-none'
 
 export default function ConfiguracoesPage() {
   const { user, profile, logout, refreshUser } = useAuth()
@@ -135,12 +135,12 @@ export default function ConfiguracoesPage() {
   if (loadingData) {
     return (
       <div>
-        <div className="h-7 w-36 bg-white/5 rounded-lg animate-pulse mb-6" />
+        <div className="h-7 w-36 bg-elevated rounded-lg animate-pulse mb-6" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-          <div className="h-72 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
-          <div className="h-72 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
+          <div className="h-72 bg-surface rounded-2xl border border-border animate-pulse" />
+          <div className="h-72 bg-surface rounded-2xl border border-border animate-pulse" />
         </div>
-        <div className="h-20 bg-[#111111] rounded-2xl border border-white/5 animate-pulse" />
+        <div className="h-20 bg-surface rounded-2xl border border-border animate-pulse" />
       </div>
     )
   }
@@ -148,20 +148,20 @@ export default function ConfiguracoesPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Configurações</h1>
-        <p className="text-neutral-400 mt-1 text-sm">Gerencie seus dados e preferências</p>
+        <h1 className="text-2xl font-bold text-foreground">Configurações</h1>
+        <p className="text-secondary mt-1 text-sm">Gerencie seus dados e preferências</p>
       </div>
 
       {/* Linha 1 — Dados pessoais + Segurança lado a lado */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
 
         {/* Dados pessoais */}
-        <section className="p-5 bg-[#111111] rounded-2xl border border-white/5 flex flex-col">
-          <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">
+        <section className="p-5 bg-surface rounded-2xl border border-border flex flex-col">
+          <h2 className="text-xs font-semibold text-muted uppercase tracking-wide mb-4">
             Dados pessoais
           </h2>
 
-          <div className="flex items-center gap-4 mb-5 pb-5 border-b border-white/5">
+          <div className="flex items-center gap-4 mb-5 pb-5 border-b border-border">
             <input
               ref={photoInputRef}
               type="file"
@@ -195,9 +195,9 @@ export default function ConfiguracoesPage() {
               </div>
             </button>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-white truncate">{profile?.name}</p>
-              <p className="text-xs text-neutral-500 mt-0.5 truncate">{user?.email}</p>
-              <p className="text-xs text-neutral-600 mt-1.5">
+              <p className="text-sm font-medium text-foreground truncate">{profile?.name}</p>
+              <p className="text-xs text-muted mt-0.5 truncate">{user?.email}</p>
+              <p className="text-xs text-faint mt-1.5">
                 {uploadingPhoto ? 'Enviando foto...' : 'Clique no avatar para trocar a foto'}
               </p>
             </div>
@@ -266,43 +266,43 @@ export default function ConfiguracoesPage() {
         </section>
 
         {/* Segurança */}
-        <section className="p-5 bg-[#111111] rounded-2xl border border-white/5 flex flex-col">
-          <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">
+        <section className="p-5 bg-surface rounded-2xl border border-border flex flex-col">
+          <h2 className="text-xs font-semibold text-muted uppercase tracking-wide mb-4">
             Segurança
           </h2>
 
           <div className="flex-1 flex flex-col justify-between gap-6">
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                <p className="text-sm font-medium text-white mb-1">Redefinir senha</p>
-                <p className="text-xs text-neutral-500 leading-relaxed">
+              <div className="p-4 rounded-xl bg-surface border border-border">
+                <p className="text-sm font-medium text-foreground mb-1">Redefinir senha</p>
+                <p className="text-xs text-muted leading-relaxed">
                   Enviaremos um link de redefinição para{' '}
-                  <span className="text-neutral-300">{user?.email}</span>.
+                  <span className="text-secondary">{user?.email}</span>.
                 </p>
                 <button
                   onClick={handlePasswordReset}
                   disabled={passwordSent}
-                  className="mt-3 h-9 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-colors disabled:opacity-60"
+                  className="mt-3 h-9 px-4 rounded-xl bg-elevated hover:bg-elevated border border-border-strong text-foreground text-sm font-semibold transition-colors disabled:opacity-60"
                 >
                   {passwordSent ? '✓ Email enviado' : 'Enviar link'}
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                <p className="text-sm font-medium text-white mb-1">Autenticação</p>
-                <p className="text-xs text-neutral-500 leading-relaxed">
+              <div className="p-4 rounded-xl bg-surface border border-border">
+                <p className="text-sm font-medium text-foreground mb-1">Autenticação</p>
+                <p className="text-xs text-muted leading-relaxed">
                   Login via provedor{' '}
-                  <span className="text-neutral-300 font-medium">
+                  <span className="text-secondary font-medium">
                     {user?.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email/senha'}
                   </span>.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                <p className="text-sm font-medium text-white mb-1">Última atividade</p>
-                <p className="text-xs text-neutral-500">
+              <div className="p-4 rounded-xl bg-surface border border-border">
+                <p className="text-sm font-medium text-foreground mb-1">Última atividade</p>
+                <p className="text-xs text-muted">
                   Conta criada em{' '}
-                  <span className="text-neutral-300">
+                  <span className="text-secondary">
                     {user?.metadata?.creationTime
                       ? new Date(user.metadata.creationTime).toLocaleDateString('pt-BR')
                       : '—'}
@@ -315,13 +315,13 @@ export default function ConfiguracoesPage() {
       </div>
 
       {/* Linha 2 — Sessão esticada full width */}
-      <section className="p-5 bg-[#111111] rounded-2xl border border-red-500/10">
+      <section className="p-5 bg-surface rounded-2xl border border-red-500/10">
         <div className="flex items-center justify-between gap-6 flex-wrap">
           <div>
-            <h2 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1">
+            <h2 className="text-xs font-semibold text-muted uppercase tracking-wide mb-1">
               Sessão
             </h2>
-            <p className="text-xs text-neutral-600 leading-relaxed">
+            <p className="text-xs text-faint leading-relaxed">
               Encerra sua sessão atual e retorna à página inicial.
             </p>
           </div>

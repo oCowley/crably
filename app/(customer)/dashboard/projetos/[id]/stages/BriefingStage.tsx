@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { DashboardOrder } from '@/types'
 import { Plus, Trash2, Loader2, ArrowRight } from 'lucide-react'
 
-const inputCls = 'w-full px-3.5 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 transition-colors'
+const inputCls = 'w-full px-3.5 py-2.5 text-sm bg-elevated border border-border-strong rounded-xl text-foreground placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors'
 
 export default function BriefingStage({ order }: { order: DashboardOrder; active: boolean; done: boolean }) {
   const [notes, setNotes]         = useState('')
@@ -44,20 +44,20 @@ export default function BriefingStage({ order }: { order: DashboardOrder; active
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-neutral-300 leading-relaxed">
+      <p className="text-sm text-secondary leading-relaxed">
         Antes de começar, queremos entender melhor seu projeto.
         O briefing preenchido na compra já foi recebido — use este espaço para adicionar detalhes extras e referências visuais.
       </p>
 
       {order.briefing && (
-        <div className="p-4 rounded-xl bg-white/[0.03] border border-white/8">
-          <p className="text-xs font-medium text-neutral-500 mb-1.5">Briefing enviado na compra</p>
-          <p className="text-sm text-neutral-300 leading-relaxed">{order.briefing}</p>
+        <div className="p-4 rounded-xl bg-surface border border-border">
+          <p className="text-xs font-medium text-muted mb-1.5">Briefing enviado na compra</p>
+          <p className="text-sm text-secondary leading-relaxed">{order.briefing}</p>
         </div>
       )}
 
       <div className="space-y-1.5">
-        <label className="text-xs font-medium text-neutral-400">Observações adicionais (opcional)</label>
+        <label className="text-xs font-medium text-secondary">Observações adicionais (opcional)</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
@@ -69,7 +69,7 @@ export default function BriefingStage({ order }: { order: DashboardOrder; active
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-neutral-400">
+          <label className="text-xs font-medium text-secondary">
             Referências visuais ({refs.length}/5)
           </label>
           {refs.length < 5 && (
@@ -88,7 +88,7 @@ export default function BriefingStage({ order }: { order: DashboardOrder; active
               className={inputCls}
             />
             {refs.length > 1 && (
-              <button onClick={() => removeRef(i)} className="p-2 text-neutral-600 hover:text-red-400 transition-colors">
+              <button onClick={() => removeRef(i)} className="p-2 text-faint hover:text-red-400 transition-colors">
                 <Trash2 size={14} />
               </button>
             )}
@@ -96,7 +96,7 @@ export default function BriefingStage({ order }: { order: DashboardOrder; active
         ))}
       </div>
 
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
 
       <button
         onClick={handleSubmit}

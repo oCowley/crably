@@ -57,18 +57,18 @@ function ModelCard({ title, url }: { title: string; url: string }) {
   const domain = toDomain(url)
 
   return (
-    <div className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/8 bg-[#111] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/70 hover:border-white/15">
+    <div className="group relative flex flex-col rounded-2xl overflow-hidden border border-border bg-surface transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/70 hover:border-border-strong">
 
       {/* ── browser chrome ── */}
-      <div className="shrink-0 flex items-center gap-3 px-3.5 py-2.5 bg-[#191919] border-b border-white/[0.07]">
+      <div className="shrink-0 flex items-center gap-3 px-3.5 py-2.5 bg-elevated border-b border-border">
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
         </div>
-        <div className="flex-1 flex items-center gap-1.5 bg-white/[0.06] rounded-md px-2.5 py-1 min-w-0">
+        <div className="flex-1 flex items-center gap-1.5 bg-elevated rounded-md px-2.5 py-1 min-w-0">
           <span className="w-1.5 h-1.5 rounded-full bg-green-400/70 shrink-0" />
-          <span className="text-[11px] text-neutral-500 truncate font-mono leading-none">{domain}</span>
+          <span className="text-[11px] text-muted truncate font-mono leading-none">{domain}</span>
         </div>
       </div>
 
@@ -90,14 +90,14 @@ function ModelCard({ title, url }: { title: string; url: string }) {
             />
           </div>
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#111]">
-            <Globe size={26} className="text-neutral-700" />
-            <p className="text-xs text-neutral-600 font-mono">{domain}</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface">
+            <Globe size={26} className="text-faint" />
+            <p className="text-xs text-faint font-mono">{domain}</p>
           </div>
         )}
 
         {/* bottom fade */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#111] via-[#111]/60 to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-surface via-surface/60 to-transparent pointer-events-none z-10" />
 
         {/* hover overlay */}
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-all duration-300 opacity-0 group-hover:opacity-100">
@@ -115,16 +115,16 @@ function ModelCard({ title, url }: { title: string; url: string }) {
       </div>
 
       {/* ── footer ── */}
-      <div className="px-4 py-3 flex items-center justify-between gap-2 bg-[#111]">
+      <div className="px-4 py-3 flex items-center justify-between gap-2 bg-surface">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-white truncate">{title || domain}</p>
-          <p className="text-[11px] text-neutral-600 mt-0.5 truncate">{domain}</p>
+          <p className="text-sm font-semibold text-foreground truncate">{title || domain}</p>
+          <p className="text-[11px] text-faint mt-0.5 truncate">{domain}</p>
         </div>
         <a
           href={normalized}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 p-2 rounded-lg text-neutral-600 hover:text-white hover:bg-white/8 transition-colors"
+          className="shrink-0 p-2 rounded-lg text-faint hover:text-foreground hover:bg-elevated transition-colors"
         >
           <ExternalLink size={13} />
         </a>
@@ -152,24 +152,24 @@ function PortfolioModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
-      <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-md" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-5xl bg-[#0b0b0b] border border-white/8 rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
+        className="relative w-full max-w-5xl bg-background border border-border rounded-2xl shadow-2xl overflow-hidden animate-fade-up flex flex-col"
         style={{ maxHeight: '94vh' }}
       >
         {/* header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <div>
             <div className="flex items-center gap-2.5">
               <Link2 size={14} className="text-brand" />
-              <h2 className="text-base font-bold text-white">Portfólio de modelos</h2>
+              <h2 className="text-base font-bold text-foreground">Portfólio de modelos</h2>
             </div>
-            <p className="text-xs text-neutral-500 mt-0.5">{product.name}</p>
+            <p className="text-xs text-muted mt-0.5">{product.name}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
           >
             <X size={15} />
           </button>
@@ -183,14 +183,14 @@ function PortfolioModal({
 
             {/* models grid */}
             <div className="space-y-3">
-              <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-widest">
+              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest">
                 Nossos modelos de projeto — {refs.length} {refs.length === 1 ? 'exemplar' : 'exemplares'}
               </p>
 
               {refs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <Globe size={32} className="text-neutral-700" />
-                  <p className="text-sm text-neutral-600">Nenhum modelo disponível ainda.</p>
+                  <Globe size={32} className="text-faint" />
+                  <p className="text-sm text-faint">Nenhum modelo disponível ainda.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -204,13 +204,13 @@ function PortfolioModal({
         </div>
 
         {/* sticky footer — price + CTA */}
-        <div className="shrink-0 border-t border-white/[0.06] bg-[#0b0b0b] px-6 py-4 flex items-center justify-between gap-6">
+        <div className="shrink-0 border-t border-border bg-background px-6 py-4 flex items-center justify-between gap-6">
           <div>
-            <p className="text-[10px] text-neutral-600 uppercase tracking-widest font-medium">A partir de</p>
+            <p className="text-[10px] text-faint uppercase tracking-widest font-medium">A partir de</p>
             {isFirstPurchase ? (
               <div className="flex items-baseline gap-2 mt-0.5">
                 <span className="text-2xl font-bold text-brand">{fmt(displayPrice)}</span>
-                <span className="text-sm text-neutral-600 line-through">{fmt(product.price)}</span>
+                <span className="text-sm text-faint line-through">{fmt(product.price)}</span>
                 <span className="text-xs font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">−30%</span>
               </div>
             ) : (
@@ -296,7 +296,7 @@ export default function ContratarPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-neutral-500 text-sm">Carregando produtos...</p>
+        <p className="text-muted text-sm">Carregando produtos...</p>
       </div>
     )
   }
@@ -306,8 +306,8 @@ export default function ContratarPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Contratar site</h1>
-        <p className="text-neutral-400 mt-1 text-sm">Escolha o produto ideal e configure seu pedido</p>
+        <h1 className="text-2xl font-bold text-foreground">Contratar site</h1>
+        <p className="text-secondary mt-1 text-sm">Escolha o produto ideal e configure seu pedido</p>
       </div>
 
       {/* first purchase banner */}
@@ -321,10 +321,10 @@ export default function ContratarPage() {
               <Sparkles size={22} className="text-green-400" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-white">
+              <p className="text-base font-bold text-foreground">
                 🎉 Sua primeira compra tem {DISCOUNT_PCT}% de desconto!
               </p>
-              <p className="text-sm text-neutral-400 mt-0.5">
+              <p className="text-sm text-secondary mt-0.5">
                 O cupom{' '}
                 <span className="font-mono font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-md text-xs">
                   PRIMEIRACOMPRA
@@ -333,7 +333,7 @@ export default function ContratarPage() {
               </p>
             </div>
             <div className="shrink-0 text-right hidden sm:block">
-              <p className="text-3xl font-black text-green-400">{DISCOUNT_PCT}%</p>
+              <p className="text-3xl font-black text-success">{DISCOUNT_PCT}%</p>
               <p className="text-xs text-green-500/70 font-medium">OFF</p>
             </div>
           </div>
@@ -342,7 +342,7 @@ export default function ContratarPage() {
 
       {products.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <p className="text-neutral-500 text-sm">Nenhum produto disponível no momento.</p>
+          <p className="text-muted text-sm">Nenhum produto disponível no momento.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -353,10 +353,10 @@ export default function ContratarPage() {
             return (
               <div
                 key={product.id}
-                className="flex flex-col rounded-2xl border bg-[#111111] border-white/5 hover:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 overflow-hidden"
+                className="flex flex-col rounded-2xl border bg-surface border-border hover:border-border-strong transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 overflow-hidden"
               >
                 {/* image */}
-                <div className="aspect-[4/3] relative overflow-hidden shrink-0 bg-[#0d0d0d]">
+                <div className="aspect-[4/3] relative overflow-hidden shrink-0 bg-inset">
                   {product.images?.[0] ? (
                     <>
                       <img
@@ -365,11 +365,11 @@ export default function ContratarPage() {
                         className="w-full h-full object-cover object-top"
                       />
                       {/* fade para o card */}
-                      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111111] to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface to-transparent" />
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon size={28} className="text-neutral-700" />
+                      <ImageIcon size={28} className="text-faint" />
                     </div>
                   )}
 
@@ -386,15 +386,15 @@ export default function ContratarPage() {
                 {/* content */}
                 <div className="flex flex-col flex-1 p-5 gap-4">
                   <div className="flex-1">
-                    <h3 className="text-base font-bold text-white">{product.name}</h3>
-                    <p className="text-sm text-neutral-500 mt-1 line-clamp-2 leading-relaxed">{product.description}</p>
+                    <h3 className="text-base font-bold text-foreground">{product.name}</h3>
+                    <p className="text-sm text-muted mt-1 line-clamp-2 leading-relaxed">{product.description}</p>
                   </div>
 
                   {/* price */}
                   {isFirstPurchase ? (
                     <div className="flex items-baseline gap-2 flex-wrap">
                       <span className="text-2xl font-bold text-brand">{fmt(priceAfter)}</span>
-                      <span className="text-sm text-neutral-600 line-through">{fmt(product.price)}</span>
+                      <span className="text-sm text-faint line-through">{fmt(product.price)}</span>
                       <span className="text-xs font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full">
                         −{DISCOUNT_PCT}%
                       </span>
@@ -404,7 +404,7 @@ export default function ContratarPage() {
                   )}
 
                   {/* actions */}
-                  <div className="flex gap-2 pt-1 border-t border-white/[0.06]">
+                  <div className="flex gap-2 pt-1 border-t border-border">
                     {hasMedia && (
                       <button
                         onClick={() => setGallery(product)}
@@ -454,7 +454,7 @@ export default function ContratarPage() {
       )}
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-[70] px-5 py-3 bg-[#1a1a1a] border border-white/10 rounded-xl text-sm text-white shadow-xl animate-fade-in">
+        <div className="fixed bottom-6 right-6 z-[70] px-5 py-3 bg-elevated border border-border-strong rounded-xl text-sm text-foreground shadow-xl animate-fade-in">
           {toast}
         </div>
       )}

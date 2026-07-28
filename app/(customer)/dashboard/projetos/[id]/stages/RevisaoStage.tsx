@@ -46,8 +46,8 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
         <div className="flex items-start gap-3 p-4 rounded-xl bg-brand/10 border border-brand/20">
           <CheckCircle2 size={16} className="text-brand mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-white">Revisão em andamento</p>
-            <p className="text-xs text-neutral-400 mt-1">
+            <p className="text-sm font-semibold text-foreground">Revisão em andamento</p>
+            <p className="text-xs text-secondary mt-1">
               Nossa equipe está aplicando os ajustes. O prazo foi estendido em 5 dias úteis.
             </p>
           </div>
@@ -58,12 +58,12 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
 
   return (
     <div className="space-y-4">
-      <div className="p-4 rounded-xl bg-white/[0.03] border border-white/8 space-y-2">
+      <div className="p-4 rounded-xl bg-surface border border-border space-y-2">
         <div className="flex items-center gap-2">
           <RefreshCw size={14} className="text-brand" />
-          <p className="text-sm font-semibold text-white">Revisão opcional — R$ 297</p>
+          <p className="text-sm font-semibold text-foreground">Revisão opcional — R$ 297</p>
         </div>
-        <ul className="text-xs text-neutral-400 space-y-1 list-disc list-inside ml-1">
+        <ul className="text-xs text-secondary space-y-1 list-disc list-inside ml-1">
           <li>Meet de alinhamento com o desenvolvedor</li>
           <li>Ajustes no layout, textos ou funcionalidades</li>
           <li>+5 dias úteis adicionados ao prazo de entrega</li>
@@ -89,7 +89,7 @@ export default function RevisaoStage({ order }: { order: DashboardOrder; active:
         <button
           onClick={handleSkip}
           disabled={loading || skipping}
-          className="flex items-center gap-2 h-10 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-sm font-medium transition-colors disabled:opacity-50 border border-white/10"
+          className="flex items-center gap-2 h-10 px-4 rounded-xl bg-elevated hover:bg-elevated text-secondary hover:text-foreground text-sm font-medium transition-colors disabled:opacity-50 border border-border-strong"
         >
           {skipping ? <Loader2 size={14} className="animate-spin" /> : <SkipForward size={14} />}
           {skipping ? 'Avançando…' : 'Pular etapa'}

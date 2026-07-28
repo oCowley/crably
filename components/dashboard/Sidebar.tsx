@@ -41,7 +41,7 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
     <>
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="lg:hidden fixed inset-0 z-40 bg-overlay backdrop-blur-sm"
           onClick={onClose}
         />
       )}
@@ -49,13 +49,13 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
       <aside
         className={[
           'fixed inset-y-0 left-0 z-50 w-60 flex flex-col',
-          'bg-[#0d0d0d] border-r border-white/5',
+          'bg-inset border-r border-border',
           'transition-transform duration-300 ease-in-out',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         ].join(' ')}
       >
         {/* Logo */}
-        <div className="h-24 flex items-center gap-2.5 px-5 border-b border-white/5 shrink-0">
+        <div className="h-24 flex items-center gap-2.5 px-5 border-b border-border shrink-0">
           <Image
             src="/images/icone-crably.png"
             alt="Crably"
@@ -63,12 +63,12 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
             height={32}
             className="rounded-xl shrink-0"
           />
-          <span className="font-bold text-white tracking-tight text-lg flex-1">
+          <span className="font-bold text-foreground tracking-tight text-lg flex-1">
             crably
           </span>
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg text-neutral-500 hover:text-white transition-colors"
+            className="lg:hidden p-1.5 rounded-lg text-muted hover:text-foreground transition-colors"
             aria-label="Fechar menu"
           >
             <X size={16} />
@@ -86,8 +86,8 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
                 className={[
                   'flex items-center gap-3 py-3 pr-4 rounded-xl text-sm transition-all duration-200',
                   active
-                    ? 'bg-white/5 text-white border-l-2 border-brand pl-[14px]'
-                    : 'text-neutral-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent pl-[14px]',
+                    ? 'bg-elevated text-foreground border-l-2 border-brand pl-[14px]'
+                    : 'text-secondary hover:text-foreground hover:bg-elevated border-l-2 border-transparent pl-[14px]',
                 ].join(' ')}
               >
                 <Icon size={18} className="shrink-0" />
@@ -98,8 +98,8 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
         </nav>
 
         {/* Footer */}
-        <div className="py-4 px-3 border-t border-white/5 shrink-0 space-y-1">
-          <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/[0.03] border border-white/5">
+        <div className="py-4 px-3 border-t border-border shrink-0 space-y-1">
+          <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-surface border border-border">
             <div className="w-8 h-8 rounded-full bg-brand/20 border border-brand/30 flex items-center justify-center shrink-0 overflow-hidden">
               {user?.photoURL ? (
                 <Image
@@ -114,15 +114,15 @@ export default function DashboardSidebar({ mobileOpen, onClose }: Props) {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-medium text-foreground truncate">
                 {profile?.name ?? '—'}
               </p>
-              <p className="text-xs text-neutral-500 truncate">{user?.email}</p>
+              <p className="text-xs text-muted truncate">{user?.email}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-neutral-500 hover:text-red-400 hover:bg-red-400/5 transition-all duration-200"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-muted hover:text-red-400 hover:bg-red-400/5 transition-all duration-200"
           >
             <LogOut size={18} className="shrink-0" />
             Sair da conta

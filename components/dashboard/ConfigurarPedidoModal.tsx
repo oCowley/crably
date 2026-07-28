@@ -106,7 +106,7 @@ function fmt(value: number) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold text-neutral-600 uppercase tracking-widest mb-3">
+    <p className="text-[10px] font-semibold text-faint uppercase tracking-widest mb-3">
       {children}
     </p>
   )
@@ -192,21 +192,21 @@ export default function ConfigurarPedidoModal({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-3xl bg-[#0e0e0e] border border-white/8 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="relative w-full max-w-3xl bg-inset border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
         style={{ maxHeight: '92vh' }}
       >
         {/* header */}
-        <div className="flex items-start justify-between px-6 py-4 border-b border-white/[0.06] shrink-0">
+        <div className="flex items-start justify-between px-6 py-4 border-b border-border shrink-0">
           <div>
-            <h2 className="text-base font-bold text-white">Configurar pedido</h2>
-            <p className="text-xs text-neutral-500 mt-0.5">{productName}</p>
+            <h2 className="text-base font-bold text-foreground">Configurar pedido</h2>
+            <p className="text-xs text-muted mt-0.5">{productName}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-elevated transition-colors"
           >
             <X size={16} />
           </button>
@@ -216,11 +216,11 @@ export default function ConfigurarPedidoModal({
         <form id="pedido-form" onSubmit={handleSubmit} className="flex flex-1 overflow-hidden min-h-0">
 
           {/* ── left: project info ── */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-5 border-r border-white/[0.06]">
+          <div className="flex-1 overflow-y-auto p-6 space-y-5 border-r border-border">
             <SectionLabel>Sobre o projeto</SectionLabel>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 Nome do projeto <span className="text-brand">*</span>
               </label>
               <input
@@ -228,12 +228,12 @@ export default function ConfigurarPedidoModal({
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 placeholder="Ex: Site da minha empresa"
-                className="w-full h-10 px-3.5 rounded-xl bg-white/5 border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors"
+                className="w-full h-10 px-3.5 rounded-xl bg-elevated border border-border text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 Briefing <span className="text-brand">*</span>
               </label>
               <textarea
@@ -242,23 +242,23 @@ export default function ConfigurarPedidoModal({
                 onChange={(e) => setBriefing(e.target.value)}
                 placeholder="Descreva o projeto, público-alvo, objetivos, estilo visual, cores preferidas..."
                 rows={6}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors resize-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-elevated border border-border text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors resize-none"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-neutral-400">
+              <label className="text-xs font-medium text-secondary">
                 URL de referência{' '}
-                <span className="text-neutral-600 font-normal">(opcional)</span>
+                <span className="text-faint font-normal">(opcional)</span>
               </label>
               <input
                 type="url"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
                 placeholder="https://exemplo.com"
-                className="w-full h-10 px-3.5 rounded-xl bg-white/5 border border-white/8 text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors"
+                className="w-full h-10 px-3.5 rounded-xl bg-elevated border border-border text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors"
               />
-              <p className="text-[11px] text-neutral-600">Algum site que você gosta e serve de inspiração.</p>
+              <p className="text-[11px] text-faint">Algum site que você gosta e serve de inspiração.</p>
             </div>
           </div>
 
@@ -280,11 +280,11 @@ export default function ConfigurarPedidoModal({
                     className={[
                       'flex flex-col gap-1 p-3 rounded-xl border text-left transition-all',
                       prazo === opt.value
-                        ? 'bg-brand/10 border-brand/40 text-white'
-                        : 'bg-white/[0.03] border-white/8 text-neutral-400 hover:border-white/15',
+                        ? 'bg-brand/10 border-brand/40 text-foreground'
+                        : 'bg-surface border-border text-secondary hover:border-border-strong',
                     ].join(' ')}
                   >
-                    <opt.icon size={14} className={prazo === opt.value ? 'text-brand' : 'text-neutral-600'} />
+                    <opt.icon size={14} className={prazo === opt.value ? 'text-brand' : 'text-faint'} />
                     <span className="text-sm font-bold leading-none mt-0.5">{opt.title}</span>
                     <span className="text-[11px] opacity-60">{opt.sub}</span>
                     {opt.extra > 0 && (
@@ -299,15 +299,15 @@ export default function ConfigurarPedidoModal({
             <div>
               <SectionLabel>Reuniões de alinhamento</SectionLabel>
               <div className="space-y-2">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border">
                   <div className="w-5 h-5 rounded-md bg-green-500/20 border border-green-500/30 flex items-center justify-center shrink-0">
                     <Check size={11} className="text-green-400" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-white">1ª reunião</p>
-                    <p className="text-[11px] text-neutral-600">Cortesia — inclusa no pedido</p>
+                    <p className="text-xs font-medium text-foreground">1ª reunião</p>
+                    <p className="text-[11px] text-faint">Cortesia — inclusa no pedido</p>
                   </div>
-                  <span className="text-xs font-semibold text-green-400 shrink-0">Grátis</span>
+                  <span className="text-xs font-semibold text-success shrink-0">Grátis</span>
                 </div>
 
                 <button
@@ -317,25 +317,25 @@ export default function ConfigurarPedidoModal({
                     'w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all',
                     extraMeeting
                       ? 'bg-brand/10 border-brand/30'
-                      : 'bg-white/[0.02] border-white/[0.06] hover:border-white/10',
+                      : 'bg-surface border-border hover:border-border-strong',
                   ].join(' ')}
                 >
                   <div className={[
                     'w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors',
-                    extraMeeting ? 'bg-brand border-brand' : 'bg-white/5 border-white/15',
+                    extraMeeting ? 'bg-brand border-brand' : 'bg-elevated border-border-strong',
                   ].join(' ')}>
                     {extraMeeting && <Check size={11} className="text-white" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-white flex items-center gap-1.5">
+                    <p className="text-xs font-medium text-foreground flex items-center gap-1.5">
                       <Video size={11} className="shrink-0" />
                       Reunião adicional
                     </p>
-                    <p className="text-[11px] text-neutral-600 mt-0.5">
+                    <p className="text-[11px] text-faint mt-0.5">
                       Sessão extra de alinhamento por videoconferência
                     </p>
                   </div>
-                  <span className={['text-xs font-semibold shrink-0', extraMeeting ? 'text-brand' : 'text-neutral-500'].join(' ')}>
+                  <span className={['text-xs font-semibold shrink-0', extraMeeting ? 'text-brand' : 'text-muted'].join(' ')}>
                     +R$ 150
                   </span>
                 </button>
@@ -357,23 +357,23 @@ export default function ConfigurarPedidoModal({
                         'w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all',
                         active
                           ? 'bg-brand/10 border-brand/30'
-                          : 'bg-white/[0.02] border-white/[0.06] hover:border-white/10',
+                          : 'bg-surface border-border hover:border-border-strong',
                       ].join(' ')}
                     >
                       <div className={[
                         'w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-colors',
-                        active ? 'bg-brand border-brand' : 'bg-white/5 border-white/15',
+                        active ? 'bg-brand border-brand' : 'bg-elevated border-border-strong',
                       ].join(' ')}>
                         {active && <Check size={11} className="text-white" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <addon.icon size={11} className={active ? 'text-brand' : 'text-neutral-600'} />
-                          <span className="text-xs font-semibold text-white">{addon.label}</span>
+                          <addon.icon size={11} className={active ? 'text-brand' : 'text-faint'} />
+                          <span className="text-xs font-semibold text-foreground">{addon.label}</span>
                         </div>
-                        <p className="text-[11px] text-neutral-600 mt-0.5 leading-relaxed">{addon.description}</p>
+                        <p className="text-[11px] text-faint mt-0.5 leading-relaxed">{addon.description}</p>
                       </div>
-                      <span className={['text-xs font-semibold shrink-0 mt-0.5', active ? 'text-brand' : 'text-neutral-500'].join(' ')}>
+                      <span className={['text-xs font-semibold shrink-0 mt-0.5', active ? 'text-brand' : 'text-muted'].join(' ')}>
                         +{fmt(addon.price)}
                       </span>
                     </button>
@@ -399,7 +399,7 @@ export default function ConfigurarPedidoModal({
                       <p className={['text-xs font-bold font-mono', appliedCoupon.auto ? 'text-green-400' : 'text-brand'].join(' ')}>
                         {appliedCoupon.code}
                       </p>
-                      <p className="text-[10px] text-neutral-500">
+                      <p className="text-[10px] text-muted">
                         {appliedCoupon.auto ? 'Aplicado automaticamente' : 'Aplicado'} — {appliedCoupon.pct}% off
                       </p>
                     </div>
@@ -407,7 +407,7 @@ export default function ConfigurarPedidoModal({
                   <button
                     type="button"
                     onClick={removeCoupon}
-                    className="p-1 text-neutral-600 hover:text-neutral-300 transition-colors shrink-0"
+                    className="p-1 text-faint hover:text-secondary transition-colors shrink-0"
                   >
                     <X size={13} />
                   </button>
@@ -420,60 +420,60 @@ export default function ConfigurarPedidoModal({
                       onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError('') }}
                       onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyCouponCode())}
                       placeholder="CÓDIGO DO CUPOM"
-                      className="flex-1 h-9 px-3 rounded-xl bg-white/5 border border-white/8 text-white text-xs font-mono placeholder-neutral-700 focus:outline-none focus:border-brand/50 transition-colors uppercase"
+                      className="flex-1 h-9 px-3 rounded-xl bg-elevated border border-border text-foreground text-xs font-mono placeholder:text-faint focus:outline-none focus:border-brand/50 transition-colors uppercase"
                     />
                     <button
                       type="button"
                       onClick={applyCouponCode}
                       disabled={!couponInput.trim()}
-                      className="h-9 px-3.5 rounded-xl bg-white/5 hover:bg-white/10 disabled:opacity-40 text-xs text-neutral-300 font-semibold transition-colors shrink-0"
+                      className="h-9 px-3.5 rounded-xl bg-elevated hover:bg-elevated disabled:opacity-40 text-xs text-secondary font-semibold transition-colors shrink-0"
                     >
                       Aplicar
                     </button>
                   </div>
-                  {couponError && <p className="text-[11px] text-red-400">{couponError}</p>}
+                  {couponError && <p className="text-[11px] text-danger">{couponError}</p>}
                 </div>
               )}
             </div>
 
             {/* price summary */}
-            <div className="mt-auto pt-4 border-t border-white/[0.06] space-y-2">
+            <div className="mt-auto pt-4 border-t border-border space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-neutral-500">{productName}</span>
-                <span className="text-neutral-300">{fmt(basePrice)}</span>
+                <span className="text-muted">{productName}</span>
+                <span className="text-secondary">{fmt(basePrice)}</span>
               </div>
               {expressAdd > 0 && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-500">Express (7 dias)</span>
-                  <span className="text-neutral-300">+{fmt(expressAdd)}</span>
+                  <span className="text-muted">Express (7 dias)</span>
+                  <span className="text-secondary">+{fmt(expressAdd)}</span>
                 </div>
               )}
               {meetingAdd > 0 && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-500">Reunião adicional</span>
-                  <span className="text-neutral-300">+{fmt(meetingAdd)}</span>
+                  <span className="text-muted">Reunião adicional</span>
+                  <span className="text-secondary">+{fmt(meetingAdd)}</span>
                 </div>
               )}
               {ADDONS.filter((a) => selectedAddons.has(a.id)).map((a) => (
                 <div key={a.id} className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-500 truncate mr-2">{a.label}</span>
-                  <span className="text-neutral-300 shrink-0">+{fmt(a.price)}</span>
+                  <span className="text-muted truncate mr-2">{a.label}</span>
+                  <span className="text-secondary shrink-0">+{fmt(a.price)}</span>
                 </div>
               ))}
               {discount > 0 && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-green-400 flex items-center gap-1">
+                  <span className="text-success flex items-center gap-1">
                     <Tag size={10} />
                     Cupom {appliedCoupon?.code} (−{appliedCoupon?.pct}%)
                   </span>
-                  <span className="text-green-400 font-semibold">−{fmt(discount)}</span>
+                  <span className="text-success font-semibold">−{fmt(discount)}</span>
                 </div>
               )}
-              <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-                <span className="text-sm font-semibold text-white">Total</span>
+              <div className="flex items-center justify-between pt-3 border-t border-border">
+                <span className="text-sm font-semibold text-foreground">Total</span>
                 <div className="text-right">
                   {discount > 0 && (
-                    <p className="text-xs text-neutral-600 line-through">{fmt(subtotal)}</p>
+                    <p className="text-xs text-faint line-through">{fmt(subtotal)}</p>
                   )}
                   <p className="text-2xl font-bold text-brand">{fmt(finalPrice)}</p>
                 </div>
@@ -483,11 +483,11 @@ export default function ConfigurarPedidoModal({
         </form>
 
         {/* footer */}
-        <div className="px-6 py-4 border-t border-white/[0.06] flex items-center justify-end gap-3 shrink-0">
+        <div className="px-6 py-4 border-t border-border flex items-center justify-end gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            className="px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-elevated rounded-xl transition-colors"
           >
             Cancelar
           </button>
