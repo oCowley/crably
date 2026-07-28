@@ -21,6 +21,7 @@ import {
   Briefcase,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 interface SidebarProps {
   collapsed: boolean
@@ -107,6 +108,9 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
         <div className="flex items-center gap-2">
           <Image src="/images/icone-crably.png" alt="Crably" width={24} height={24} className="rounded-md" />
           <span className="font-bold text-white text-sm tracking-tight">crably</span>
+        </div>
+        <div className="ml-auto">
+          <ThemeToggle />
         </div>
       </header>
 
@@ -236,6 +240,10 @@ export default function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
               </div>
             </div>
           )}
+
+          <div className={`hidden lg:flex items-center mt-1 ${collapsed ? 'justify-center' : 'px-3'}`}>
+            <ThemeToggle />
+          </div>
 
           <button
             onClick={handleLogout}

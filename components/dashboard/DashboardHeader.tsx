@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Menu, ShoppingCart } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 interface Props {
   onMenuOpen: () => void
@@ -21,7 +22,8 @@ export default function DashboardHeader({ onMenuOpen }: Props) {
         <Menu size={20} />
       </button>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle />
         <Link
           href="/dashboard/carrinho"
           className="relative inline-flex items-center justify-center w-9 h-9 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all duration-200"
