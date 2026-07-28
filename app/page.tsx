@@ -27,6 +27,10 @@ import SitesGrid from '@/components/sections/SitesGrid'
 import DashboardMockup from '@/components/ui/DashboardMockup'
 import FAQ from '@/components/sections/FAQ'
 
+// Trava explícita: a landing DEVE ser prerenderizada estática (TTFB via CDN).
+// Se alguém introduzir uma API dinâmica aqui, o build falha em vez de degradar.
+export const dynamic = 'force-static'
+
 /* ──────────────────────────────────────────────────────────────
    Sub-components (server)
 ────────────────────────────────────────────────────────────── */
@@ -159,14 +163,14 @@ export default function HomePage() {
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] pointer-events-none animate-glow"
             style={{
-              background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.08) 0%, rgba(249,115,22,0.03) 40%, transparent 70%)',
+              background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.08) 0%, rgba(var(--brand-rgb),0.03) 40%, transparent 70%)',
               filter: 'blur(24px)',
             }}
           />
           <div
             className="absolute -left-32 top-1/3 w-[500px] h-[500px] rounded-full pointer-events-none animate-blob"
             style={{
-              background: 'radial-gradient(circle, rgba(249,115,22,0.04) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(var(--brand-rgb),0.04) 0%, transparent 70%)',
               filter: 'blur(40px)',
             }}
           />
@@ -228,7 +232,7 @@ export default function HomePage() {
                 <Link href="/products">
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto glow-brand-sm text-base px-8 hover:scale-105 transition-transform"
+                    className="w-full sm:w-auto cta-glow text-base px-8 hover:scale-105"
                   >
                     Ver modelos de site
                   </Button>
@@ -288,7 +292,7 @@ export default function HomePage() {
                 <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] relative overflow-hidden group">
                   <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(249,115,22,0.06) 0%, transparent 60%)' }}
+                    style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(var(--brand-rgb),0.06) 0%, transparent 60%)' }}
                   />
                   <div className="relative z-10">
                     <Zap size={36} className="mb-4 text-brand" />
@@ -315,7 +319,7 @@ export default function HomePage() {
                 <div className="bento-card p-6 lg:p-8 h-full min-h-[200px] group relative overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.05) 0%, transparent 70%)' }}
+                    style={{ background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.05) 0%, transparent 70%)' }}
                   />
                   <DollarSign size={36} className="mb-4 text-brand" />
                   <h3 className="text-xl font-bold text-foreground mb-2">Preço fixo, sem orçamento escondido</h3>
@@ -368,7 +372,7 @@ export default function HomePage() {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.06) 50%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(var(--brand-rgb),0.06) 50%, transparent 100%)',
             }}
           />
           <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center relative z-10">
@@ -479,7 +483,7 @@ export default function HomePage() {
               <div className="bento-card p-8 sm:p-12 text-center relative overflow-hidden border-brand/20">
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.06) 0%, transparent 60%)' }}
+                  style={{ background: 'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.06) 0%, transparent 60%)' }}
                 />
                 <div className="relative z-10">
                   <ShieldCheck size={48} className="mx-auto mb-6 text-brand" />
@@ -727,7 +731,7 @@ export default function HomePage() {
             <ScrollReveal>
               <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
                 <Image
-                  src="/images/owners.png"
+                  src="/images/owners.webp"
                   alt="Equipe Crably"
                   width={720}
                   height={540}
@@ -803,7 +807,7 @@ export default function HomePage() {
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: 'radial-gradient(ellipse at 50% 120%, rgba(249,115,22,0.1) 0%, transparent 55%)',
+                    background: 'radial-gradient(ellipse at 50% 120%, rgba(var(--brand-rgb),0.1) 0%, transparent 55%)',
                   }}
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />

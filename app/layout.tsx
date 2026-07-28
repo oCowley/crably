@@ -16,6 +16,7 @@ const firaCode = Fira_Code({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://crably.com.br'),
   title: {
     default: 'Crably — Sites premium prontos para lançar',
     template: '%s | Crably',

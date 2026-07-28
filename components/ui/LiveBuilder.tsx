@@ -8,7 +8,7 @@ type CodeLine = { tokens: Token[]; empty?: boolean; delayAfter: number }
 
 // Syntax colors
 const K = '#c792ea'  // keywords
-const T = '#F97316'  // jsx tags
+const T = 'var(--brand)'  // jsx tags
 const A = '#80cbc4'  // attributes
 const S = '#c3e88d'  // strings
 const C = '#82aaff'  // component names
@@ -135,7 +135,7 @@ export default function LiveBuilder() {
         className="w-full max-w-[540px] rounded-2xl overflow-hidden border border-white/[0.08]"
         style={{
           background: '#0d0d0d',
-          boxShadow: '0 0 60px rgba(249,115,22,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
+          boxShadow: '0 0 60px rgba(var(--brand-rgb),0.08), 0 0 0 1px rgba(255,255,255,0.05)',
         }}
       >
         {/* ── Top bar ── */}
@@ -201,7 +201,7 @@ export default function LiveBuilder() {
                   {renderPartialTokens(LINES[lineIdx].tokens, charIdx).map((tok, ti) => (
                     <span key={ti} style={{ color: tok.color }}>{tok.text}</span>
                   ))}
-                  <span className="animate-pulse" style={{ color: '#F97316' }}>▋</span>
+                  <span className="animate-pulse" style={{ color: 'var(--brand)' }}>▋</span>
                 </span>
               </div>
             )}
@@ -210,7 +210,7 @@ export default function LiveBuilder() {
             {done && (
               <div className="flex items-start" style={{ lineHeight: '1.85' }}>
                 <span style={{ ...FIRA, fontSize: '11.5px', minWidth: '20px', marginRight: '14px' }} />
-                <span className="animate-pulse" style={{ ...FIRA, fontSize: '11.5px', color: '#F97316' }}>▋</span>
+                <span className="animate-pulse" style={{ ...FIRA, fontSize: '11.5px', color: 'var(--brand)' }}>▋</span>
               </div>
             )}
           </div>
@@ -269,7 +269,7 @@ export default function LiveBuilder() {
                 </div>
                 <button
                   style={{
-                    background: '#F97316',
+                    background: 'var(--brand)',
                     color: '#fff',
                     fontSize: '9px',
                     padding: '4px 8px',
@@ -298,8 +298,8 @@ export default function LiveBuilder() {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    background: 'rgba(249,115,22,0.08)',
-                    border: '1px solid rgba(249,115,22,0.19)',
+                    background: 'rgba(var(--brand-rgb),0.08)',
+                    border: '1px solid rgba(var(--brand-rgb),0.19)',
                     borderRadius: '999px',
                     padding: '3px 10px',
                     marginBottom: '10px',
@@ -308,7 +308,7 @@ export default function LiveBuilder() {
                     transition: 'opacity 0.4s ease, transform 0.4s ease',
                   }}
                 >
-                  <span style={{ ...FIRA, fontSize: '8px', color: '#F97316' }}>
+                  <span style={{ ...FIRA, fontSize: '8px', color: 'var(--brand)' }}>
                     ● Desenvolvimento web · 14 dias
                   </span>
                 </div>
@@ -332,7 +332,7 @@ export default function LiveBuilder() {
                     }}
                   >
                     Seu site no ar em até{' '}
-                    <span style={{ color: '#F97316' }}>2 semanas.</span>
+                    <span style={{ color: 'var(--brand)' }}>2 semanas.</span>
                   </span>
                 </div>
 
@@ -363,14 +363,14 @@ export default function LiveBuilder() {
                 >
                   <button
                     style={{
-                      background: '#F97316',
+                      background: 'var(--brand)',
                       color: '#fff',
                       fontSize: '8px',
                       padding: '5px 10px',
                       borderRadius: '6px',
                       fontWeight: 600,
                       border: 'none',
-                      boxShadow: '0 0 12px rgba(249,115,22,0.3)',
+                      boxShadow: '0 0 12px rgba(var(--brand-rgb),0.3)',
                       cursor: 'default',
                     }}
                   >
@@ -431,7 +431,7 @@ export default function LiveBuilder() {
           <div className="flex items-center gap-1.5">
             <span
               className="w-1.5 h-1.5 rounded-full shrink-0 animate-pulse"
-              style={{ background: done ? '#4ade80' : '#F97316' }}
+              style={{ background: done ? '#4ade80' : 'var(--brand)' }}
             />
             <span
               style={{

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { X, Check, MessageCircle, Flame, Zap, TrendingUp, Award, Star, Sparkles, Target, Users, BarChart3, ShoppingCart, Globe, Brush, Layout, Rocket, Eye, FileText, Building2, BookOpen, DollarSign } from 'lucide-react'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
@@ -253,10 +254,12 @@ export default function SitesGrid() {
                 {/* Preview image */}
                 <div className="aspect-[16/10] relative overflow-hidden bg-inset rounded-t-2xl">
                   {product.images?.[0] ? (
-                    <img
+                    <Image
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-full h-full object-cover object-top transition-[object-position] duration-[3s] ease-in-out sm:group-hover:object-bottom"
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover object-top transition-[object-position] duration-[3s] ease-in-out sm:group-hover:object-bottom"
                     />
                   ) : (
                     <div className="absolute inset-0 p-5 flex flex-col justify-between opacity-30 group-hover:opacity-50 transition-opacity" style={{ background: 'linear-gradient(135deg, var(--inset) 0%, var(--elevated) 100%)' }}>
@@ -325,7 +328,7 @@ export default function SitesGrid() {
                   {/* Pricing */}
                   <p className="text-[11px] text-muted mb-0.5">A partir de</p>
                   <div className="flex items-center gap-2.5 mb-1">
-                    <span className="text-2xl font-bold text-[#F97316]">
+                    <span className="text-2xl font-bold text-brand">
                       {fmt(discountedPrice(product.price))}
                     </span>
                     <span className="price-slash text-sm text-neutral-600 font-medium">
@@ -381,10 +384,13 @@ export default function SitesGrid() {
             </button>
 
             {previewProduct.images?.[0] && (
-              <img
+              <Image
                 src={previewProduct.images[0]}
                 alt={previewProduct.name}
-                className="w-full rounded-t-2xl"
+                width={1280}
+                height={800}
+                sizes="(min-width: 896px) 896px, 100vw"
+                className="w-full h-auto rounded-t-2xl"
               />
             )}
 

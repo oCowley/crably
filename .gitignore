@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# playwright mcp artifacts
+.playwright-mcp/
+
+# raw design assets (fonte do dark-note.webp, 5MB)
+/hero-dark.png
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

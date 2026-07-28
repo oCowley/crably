@@ -342,7 +342,7 @@ export default function CarrinhoPage() {
               className={[
                 'w-full h-11 mt-5 rounded-xl text-white text-sm font-semibold transition-all duration-200',
                 buyerDataComplete
-                  ? 'bg-brand hover:bg-brand-hover shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_28px_rgba(249,115,22,0.45)]'
+                  ? 'bg-brand hover:bg-brand-hover shadow-[0_0_20px_rgba(var(--brand-rgb),0.3)] hover:shadow-[0_0_28px_rgba(var(--brand-rgb),0.45)]'
                   : 'bg-neutral-800 cursor-not-allowed text-neutral-500',
                 loading ? 'opacity-60 cursor-not-allowed' : '',
               ].join(' ')}

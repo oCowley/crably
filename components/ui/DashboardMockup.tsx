@@ -13,7 +13,7 @@ export default function DashboardMockup() {
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[560px] h-[560px] pointer-events-none animate-glow"
         style={{
-          background: 'radial-gradient(circle, rgba(249,115,22,0.16) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(var(--brand-rgb),0.16) 0%, transparent 65%)',
           filter: 'blur(34px)',
         }}
       />
@@ -22,22 +22,23 @@ export default function DashboardMockup() {
         className="relative animate-float w-full max-w-[600px]"
         style={{ animationDuration: '10s', filter: 'drop-shadow(0 24px 50px rgba(0,0,0,0.30))' }}
       >
-        {/* Dark mode */}
+        {/* Dark mode (tema padrão). Ambos ficam com loading lazy (default):
+            só a variante visível baixa; fetchPriority prioriza o LCP. */}
         <Image
-          src="/images/dark-note.png"
+          src="/images/dark-note.webp"
           alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
-          width={1448}
-          height={1086}
-          priority
+          width={1200}
+          height={900}
+          fetchPriority="high"
           sizes="(min-width: 1024px) 600px, 100vw"
           className="hidden dark:block w-full h-auto"
         />
         {/* Light mode */}
         <Image
-          src="/images/light-note.png"
+          src="/images/light-note.webp"
           alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
-          width={1448}
-          height={1086}
+          width={1200}
+          height={900}
           sizes="(min-width: 1024px) 600px, 100vw"
           className="block dark:hidden w-full h-auto"
         />

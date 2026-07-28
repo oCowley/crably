@@ -91,8 +91,8 @@ function AreaChart({ data }: { data: { month: string; orders: number }[] }) {
     <svg viewBox={`0 0 ${W} ${H + 22}`} className="w-full" aria-label="Pedidos por mês">
       <defs>
         <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#F97316" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#F97316" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FF570E" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#FF570E" stopOpacity="0" />
         </linearGradient>
       </defs>
 
@@ -114,7 +114,7 @@ function AreaChart({ data }: { data: { month: string; orders: number }[] }) {
       <path
         d={linePath}
         fill="none"
-        stroke="#F97316"
+        stroke="#FF570E"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -123,12 +123,12 @@ function AreaChart({ data }: { data: { month: string; orders: number }[] }) {
       {/* Points + labels */}
       {pts.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r="3.5" fill="#0d0d0d" stroke="#F97316" strokeWidth="1.8" />
+          <circle cx={p.x} cy={p.y} r="3.5" fill="#0d0d0d" stroke="#FF570E" strokeWidth="1.8" />
           <text x={p.x} y={H + 16} textAnchor="middle" fill="#525252" fontSize={9} fontFamily="system-ui">
             {p.month}
           </text>
           {p.val > 0 && (
-            <text x={p.x} y={p.y - 8} textAnchor="middle" fill="#F97316" fontSize={9} fontFamily="system-ui" fontWeight="600">
+            <text x={p.x} y={p.y - 8} textAnchor="middle" fill="#FF570E" fontSize={9} fontFamily="system-ui" fontWeight="600">
               {p.val}
             </text>
           )}

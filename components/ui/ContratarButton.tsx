@@ -106,7 +106,7 @@ export default function ContratarButton({ productName }: { productName: string }
               className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
               style={{
                 background:
-                  'radial-gradient(ellipse at center, rgba(249,115,22,0.08) 0%, transparent 70%)',
+                  'radial-gradient(ellipse at center, rgba(var(--brand-rgb),0.08) 0%, transparent 70%)',
                 filter: 'blur(20px)',
               }}
             />

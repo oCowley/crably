@@ -188,7 +188,7 @@ function StatusTimeline({ stage }: { stage: ProjectStage }) {
             {i < STATUS_ORDER.length - 1 && (
               <div className="flex-1 h-px mx-1 mb-4" style={{
                 background: done
-                  ? 'linear-gradient(90deg, #F97316, #F97316)'
+                  ? 'linear-gradient(90deg, var(--brand), var(--brand))'
                   : 'rgba(255,255,255,0.06)',
               }} />
             )}
@@ -404,7 +404,7 @@ export default function ProjetosPage() {
                       width: `${progress}%`,
                       background: isDelivered
                         ? 'linear-gradient(90deg, #22c55e, #4ade80)'
-                        : 'linear-gradient(90deg, #F97316, #fb923c)',
+                        : 'linear-gradient(90deg, var(--brand), var(--brand-light))',
                     }}
                   />
                 </div>

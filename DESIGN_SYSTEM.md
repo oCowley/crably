@@ -19,10 +19,14 @@ The experience should feel polished, fast, and memorable.
 
 ## Color Palette
 
-Primary:
+Primary (aligned to the crab logo — `public/images/icone-crably.png`):
 
-* Orange: #F97316
-* Orange Hover: #EA580C
+* Orange: #FF570E — CSS var `--brand` / class `bg-brand`, `text-brand`
+* Orange Hover: #E84B05 — `--brand-hover`
+* Orange Light: #FF7A3D — `--brand-light` (gradients/accents)
+* RGB base for alphas: `--brand-rgb: 255, 87, 14`
+
+Rule: NEVER hardcode brand orange. Solid color → `var(--brand)` or Tailwind `brand` classes. Transparency → `rgba(var(--brand-rgb), α)` (works in CSS, inline styles, and Tailwind arbitrary values). The only exception is SVG presentation attributes (stopColor/stroke/fill as JSX props), which don't support var() — use #FF570E directly there.
 
 Neutrals:
 
