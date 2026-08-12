@@ -10,8 +10,8 @@ const kb = (p) => Math.round(statSync(p).size / 1024) + ' KB'
 
 // Foto da equipe: renderizada a ~720px (1440px @2x)
 {
-  const src = 'public/images/owners.png'
-  const out = 'public/images/owners.webp'
+  const src = 'public/images/crably.png'
+  const out = 'public/images/crably.webp'
   await sharp(src)
     .resize({ width: 1440, withoutEnlargement: true })
     .webp({ quality: 78 })

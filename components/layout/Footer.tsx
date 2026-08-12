@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail, Phone } from 'lucide-react'
-import { WHATSAPP_URL } from '@/lib/constants'
+import { WHATSAPP_DISPLAY, WHATSAPP_URL } from '@/lib/constants'
 
 export default function Footer() {
   return (
@@ -78,7 +78,7 @@ export default function Footer() {
                 <Mail size={11} className="shrink-0" />contato@crably.com.br
               </a>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-faint hover:text-secondary transition-colors">
-                <Phone size={11} className="shrink-0" />WhatsApp
+                <Phone size={11} className="shrink-0" />{WHATSAPP_DISPLAY}
               </a>
             </div>
 

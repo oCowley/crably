@@ -16,14 +16,17 @@ interface Props {
 function MockupImages({ sizes, priority }: { sizes: string; priority?: boolean }) {
   return (
     <>
-      {/* Dark mode (tema padrão). Ambos ficam com loading lazy (default):
-          só a variante visível baixa; fetchPriority prioriza o LCP. */}
+      {/* Dark mode (tema padrão): eager + fetchPriority high porque é o LCP
+          na primeira visita. A variante light continua lazy — quem usa light
+          baixa a dark à toa (custo aceito), mas o LCP do tema padrão não
+          espera o lazy loader. */}
       <Image
         src="/images/dashboard-dark.png"
         alt="Dashboard de acompanhamento de vendas e pedidos da Crably"
         width={1241}
         height={820}
         quality={80}
+        loading={priority ? 'eager' : undefined}
         fetchPriority={priority ? 'high' : undefined}
         sizes={sizes}
         className="hidden dark:block w-full h-auto"

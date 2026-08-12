@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Plus, MessageCircle } from 'lucide-react'
+import Image from 'next/image'
+import { Plus } from 'lucide-react'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import Button from '@/components/ui/Button'
 import { WHATSAPP_URL } from '@/lib/constants'
@@ -75,8 +76,8 @@ export default function FAQ() {
           </p>
 
           <div className="bento-card card-spotlight p-6">
-            <div className="w-11 h-11 rounded-xl bg-brand/10 border border-brand/20 shadow-glow-xs flex items-center justify-center mb-4">
-              <MessageCircle size={20} className="text-brand" />
+            <div className="w-11 h-11 rounded-xl bg-elevated border border-border shadow-glow-xs flex items-center justify-center mb-4">
+              <Image src="/images/whatsapp.png" alt="" width={22} height={22} />
             </div>
             <h3 className="font-semibold text-foreground mb-1">Ainda com dúvida?</h3>
             <p className="text-sm text-muted leading-relaxed mb-5">

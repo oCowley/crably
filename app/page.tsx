@@ -16,9 +16,8 @@ import {
   CreditCard as CreditCardIcon,
   Monitor,
   Upload,
-  MessageCircle,
-  ChevronDown,
   ArrowRight,
+  Sparkles,
 } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -211,19 +210,24 @@ export default function HomePage() {
           {/* Noise */}
           <div className="absolute inset-0 pointer-events-none noise-overlay" aria-hidden="true" />
 
-          <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-16 lg:pb-0 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 items-center lg:min-h-screen">
+          <div className="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-16 lg:pb-24 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 items-center lg:min-h-screen">
 
             {/* LEFT: Copy */}
             <div className="z-10">
 
-              {/* Launch badge — pill técnico */}
+              {/* Launch badge — tag segmentada estilo version tag */}
               <div
-                className="inline-flex flex-wrap items-center gap-2.5 px-4 py-2 rounded-full border border-brand/25 bg-brand/5 mb-6 animate-fade-up"
+                className="badge-sheen inline-flex items-stretch rounded-full border border-brand/25 bg-surface/60 overflow-hidden shadow-glow-xs mb-6 animate-fade-up"
                 style={{ animationDelay: '100ms' }}
               >
-                <span className="dot-live shrink-0" />
-                <span className="font-mono text-[11px] font-medium text-brand uppercase tracking-[0.14em]">Lançamento</span>
-                <span className="font-mono text-[11px] text-secondary uppercase tracking-[0.14em]">· 30% off na 1ª compra</span>
+                <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand/10 border-r border-brand/20">
+                  <Sparkles size={11} className="text-brand shrink-0" aria-hidden="true" />
+                  <span className="font-mono text-[11px] font-bold text-foreground uppercase tracking-[0.14em]">Lançamento</span>
+                </span>
+                <span className="flex items-baseline gap-1.5 px-3.5 py-1.5">
+                  <span className="font-mono text-[11px] font-bold text-foreground uppercase tracking-[0.14em]">30% off</span>
+                  <span className="font-mono text-[11px] text-secondary uppercase tracking-[0.14em]">na 1ª compra</span>
+                </span>
               </div>
 
               {/* Headline */}
@@ -233,7 +237,7 @@ export default function HomePage() {
                 </span>
                 <span className="block overflow-hidden mt-2">
                   <span
-                    className="animate-word-reveal inline-block gradient-text text-glow"
+                    className="animate-word-reveal inline-block gradient-text-subtle"
                     style={{ animationDelay: '650ms' }}
                   >
                     2 semanas.
@@ -286,11 +290,6 @@ export default function HomePage() {
             <DashboardMockup />
           </div>
 
-          {/* Scroll cue */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 animate-fade-in delay-1000">
-            <div className="w-px h-10 bg-border beam-track-y" />
-            <ChevronDown size={14} className="text-muted" />
-          </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -589,9 +588,18 @@ export default function HomePage() {
               <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.02em] text-foreground">
                 O que nossos clientes dizem
               </h2>
-              <span className="mt-5 inline-flex items-center gap-2 badge badge-outline badge-tech">
-                <span className="dot-live w-1.5 h-1.5" />
-                ★ 4.9 / 5 — 30+ projetos
+              <span className="badge-sheen mt-5 inline-flex items-center gap-2.5 badge badge-outline badge-tech">
+                <span className="flex items-center gap-[3px]" aria-hidden="true">
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Star
+                      key={n}
+                      size={11}
+                      className={`text-brand fill-brand ${n === 4 ? 'opacity-40' : ''}`}
+                    />
+                  ))}
+                </span>
+                <span className="font-bold text-foreground">4.9/5</span>
+                <span>30+ projetos</span>
               </span>
             </ScrollReveal>
 
@@ -697,15 +705,16 @@ export default function HomePage() {
                   <div className="absolute -bottom-5 -left-5 w-full h-full dot-grid rounded-3xl -z-10" aria-hidden="true" />
                   <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl shadow-black/10 dark:shadow-black/60">
                     <Image
-                      src="/images/owners.webp"
-                      alt="Equipe Crably"
-                      width={720}
-                      height={540}
+                      src="/images/crably.webp"
+                      alt="Equipe Crably: Oliver Cowley (CTO), Guilherme Schmitz (CCO) e Gustavo Pavaneli (CMO)"
+                      width={1397}
+                      height={1126}
                       quality={80}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
-                    <div className="absolute bottom-5 left-5 flex items-center gap-2 px-3 py-2 rounded-xl glass">
+                    {/* Gradiente e badge no topo: o rodapé da foto já traz o lockup da marca */}
+                    <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/80 to-transparent pointer-events-none" />
+                    <div className="absolute top-5 left-5 flex items-center gap-2 px-3 py-2 rounded-xl glass">
                       <span className="dot-live shrink-0" />
                       <span className="text-xs font-medium text-foreground">Time disponivel agora</span>
                     </div>
@@ -785,13 +794,13 @@ export default function HomePage() {
           <div className="absolute inset-0 pointer-events-none noise-overlay" aria-hidden="true" />
 
           <ScrollReveal className="relative z-10 max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-brand/25 bg-brand/5 mb-8">
-              <span className="dot-live shrink-0" />
-              <span className="font-mono text-[11px] font-medium text-brand uppercase tracking-[0.14em]">Condição de lançamento</span>
+            <div className="badge-sheen inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-brand/25 bg-brand/5 shadow-glow-xs mb-8">
+              <Sparkles size={11} className="text-brand shrink-0" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-bold text-brand uppercase tracking-[0.14em]">Condição de lançamento</span>
             </div>
             <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold tracking-[-0.03em] text-foreground mb-6 leading-[1.02]">
               Seu site profissional{' '}
-              <span className="gradient-text text-glow">começa aqui.</span>
+              <span className="gradient-text-subtle">começa aqui.</span>
             </h2>
             <p className="text-lg text-secondary mb-3 max-w-lg mx-auto">
               Escolha o modelo ideal, veja o preço antes de contratar e receba seu site em até 14 dias úteis após o envio das informações.
@@ -812,8 +821,8 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
               >
-                <MessageCircle size={15} />
                 Prefere conversar antes? Chame no WhatsApp
+                <Image src="/images/whatsapp.png" alt="" width={16} height={16} className="shrink-0" />
               </a>
             </div>
           </ScrollReveal>

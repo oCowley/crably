@@ -194,7 +194,8 @@ body {
   .dot-live,
   .tech-grid-pan,
   .hero-orb-drift,
-  .btn-sheen::after {
+  .btn-sheen::after,
+  .badge-sheen::after {
     animation: none !important;
   }
   .animate-word-reveal,
@@ -632,6 +633,21 @@ html.theme-transition *::after {
   pointer-events: none;
 }
 .btn-sheen:hover::after { animation: sheen 0.8s var(--ease-out) 1; }
+
+/* Sheen automático periódico — chamariz de badges (varre 1x a cada ciclo) */
+.badge-sheen { position: relative; overflow: hidden; }
+.badge-sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(var(--brand-rgb), 0.22), transparent);
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+  animation: sheen 3.5s var(--ease-out) 1.2s infinite;
+}
 
 /* ─── Glass card ─────────────────────────────────────────────── */
 .glass {

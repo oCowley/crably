@@ -14,15 +14,15 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         'btn-sheen text-white hover:-translate-y-px active:translate-y-0 active:scale-[0.98] bg-gradient-to-b from-brand-light via-brand via-55% to-brand-hover [box-shadow:inset_0_1px_0_rgba(255,255,255,0.25),var(--glow-sm)] hover:[box-shadow:inset_0_1px_0_rgba(255,255,255,0.25),var(--glow-md)]',
       secondary:
-        'bg-elevated text-foreground border border-border hover:border-brand/25 active:scale-[0.98]',
+        'bg-elevated text-foreground border border-border hover:border-brand/25 hover:shadow-glow-xs hover:-translate-y-px active:translate-y-0 active:scale-[0.98]',
       ghost:
         'text-secondary hover:text-foreground hover:bg-foreground/5',
       outline:
-        'btn-gradient-border text-foreground hover:text-brand active:scale-[0.98]',
+        'btn-gradient-border text-foreground hover:text-brand hover:-translate-y-px active:translate-y-0 active:scale-[0.98]',
     }
 
     const sizes = {
-      sm: 'h-9 px-4 text-sm rounded-lg',
+      sm: 'h-9 px-4 text-sm rounded-xl',
       md: 'h-11 px-6 text-sm rounded-xl',
       lg: 'h-12 px-8 text-base rounded-xl',
       xl: 'h-14 px-10 text-base rounded-2xl',
