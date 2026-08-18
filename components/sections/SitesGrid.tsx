@@ -9,6 +9,8 @@ import { db } from '@/lib/firebase'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 import Skeleton from '@/components/ui/Skeleton'
 import Button from '@/components/ui/Button'
+import AuthModal from '@/components/auth/AuthModal'
+import { useAuth } from '@/contexts/AuthContext'
 import { whatsappUrl } from '@/lib/constants'
 
 type Product = {
@@ -23,7 +25,7 @@ type Product = {
 const fmt = (cents: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100)
 
-const discountedPrice = (cents: number) => Math.round(cents * 0.7)
+const discountedPrice = (cents: number) => Math.round(cents * 0.85)
 
 const META_MAP: { keywords: string[]; featured: boolean; category: string }[] = [
   { keywords: ['landing'], featured: true, category: 'Landing Page' },
@@ -67,11 +69,13 @@ const INCLUDED_IN_ALL = ['Design responsivo', 'Entrega em até 14 dias úteis', 
 
 export default function SitesGrid() {
   const router = useRouter()
+  const { user } = useAuth()
 
   const [products, setProducts] = useState<Product[]>([])
   const [loadingProducts, setLoadingProducts] = useState(true)
   const [activeFilter, setActiveFilter] = useState('Todos')
   const [previewProduct, setPreviewProduct] = useState<Product | null>(null)
+  const [authProduct, setAuthProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     getDocs(query(collection(db, 'products'), orderBy('name')))
@@ -95,9 +99,16 @@ export default function SitesGrid() {
     return () => document.removeEventListener('keydown', onKey)
   }, [previewProduct])
 
-  const handleContract = useCallback((slug: string) => {
-    router.push(`/login?mode=register&redirect=/products/${slug}`)
-  }, [router])
+  const handleContract = useCallback((product: Product) => {
+    setPreviewProduct(null)
+    if (user) {
+      // Já logado: vai direto para a página de compra com o produto selecionado
+      router.push(`/dashboard/contratar?produto=${encodeURIComponent(product.slug)}`)
+      return
+    }
+    // Deslogado: abre o pop-up de cadastro/login lembrando o produto escolhido
+    setAuthProduct(product)
+  }, [router, user])
 
   if (loadingProducts) {
     return (
@@ -227,7 +238,7 @@ export default function SitesGrid() {
                       <span className="translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
                         <Button
                           size="sm"
-                          onClick={(e) => { e.stopPropagation(); handleContract(product.slug) }}
+                          onClick={(e) => { e.stopPropagation(); handleContract(product) }}
                         >
                           Escolher este modelo
                         </Button>
@@ -277,7 +288,7 @@ export default function SitesGrid() {
                         {fmt(discountedPrice(product.price))}
                       </span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full border font-mono text-[10px] font-bold bg-success/10 border-success/25 text-success">
-                        −30%
+                        −15%
                       </span>
                     </div>
                     <p className="text-xs text-muted mt-1.5">
@@ -288,7 +299,7 @@ export default function SitesGrid() {
                   <Button
                     size="sm"
                     className="w-full mt-4"
-                    onClick={() => handleContract(product.slug)}
+                    onClick={() => handleContract(product)}
                   >
                     Escolher este modelo
                   </Button>
@@ -363,7 +374,7 @@ export default function SitesGrid() {
                     {fmt(discountedPrice(previewProduct.price))}
                   </span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border font-mono text-[10px] font-bold bg-success/10 border-success/25 text-success">
-                    −30%
+                    −15%
                   </span>
                   <span className="text-sm text-faint">
                     antes {fmt(previewProduct.price)}
@@ -373,13 +384,29 @@ export default function SitesGrid() {
               <Button
                 size="lg"
                 className="shrink-0"
-                onClick={() => handleContract(previewProduct.slug)}
+                onClick={() => handleContract(previewProduct)}
               >
                 Escolher este modelo
               </Button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Auth Modal — cadastro/login sem sair da página, lembrando o produto escolhido */}
+      {authProduct && (
+        <AuthModal
+          initialMode="register"
+          subtitle={`Crie sua conta ou entre para contratar "${authProduct.name}".`}
+          onClose={() => setAuthProduct(null)}
+          onSuccess={({ isStaff }) => {
+            router.push(
+              isStaff
+                ? '/admin'
+                : `/dashboard/contratar?produto=${encodeURIComponent(authProduct.slug)}`
+            )
+          }}
+        />
       )}
     </>
   )

@@ -68,7 +68,7 @@ function SpecSheet({ items }: { items: { v: string; l: string }[] }) {
 
 function TickerContent({ hidden }: { hidden?: boolean }) {
   const items = [
-    '30% OFF na primeira compra',
+    '15% OFF na primeira compra',
     'Entrega em até 14 dias úteis',
     'Preço fixo, sem surpresa',
     'Acompanhe cada etapa',
@@ -225,7 +225,7 @@ export default function HomePage() {
                   <span className="font-mono text-[11px] font-bold text-foreground uppercase tracking-[0.14em]">Lançamento</span>
                 </span>
                 <span className="flex items-baseline gap-1.5 px-3.5 py-1.5">
-                  <span className="font-mono text-[11px] font-bold text-foreground uppercase tracking-[0.14em]">30% off</span>
+                  <span className="font-mono text-[11px] font-bold text-foreground uppercase tracking-[0.14em]">15% off</span>
                   <span className="font-mono text-[11px] text-secondary uppercase tracking-[0.14em]">na 1ª compra</span>
                 </span>
               </div>
@@ -280,7 +280,7 @@ export default function HomePage() {
                   items={[
                     { v: 'Preço fixo', l: 'Sem surpresa' },
                     { v: '14 dias úteis', l: 'Prazo máximo' },
-                    { v: '30% OFF', l: '1ª compra' },
+                    { v: '15% OFF', l: '1ª compra' },
                   ]}
                 />
               </div>
@@ -404,7 +404,7 @@ export default function HomePage() {
                     Não sabe qual escolher? Use nosso chat para encontrar a melhor opção.
                   </p>
                 </div>
-                <span className="badge badge-brand badge-tech shrink-0">30% off na 1ª compra</span>
+                <span className="badge badge-brand badge-tech shrink-0">15% off na 1ª compra</span>
               </div>
             </ScrollReveal>
 
@@ -569,7 +569,7 @@ export default function HomePage() {
             <div className="mt-12 flex justify-center">
               <Link href="#sites">
                 <Button size="lg" className="cta-glow text-base px-8">
-                  Começar agora com 30% OFF
+                  Começar agora com 15% OFF
                 </Button>
               </Link>
             </div>
@@ -755,7 +755,7 @@ export default function HomePage() {
                   items={[
                     { v: '30+', l: 'Projetos entregues' },
                     { v: '14 dias úteis', l: 'Prazo máximo' },
-                    { v: '30% OFF', l: '1ª compra' },
+                    { v: '15% OFF', l: '1ª compra' },
                   ]}
                 />
               </ScrollReveal>

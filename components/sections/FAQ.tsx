@@ -18,7 +18,7 @@ const ITEMS = [
   },
   {
     q: 'Como funciona o pagamento?',
-    a: 'Você escolhe o modelo de site, visualiza o valor antes de contratar e finaliza o pagamento de forma segura. Na primeira compra, o desconto de 30% é aplicado conforme a oferta disponível.',
+    a: 'Você escolhe o modelo de site, visualiza o valor antes de contratar e finaliza o pagamento de forma segura. Na primeira compra, o desconto de 15% é aplicado conforme a oferta disponível.',
   },
   {
     q: 'O que preciso enviar para começar?',
