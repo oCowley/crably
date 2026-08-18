@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
+import AuthModal from '@/components/auth/AuthModal'
+import { useAuth } from '@/contexts/AuthContext'
 
 type Product = {
   id: string
@@ -20,10 +22,23 @@ type Product = {
 export default function ProductDetailPage() {
   const params = useParams()
   const slug = params.slug as string
+  const router = useRouter()
+  const { user } = useAuth()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [authOpen, setAuthOpen] = useState(false)
+
+  const contratarUrl = `/dashboard/contratar?produto=${encodeURIComponent(slug)}`
+
+  function handleBuy() {
+    if (user) {
+      router.push(contratarUrl)
+      return
+    }
+    setAuthOpen(true)
+  }
 
   useEffect(() => {
     getDocs(query(collection(db, 'products'), where('slug', '==', slug)))
@@ -166,18 +181,27 @@ export default function ProductDetailPage() {
                   <p className="text-sm text-brand font-medium">Sem taxas ocultas</p>
                 </div>
               </div>
-              <Link href="/login" className="block">
-                <Button size="lg" className="w-full shadow-2xl shadow-brand/30">
-                  Comprar — {price}
-                </Button>
-              </Link>
+              <Button size="lg" className="w-full shadow-2xl shadow-brand/30" onClick={handleBuy}>
+                Comprar — {price}
+              </Button>
               <p className="text-xs text-faint text-center mt-4">
-                Checkout seguro via Abacate Pay. Confirmação imediata.
+                Checkout seguro via Asaas. Confirmação imediata.
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {authOpen && (
+        <AuthModal
+          initialMode="register"
+          subtitle={`Crie sua conta ou entre para contratar "${product.name}".`}
+          onClose={() => setAuthOpen(false)}
+          onSuccess={({ isStaff }) => {
+            router.push(isStaff ? '/admin' : contratarUrl)
+          }}
+        />
+      )}
     </div>
   )
 }

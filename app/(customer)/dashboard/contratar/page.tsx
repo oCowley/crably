@@ -146,7 +146,7 @@ function PortfolioModal({
   onClose: () => void
   onAddToCart: () => void
 }) {
-  const displayPrice = isFirstPurchase ? discounted(product.price, 30) : product.price
+  const displayPrice = isFirstPurchase ? discounted(product.price, 15) : product.price
   const refs = product.references ?? []
   const imgs = product.images ?? []
 
@@ -211,7 +211,7 @@ function PortfolioModal({
               <div className="flex items-baseline gap-2 mt-0.5">
                 <span className="text-2xl font-bold text-brand">{fmt(displayPrice)}</span>
                 <span className="text-sm text-faint line-through">{fmt(product.price)}</span>
-                <span className="text-xs font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">−30%</span>
+                <span className="text-xs font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-full">−15%</span>
               </div>
             ) : (
               <p className="text-2xl font-bold text-brand mt-0.5">{fmt(product.price)}</p>
@@ -237,6 +237,16 @@ export default function ContratarPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [isFirstPurchase, setIsFirstPurchase] = useState(false)
+  const [bannerDismissed, setBannerDismissed] = useState(false)
+
+  useEffect(() => {
+    setBannerDismissed(localStorage.getItem('crably_banner_primeira_compra') === 'fechado')
+  }, [])
+
+  function dismissBanner() {
+    setBannerDismissed(true)
+    localStorage.setItem('crably_banner_primeira_compra', 'fechado')
+  }
   const [gallery, setGallery] = useState<Product | null>(null)
   const [configuring, setConfiguring] = useState<Product | null>(null)
   const [toast, setToast] = useState<string | null>(null)
@@ -251,10 +261,20 @@ export default function ContratarPage() {
             ? getDocs(query(collection(db, 'orders'), where('userId', '==', uid)))
             : Promise.resolve(null),
         ])
-        setProducts(
-          productsSnap.docs.map((doc) => ({ id: doc.id, ...(doc.data() as Omit<Product, 'id'>) })),
-        )
-        if (uid) setIsFirstPurchase((ordersSnap?.size ?? 0) === 0)
+        const list = productsSnap.docs.map((doc) => ({ id: doc.id, ...(doc.data() as Omit<Product, 'id'>) }))
+        setProducts(list)
+        // Pedidos não pagos (checkout abandonado) não consomem o desconto de primeira compra
+        if (uid)
+          setIsFirstPurchase(
+            !(ordersSnap?.docs.some((d) => d.data().status !== 'pending_payment') ?? false)
+          )
+
+        // Produto pré-selecionado via ?produto=<slug> (vindo do fluxo de cadastro/login)
+        const slugParam = new URLSearchParams(window.location.search).get('produto')
+        if (slugParam) {
+          const preselected = list.find((p) => p.slug === slugParam)
+          if (preselected) setConfiguring(preselected)
+        }
       } finally {
         setLoading(false)
       }
@@ -301,7 +321,7 @@ export default function ContratarPage() {
     )
   }
 
-  const DISCOUNT_PCT = 30
+  const DISCOUNT_PCT = 15
 
   return (
     <div>
@@ -311,32 +331,33 @@ export default function ContratarPage() {
       </div>
 
       {/* first purchase banner */}
-      {isFirstPurchase && (
-        <div className="mb-8 relative overflow-hidden rounded-2xl border border-green-500/20 bg-gradient-to-r from-green-500/[0.08] via-green-500/[0.05] to-brand/[0.08] p-5">
-          {/* glow */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex items-center gap-4 relative">
-            <div className="w-12 h-12 rounded-2xl bg-green-500/15 border border-green-500/25 flex items-center justify-center shrink-0">
-              <Sparkles size={22} className="text-green-400" />
+      {isFirstPurchase && !bannerDismissed && (
+        <div className="mb-8 relative overflow-hidden rounded-2xl border border-green-500/20 bg-green-500/[0.06] p-4 sm:p-5">
+          <div className="flex items-center gap-4 pr-8">
+            <div className="w-10 h-10 rounded-xl bg-green-500/15 border border-green-500/25 flex items-center justify-center shrink-0">
+              <Sparkles size={18} className="text-green-400" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-foreground">
-                🎉 Sua primeira compra tem {DISCOUNT_PCT}% de desconto!
+              <p className="text-sm font-bold text-foreground">
+                Sua primeira compra tem {DISCOUNT_PCT}% de desconto
               </p>
               <p className="text-sm text-secondary mt-0.5">
-                O cupom{' '}
-                <span className="font-mono font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded-md text-xs">
-                  PRIMEIRACOMPRA
-                </span>{' '}
-                será aplicado automaticamente no carrinho.
+                O desconto será aplicado automaticamente no carrinho.
               </p>
             </div>
-            <div className="shrink-0 text-right hidden sm:block">
-              <p className="text-3xl font-black text-success">{DISCOUNT_PCT}%</p>
-              <p className="text-xs text-green-500/70 font-medium">OFF</p>
-            </div>
+            <span className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/25 text-sm font-bold text-green-400 shrink-0">
+              {DISCOUNT_PCT}% OFF
+            </span>
           </div>
+
+          <button
+            type="button"
+            onClick={dismissBanner}
+            aria-label="Fechar aviso de desconto"
+            className="absolute top-3 right-3 p-1.5 rounded-lg text-green-500/60 hover:text-green-400 hover:bg-green-500/10 transition-colors"
+          >
+            <X size={14} />
+          </button>
         </div>
       )}
 
@@ -372,15 +393,6 @@ export default function ContratarPage() {
                       <ImageIcon size={28} className="text-faint" />
                     </div>
                   )}
-
-                  {/* first purchase badge */}
-                  {isFirstPurchase && (
-                    <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-green-500 shadow-lg shadow-green-500/30">
-                      <Sparkles size={11} className="text-white" />
-                      <span className="text-[11px] font-black text-white">{DISCOUNT_PCT}% OFF</span>
-                    </div>
-                  )}
-
                 </div>
 
                 {/* content */}
@@ -447,7 +459,6 @@ export default function ContratarPage() {
           productName={configuring.name}
           productType={configuring.id}
           basePrice={configuring.price / 100}
-          initialCoupon={isFirstPurchase ? 'PRIMEIRACOMPRA' : undefined}
           onClose={() => setConfiguring(null)}
           onConfirm={handleConfirm}
         />

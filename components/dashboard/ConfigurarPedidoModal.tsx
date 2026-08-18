@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import {
-  X, Check, Zap, Clock, Search, PenLine,
-  MessageCircle, BarChart2, ClipboardList, Palette, Video, Tag,
+  X, Check, Zap, Clock, Search, PenLine, ArrowUpRight,
+  BarChart2, ClipboardList, Palette, Video, Tag, Wrench, TrendingUp,
 } from 'lucide-react'
+import { whatsappUrl } from '@/lib/constants'
 
 // ─── coupons ─────────────────────────────────────────────────────────────────
 
+// PRIMEIRACOMPRA não é cupom: o desconto de primeira compra é automático no carrinho
 const VALID_COUPONS: Record<string, number> = {
-  PRIMEIRACOMPRA: 30,
   CRABLY10: 10,
   CRABLY20: 20,
 }
@@ -38,13 +39,6 @@ const ADDONS = [
     price: 497,
   },
   {
-    id: 'whatsapp',
-    icon: MessageCircle,
-    label: 'WhatsApp Business',
-    description: 'Botão flutuante + link direto com mensagem pré-definida',
-    price: 97,
-  },
-  {
     id: 'analytics',
     icon: BarChart2,
     label: 'Pixel & Analytics',
@@ -68,6 +62,25 @@ const ADDONS = [
 ] as const
 
 type AddonId = (typeof ADDONS)[number]['id']
+
+// ─── serviços sob consulta (fora do checkout — conversa no WhatsApp) ──────────
+
+const CONSULT_SERVICES = [
+  {
+    id: 'manutencao',
+    icon: Wrench,
+    label: 'Manutenção do site',
+    description: 'Atualizações de conteúdo, ajustes e monitoramento contínuo',
+    message: 'Olá! Tenho interesse no serviço de manutenção de site da Crably. Podem me passar mais detalhes?',
+  },
+  {
+    id: 'trafego',
+    icon: TrendingUp,
+    label: 'Gestão de tráfego',
+    description: 'Campanhas no Google e Meta Ads para atrair clientes',
+    message: 'Olá! Tenho interesse em gestão de tráfego com a Crably. Podem me passar mais detalhes?',
+  },
+] as const
 
 // ─── types ───────────────────────────────────────────────────────────────────
 
@@ -100,7 +113,7 @@ function fmt(value: number) {
     style: 'currency',
     currency: 'BRL',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   })
 }
 
@@ -172,7 +185,8 @@ export default function ConfigurarPedidoModal({
   const meetingAdd   = extraMeeting ? 150 : 0
   const addonsTotal  = ADDONS.filter((a) => selectedAddons.has(a.id)).reduce((s, a) => s + a.price, 0)
   const subtotal     = basePrice + expressAdd + meetingAdd + addonsTotal
-  const discount     = appliedCoupon ? Math.round(subtotal * appliedCoupon.pct / 100) : 0
+  // arredonda em centavos — arredondar em reais zera o desconto em preços baixos
+  const discount     = appliedCoupon ? Math.round(subtotal * appliedCoupon.pct) / 100 : 0
   const finalPrice   = subtotal - discount
 
   function handleSubmit(e: React.FormEvent) {
@@ -252,10 +266,10 @@ export default function ConfigurarPedidoModal({
                 <span className="text-faint font-normal">(opcional)</span>
               </label>
               <input
-                type="url"
+                type="text"
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
-                placeholder="https://exemplo.com"
+                placeholder="Ex: exemplo.com ou o nome de um site que você gosta"
                 className="w-full h-10 px-3.5 rounded-xl bg-elevated border border-border text-foreground placeholder:text-faint text-sm focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/20 transition-colors"
               />
               <p className="text-[11px] text-faint">Algum site que você gosta e serve de inspiração.</p>
@@ -380,6 +394,37 @@ export default function ConfigurarPedidoModal({
                   )
                 })}
               </div>
+            </div>
+
+            {/* serviços sob consulta */}
+            <div>
+              <SectionLabel>Serviços sob consulta</SectionLabel>
+              <div className="space-y-2">
+                {CONSULT_SERVICES.map((service) => (
+                  <a
+                    key={service.id}
+                    href={whatsappUrl(service.message)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-start gap-3 p-3 rounded-xl border bg-surface border-border hover:border-border-strong text-left transition-all group"
+                  >
+                    <div className="w-5 h-5 rounded-md bg-elevated border border-border-strong flex items-center justify-center shrink-0 mt-0.5">
+                      <service.icon size={11} className="text-faint" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-foreground">{service.label}</span>
+                      <p className="text-[11px] text-faint mt-0.5 leading-relaxed">{service.description}</p>
+                    </div>
+                    <span className="text-xs font-semibold shrink-0 mt-0.5 text-success flex items-center gap-0.5">
+                      Consultar
+                      <ArrowUpRight size={11} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </a>
+                ))}
+              </div>
+              <p className="text-[10px] text-faint mt-2">
+                Conversamos pelo WhatsApp para montar um plano sob medida.
+              </p>
             </div>
 
             {/* coupon */}

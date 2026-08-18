@@ -1,84 +1,76 @@
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'node:crypto'
 import { db } from '@/lib/firebase'
-import { doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  getDocs,
+  query,
+  collection,
+  where,
+  serverTimestamp,
+} from 'firebase/firestore'
 
-const ABACATEPAY_PUBLIC_KEY =
-  't9dXRhHHo3yDEj5pVDYz0frf7q6bMKyMRmxxCPIPp3RCplBfXRxqlC6ZpiWmOqj4L63qEaeUOtrCI8P0VMUgo6iIga2ri9ogaHFs0WIIywSMg0q7RmBfybe1E5XJcfC4IW3alNqym0tXoAKkzvfEjZxV6bE0oG2zJrNNYmUCKZyV0KZ3JS8Votf9EAWWYdiDkMkpbMdPggfh1EqHlVkMiTady6jOR3hyzGEHrIz2Ret0xHKMbiqkr9HS1JhNHDX9'
-
-function verifySignature(rawBody: string, signatureFromHeader: string): boolean {
-  const bodyBuffer = Buffer.from(rawBody, 'utf8')
-  const expectedSig = crypto
-    .createHmac('sha256', ABACATEPAY_PUBLIC_KEY)
-    .update(bodyBuffer)
-    .digest('base64')
-
-  const A = Buffer.from(expectedSig)
-  const B = Buffer.from(signatureFromHeader)
-
-  return A.length === B.length && crypto.timingSafeEqual(A, B)
-}
-
-interface WebhookPayload {
+interface AsaasWebhookPayload {
   id: string
   event: string
-  apiVersion: number
-  devMode: boolean
-  data: {
-    metadata?: Record<string, string>
-    [key: string]: unknown
+  checkout?: {
+    id: string
+    status?: string
   }
 }
 
 export async function POST(req: NextRequest) {
-  // Layer 1: Verify webhook secret in query string
-  const webhookSecret = req.nextUrl.searchParams.get('webhookSecret')
-  if (webhookSecret !== process.env.ABACATEPAY_WEBHOOK_SECRET) {
+  // O Asaas envia de volta o token de autenticação definido ao configurar o webhook
+  const token = req.headers.get('asaas-access-token')
+  if (!process.env.ASAAS_WEBHOOK_TOKEN || token !== process.env.ASAAS_WEBHOOK_TOKEN) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Layer 2: Verify HMAC-SHA256 signature
-  const rawBody = await req.text()
-  const signature = req.headers.get('x-webhook-signature')
+  const payload = (await req.json()) as AsaasWebhookPayload
 
-  if (!signature || !verifySignature(rawBody, signature)) {
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
-  }
-
-  const payload = JSON.parse(rawBody) as WebhookPayload
-
-  if (payload.event === 'checkout.completed') {
-    const meta = payload.data.metadata ?? {}
-    const userId = meta.userId
-    const orderIds = (meta.orderIds ?? '').split(',').filter(Boolean)
+  if (payload.event === 'CHECKOUT_PAID' && payload.checkout?.id) {
+    const checkoutId = payload.checkout.id
 
     try {
-      // Atualiza cada pedido de 'pending_payment' → 'aguardando'
-      await Promise.all(
-        orderIds.map((orderId) =>
-          updateDoc(doc(db, 'orders', orderId), {
-            status: 'aguardando',
-            projectStage: 'briefing',
-            updatedAt: serverTimestamp(),
-          })
-        )
+      // Fluxo principal: pedidos vinculados a esta sessão de checkout
+      const ordersSnap = await getDocs(
+        query(collection(db, 'orders'), where('checkoutId', '==', checkoutId))
       )
 
-      // Revisão paga: move o pedido para em_revisao
-      if (meta.type === 'revision' && meta.orderId) {
-        await updateDoc(doc(db, 'orders', meta.orderId), {
-          projectStage: 'em_revisao',
-          revisionPaid: true,
-          updatedAt: serverTimestamp(),
-        })
-      }
+      if (!ordersSnap.empty) {
+        await Promise.all(
+          ordersSnap.docs.map((d) =>
+            updateDoc(d.ref, {
+              status: 'aguardando',
+              projectStage: 'briefing',
+              updatedAt: serverTimestamp(),
+            })
+          )
+        )
 
-      // Marca primeira compra como concluída
-      if (userId) {
-        await setDoc(
-          doc(db, 'users', userId),
-          { firstPurchaseDone: true, updatedAt: serverTimestamp() },
-          { merge: true }
+        // Marca primeira compra como concluída
+        const userId = ordersSnap.docs[0].data().userId as string | undefined
+        if (userId) {
+          await setDoc(
+            doc(db, 'users', userId),
+            { firstPurchaseDone: true, updatedAt: serverTimestamp() },
+            { merge: true }
+          )
+        }
+      } else {
+        // Fluxo de revisão: pedido com revisionCheckoutId vinculado a esta sessão
+        const revisionSnap = await getDocs(
+          query(collection(db, 'orders'), where('revisionCheckoutId', '==', checkoutId))
+        )
+        await Promise.all(
+          revisionSnap.docs.map((d) =>
+            updateDoc(d.ref, {
+              projectStage: 'em_revisao',
+              revisionPaid: true,
+              updatedAt: serverTimestamp(),
+            })
+          )
         )
       }
     } catch (err) {

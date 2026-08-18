@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createCustomer, getOrCreateProduct, createCheckout } from '@/lib/abacatepay'
+import { createCheckout } from '@/lib/asaas'
 import { db } from '@/lib/firebase'
 import {
   doc,
@@ -31,10 +31,7 @@ export async function POST(req: NextRequest) {
     const userCpf = userSnap.exists() ? (userSnap.data().cpf as string | undefined) : undefined
     const userName = userSnap.exists() ? (userSnap.data().name as string | undefined) : undefined
 
-    // 2. Cria customer no Abacate Pay
-    const customer = await createCustomer(userEmail, userCpf, userName)
-
-    // 3. Persiste os pedidos no Firestore ANTES do checkout
+    // 2. Persiste os pedidos no Firestore ANTES do checkout
     // O preço já vem com desconto aplicado pelo cliente
     const orderRefs = await Promise.all(
       items.map((item) => {
@@ -57,35 +54,33 @@ export async function POST(req: NextRequest) {
 
     const orderIds = orderRefs.map((r) => r.id).join(',')
 
-    // 4. Cria products on-the-fly no Abacate Pay e monta items do checkout
-    const checkoutItems = await Promise.all(
-      items.map(async (item) => {
-        const priceInCents = Math.round(item.finalPrice * 100)
-        const externalId = `${item.productType}_${priceInCents}`
-        const product = await getOrCreateProduct(item.productName, priceInCents, externalId)
-        return { id: product.id, quantity: 1 }
-      })
-    )
-
-    // 5. Cria checkout no Abacate Pay
+    // 3. Cria checkout no Asaas (items inline, valores em reais)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const checkout = await createCheckout({
-      items: checkoutItems,
-      returnUrl: `${appUrl}/dashboard/projetos?success=true`,
-      completionUrl: `${appUrl}/api/webhook`,
-      customerId: customer.id,
-      methods: ['PIX', 'CARD'],
-      metadata: { userId, orderIds },
+      items: items.map((item) => ({
+        name: item.productName,
+        description: item.projectName,
+        quantity: 1,
+        value: item.finalPrice,
+      })),
+      successUrl: `${appUrl}/dashboard/projetos?success=true`,
+      cancelUrl: `${appUrl}/dashboard/carrinho`,
+      externalReference: orderIds,
+      customerData: {
+        email: userEmail,
+        ...(userName ? { name: userName } : {}),
+        ...(userCpf ? { cpfCnpj: userCpf } : {}),
+      },
     })
 
-    // 6. Vincula o checkoutId aos pedidos criados
+    // 4. Vincula o checkoutId aos pedidos criados
     await Promise.all(
       orderRefs.map((ref) =>
         updateDoc(ref, { checkoutId: checkout.id })
       )
     )
 
-    return NextResponse.json({ url: checkout.url })
+    return NextResponse.json({ url: checkout.link })
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
     console.error('[checkout] ERRO:', msg)
