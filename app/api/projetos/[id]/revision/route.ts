@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createCheckout } from '@/lib/asaas'
+import { createCheckout, getCallbackBaseUrl } from '@/lib/asaas'
 import { db } from '@/lib/firebase'
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
 
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!snap.exists()) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
 
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const appUrl = getCallbackBaseUrl()
     const checkout = await createCheckout({
       items: [{ name: 'Revisão do projeto', quantity: 1, value: 297 }],
       successUrl: `${appUrl}/dashboard/projetos/${id}?revisao=paga`,

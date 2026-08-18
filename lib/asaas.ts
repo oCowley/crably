@@ -39,6 +39,17 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return json as T
 }
 
+/**
+ * O Asaas exige URLs de callback públicas em https — rejeita http://localhost.
+ * Em dev, os redirects pós-pagamento caem no site publicado; para confirmar
+ * um pagamento em localhost use o botão "verificar pagamento" em /dashboard/projetos.
+ */
+export function getCallbackBaseUrl(): string {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
+  if (appUrl.startsWith('https://')) return appUrl
+  return 'https://crably.com.br'
+}
+
 // --- Checkouts ---
 
 export interface AsaasCheckoutItem {

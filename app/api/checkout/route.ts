@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createCheckout } from '@/lib/asaas'
+import { createCheckout, getCallbackBaseUrl } from '@/lib/asaas'
 import { db } from '@/lib/firebase'
 import {
-  doc,
-  getDoc,
   collection,
   addDoc,
   updateDoc,
@@ -26,12 +24,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 })
     }
 
-    // 1. Busca dados do usuário
-    const userSnap = await getDoc(doc(db, 'users', userId))
-    const userCpf = userSnap.exists() ? (userSnap.data().cpf as string | undefined) : undefined
-    const userName = userSnap.exists() ? (userSnap.data().name as string | undefined) : undefined
-
-    // 2. Persiste os pedidos no Firestore ANTES do checkout
+    // 1. Persiste os pedidos no Firestore ANTES do checkout
     // O preço já vem com desconto aplicado pelo cliente
     const orderRefs = await Promise.all(
       items.map((item) => {
@@ -54,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     const orderIds = orderRefs.map((r) => r.id).join(',')
 
-    // 3. Cria checkout no Asaas (items inline, valores em reais)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    // 2. Cria checkout no Asaas (items inline, valores em reais)
+    const appUrl = getCallbackBaseUrl()
     const checkout = await createCheckout({
       items: items.map((item) => ({
         name: item.productName,
@@ -66,14 +59,11 @@ export async function POST(req: NextRequest) {
       successUrl: `${appUrl}/dashboard/projetos?success=true`,
       cancelUrl: `${appUrl}/dashboard/carrinho`,
       externalReference: orderIds,
-      customerData: {
-        email: userEmail,
-        ...(userName ? { name: userName } : {}),
-        ...(userCpf ? { cpfCnpj: userCpf } : {}),
-      },
+      // customerData omitido de propósito: se enviado, o Asaas exige cadastro
+      // completo (telefone, endereço, CEP...) — o pagador preenche no checkout
     })
 
-    // 4. Vincula o checkoutId aos pedidos criados
+    // 3. Vincula o checkoutId aos pedidos criados
     await Promise.all(
       orderRefs.map((ref) =>
         updateDoc(ref, { checkoutId: checkout.id })
