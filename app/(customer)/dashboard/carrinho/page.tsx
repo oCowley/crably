@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Trash2, Pencil, ShoppingBag } from 'lucide-react'
+import { Trash2, Pencil, ShoppingBag, QrCode, CreditCard } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { useAuth } from '@/contexts/AuthContext'
 import ConfigurarPedidoModal from '@/components/dashboard/ConfigurarPedidoModal'
+import PixPaymentModal from '@/components/dashboard/PixPaymentModal'
 import {
   collection,
   query,
@@ -39,6 +40,12 @@ export default function CarrinhoPage() {
   const [loading, setLoading] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'card'>('pix')
+  const [pixData, setPixData] = useState<{
+    paymentId: string
+    qrCodeImage: string
+    copiaECola: string
+  } | null>(null)
 
   // Dados do comprador
   const [cpf, setCpf] = useState('')
@@ -129,6 +136,9 @@ export default function CarrinhoPage() {
           items: itemsWithDiscount,
           userId: user.uid,
           userEmail: user.email ?? '',
+          method: paymentMethod,
+          buyerName: profile?.name ?? '',
+          buyerCpf: rawCpf,
         }),
       })
 
@@ -137,11 +147,18 @@ export default function CarrinhoPage() {
         return
       }
 
-      const data = (await res.json()) as { url?: string; error?: string }
+      const data = (await res.json()) as {
+        url?: string
+        pix?: { paymentId: string; qrCodeImage: string; copiaECola: string }
+        error?: string
+      }
 
-      if (data.url) {
-        // Redirect de página inteira: iframe é bloqueado pelo navegador quando o
-        // gateway redireciona de volta para localhost (public → local network)
+      if (data.pix) {
+        // PIX transparente: QR Code no nosso site; carrinho só limpa após confirmar
+        setPixData(data.pix)
+      } else if (data.url) {
+        // Cartão: redirect de página inteira para o checkout hospedado do Asaas
+        // (iframe é bloqueado pelo X-Frame-Options: SAMEORIGIN do Asaas)
         setRedirecting(true)
         clearCart()
         window.location.assign(data.url)
@@ -350,18 +367,46 @@ export default function CarrinhoPage() {
               </div>
             )}
 
+            {/* Método de pagamento */}
+            <div className="grid grid-cols-2 gap-2 mt-5">
+              {([
+                { value: 'pix', icon: QrCode, title: 'PIX', sub: 'Aprovação na hora' },
+                { value: 'card', icon: CreditCard, title: 'Cartão', sub: 'Site do Asaas' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setPaymentMethod(opt.value)}
+                  className={[
+                    'flex flex-col gap-0.5 p-3 rounded-xl border text-left transition-all',
+                    paymentMethod === opt.value
+                      ? 'bg-brand/10 border-brand/40 text-foreground'
+                      : 'bg-surface border-border text-secondary hover:border-border-strong',
+                  ].join(' ')}
+                >
+                  <opt.icon size={14} className={paymentMethod === opt.value ? 'text-brand' : 'text-faint'} />
+                  <span className="text-sm font-bold leading-none mt-1">{opt.title}</span>
+                  <span className="text-[11px] opacity-60">{opt.sub}</span>
+                </button>
+              ))}
+            </div>
+
             <button
               onClick={handleCheckout}
               disabled={loading || !buyerDataComplete}
               className={[
-                'w-full h-11 mt-5 rounded-xl text-white text-sm font-semibold transition-all duration-200',
+                'w-full h-11 mt-3 rounded-xl text-white text-sm font-semibold transition-all duration-200',
                 buyerDataComplete
                   ? 'bg-brand hover:bg-brand-hover shadow-[0_0_20px_rgba(var(--brand-rgb),0.3)] hover:shadow-[0_0_28px_rgba(var(--brand-rgb),0.45)]'
                   : 'bg-neutral-800 cursor-not-allowed text-muted',
                 loading ? 'opacity-60 cursor-not-allowed' : '',
               ].join(' ')}
             >
-              {loading ? 'Processando...' : 'Finalizar pedido →'}
+              {loading
+                ? 'Processando...'
+                : paymentMethod === 'pix'
+                  ? 'Gerar PIX →'
+                  : 'Pagar com cartão →'}
             </button>
 
             {!buyerDataComplete && !loadingBuyer && (
@@ -382,6 +427,20 @@ export default function CarrinhoPage() {
           </div>
         </div>
       </div>
+
+      {/* PIX modal */}
+      {pixData && (
+        <PixPaymentModal
+          paymentId={pixData.paymentId}
+          qrCodeImage={pixData.qrCodeImage}
+          copiaECola={pixData.copiaECola}
+          onClose={() => setPixData(null)}
+          onPaid={() => {
+            clearCart()
+            window.location.assign('/dashboard/projetos?success=true')
+          }}
+        />
+      )}
 
       {/* Edit modal */}
       {editingItem && (

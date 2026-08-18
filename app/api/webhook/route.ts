@@ -14,10 +14,56 @@ import {
 interface AsaasWebhookPayload {
   id: string
   event: string
-  checkout?: {
-    id: string
-    status?: string
+  checkout?: { id: string }
+  payment?: { id: string }
+}
+
+/**
+ * Marca como pagos os pedidos vinculados a um id do gateway
+ * (checkoutId = sessão hospedada ou cobrança PIX pay_...).
+ */
+async function markOrdersPaid(gatewayId: string) {
+  // Fluxo principal
+  const ordersSnap = await getDocs(
+    query(collection(db, 'orders'), where('checkoutId', '==', gatewayId))
+  )
+
+  if (!ordersSnap.empty) {
+    await Promise.all(
+      ordersSnap.docs.map((d) =>
+        updateDoc(d.ref, {
+          status: 'aguardando',
+          projectStage: 'briefing',
+          updatedAt: serverTimestamp(),
+        })
+      )
+    )
+
+    // Marca primeira compra como concluída
+    const userId = ordersSnap.docs[0].data().userId as string | undefined
+    if (userId) {
+      await setDoc(
+        doc(db, 'users', userId),
+        { firstPurchaseDone: true, updatedAt: serverTimestamp() },
+        { merge: true }
+      )
+    }
+    return
   }
+
+  // Fluxo de revisão
+  const revisionSnap = await getDocs(
+    query(collection(db, 'orders'), where('revisionCheckoutId', '==', gatewayId))
+  )
+  await Promise.all(
+    revisionSnap.docs.map((d) =>
+      updateDoc(d.ref, {
+        projectStage: 'em_revisao',
+        revisionPaid: true,
+        updatedAt: serverTimestamp(),
+      })
+    )
+  )
 }
 
 export async function POST(req: NextRequest) {
@@ -29,54 +75,23 @@ export async function POST(req: NextRequest) {
 
   const payload = (await req.json()) as AsaasWebhookPayload
 
-  if (payload.event === 'CHECKOUT_PAID' && payload.checkout?.id) {
-    const checkoutId = payload.checkout.id
-
-    try {
-      // Fluxo principal: pedidos vinculados a esta sessão de checkout
-      const ordersSnap = await getDocs(
-        query(collection(db, 'orders'), where('checkoutId', '==', checkoutId))
-      )
-
-      if (!ordersSnap.empty) {
-        await Promise.all(
-          ordersSnap.docs.map((d) =>
-            updateDoc(d.ref, {
-              status: 'aguardando',
-              projectStage: 'briefing',
-              updatedAt: serverTimestamp(),
-            })
-          )
-        )
-
-        // Marca primeira compra como concluída
-        const userId = ordersSnap.docs[0].data().userId as string | undefined
-        if (userId) {
-          await setDoc(
-            doc(db, 'users', userId),
-            { firstPurchaseDone: true, updatedAt: serverTimestamp() },
-            { merge: true }
-          )
-        }
-      } else {
-        // Fluxo de revisão: pedido com revisionCheckoutId vinculado a esta sessão
-        const revisionSnap = await getDocs(
-          query(collection(db, 'orders'), where('revisionCheckoutId', '==', checkoutId))
-        )
-        await Promise.all(
-          revisionSnap.docs.map((d) =>
-            updateDoc(d.ref, {
-              projectStage: 'em_revisao',
-              revisionPaid: true,
-              updatedAt: serverTimestamp(),
-            })
-          )
-        )
-      }
-    } catch (err) {
-      console.error('[webhook] Erro no Firestore', err)
-      return NextResponse.json({ error: 'DB error' }, { status: 500 })
+  try {
+    // Checkout hospedado (cartão)
+    if (payload.event === 'CHECKOUT_PAID' && payload.checkout?.id) {
+      await markOrdersPaid(payload.checkout.id)
     }
+
+    // Cobrança avulsa (PIX transparente): RECEIVED = dinheiro caiu,
+    // CONFIRMED = pagamento confirmado (cartão)
+    if (
+      (payload.event === 'PAYMENT_RECEIVED' || payload.event === 'PAYMENT_CONFIRMED') &&
+      payload.payment?.id
+    ) {
+      await markOrdersPaid(payload.payment.id)
+    }
+  } catch (err) {
+    console.error('[webhook] Erro no Firestore', err)
+    return NextResponse.json({ error: 'DB error' }, { status: 500 })
   }
 
   return NextResponse.json({ received: true })

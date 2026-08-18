@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isCheckoutPaid } from '@/lib/asaas'
+import { isCheckoutPaid, isPaymentPaid } from '@/lib/asaas'
 import { db } from '@/lib/firebase'
 import {
   doc,
@@ -24,7 +24,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'sessionId obrigatório' }, { status: 400 })
     }
 
-    const paid = await isCheckoutPaid(sessionId)
+    // pay_... = cobrança PIX transparente; uuid = sessão do checkout hospedado
+    const paid = sessionId.startsWith('pay_')
+      ? await isPaymentPaid(sessionId)
+      : await isCheckoutPaid(sessionId)
     if (!paid) {
       return NextResponse.json({ status: 'unpaid' })
     }

@@ -121,6 +121,33 @@ export async function createCheckout(options: AsaasCheckoutOptions): Promise<Asa
   }
 }
 
+// --- Customers ---
+
+interface AsaasCustomer {
+  id: string
+  name: string
+  cpfCnpj: string
+}
+
+/** Busca customer pelo CPF/CNPJ; cria se não existir. */
+export async function getOrCreateCustomer(
+  name: string,
+  cpfCnpj: string,
+  email?: string
+): Promise<AsaasCustomer> {
+  const existing = await request<{ data: AsaasCustomer[] }>(
+    'GET',
+    `/customers?cpfCnpj=${encodeURIComponent(cpfCnpj)}&limit=1`
+  )
+  if (existing.data.length > 0) return existing.data[0]
+
+  return request<AsaasCustomer>('POST', '/customers', {
+    name,
+    cpfCnpj,
+    ...(email ? { email } : {}),
+  })
+}
+
 // --- Payments ---
 
 export interface AsaasPayment {
@@ -131,6 +158,44 @@ export interface AsaasPayment {
 }
 
 const PAID_STATUSES = ['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH']
+
+/** Cria cobrança PIX avulsa (checkout transparente — QR Code exibido no nosso site). */
+export async function createPixPayment(options: {
+  customerId: string
+  value: number // em REAIS
+  description?: string
+  externalReference?: string
+}): Promise<AsaasPayment> {
+  // dueDate = amanhã para não expirar no fuso do fim do dia
+  const due = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  return request<AsaasPayment>('POST', '/payments', {
+    customer: options.customerId,
+    billingType: 'PIX',
+    value: options.value,
+    dueDate: due,
+    ...(options.description ? { description: options.description.slice(0, 500) } : {}),
+    ...(options.externalReference ? { externalReference: options.externalReference } : {}),
+  })
+}
+
+export interface AsaasPixQrCode {
+  encodedImage: string // PNG em base64
+  payload: string // copia-e-cola
+  expirationDate: string
+}
+
+export async function getPixQrCode(paymentId: string): Promise<AsaasPixQrCode> {
+  return request<AsaasPixQrCode>('GET', `/payments/${encodeURIComponent(paymentId)}/pixQrCode`)
+}
+
+/** Verifica se uma cobrança avulsa (pay_...) foi paga. */
+export async function isPaymentPaid(paymentId: string): Promise<boolean> {
+  const res = await request<{ status: string }>(
+    'GET',
+    `/payments/${encodeURIComponent(paymentId)}/status`
+  )
+  return PAID_STATUSES.includes(res.status)
+}
 
 /** Verifica se a sessão de checkout gerou algum pagamento confirmado/recebido. */
 export async function isCheckoutPaid(checkoutId: string): Promise<boolean> {
